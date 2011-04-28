@@ -1,0 +1,11 @@
+$def with (season_id, previous_tournament_id, next_tournament_id)
+
+$if previous_tournament_id:
+    < <a href="/tournament/$season_id/$previous_tournament_id">Tournoi précédent</a>
+$if next_tournament_id:
+    $if previous_tournament_id: |
+    <a href="/tournament/$season_id/$next_tournament_id">Tournoi suivant</a> >
+
+
+
+

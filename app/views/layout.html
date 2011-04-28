@@ -1,0 +1,63 @@
+$def with (content, user, seasons, current_season = 0)
+
+$def show_left_menu():
+    $ left_menu = [ ('/', 'Accueil', 0) ]
+    $left_menu.extend( [ ('/season/%d' %season.id, 'Saison %d' %season.id, season.id) for season in seasons ] )
+    $for _context, name, season_id in left_menu:
+        $if current_season == season_id : <a class=selected href="$_context">$name</a>
+        $else :                           <a href="$_context">$name</a>                                     
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Language" content="en-us"/>
+
+<title>Portail du VPT (Voltaire Poker Tour)</title>
+
+    <script type="text/javascript" src="/js/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="/js/defaults.js"></script>
+    <link href="/css/defaults.css" rel="stylesheet" type="text/css"/>
+</head>
+
+
+<body>  
+
+<div class="topmenu">
+    <ul class="extlinks">
+        <li><em>Bienvenue</em>, $user.pseudo</li>      
+        <li><a href='/account'>Mon compte</a></li>
+        <li><a href='/logout'>Se déconnecter</a></li>
+    </ul>
+
+</div>
+
+
+<div class="searchbar">
+</div>
+
+
+
+
+<div class="leftmenu">
+    $:show_left_menu()
+</div>
+
+
+$:content
+
+
+<!-- 
+<div class="copyright">
+Réalisé par Francky P - 
+Motorisé par <a href="http://webpy.org/"><strong>web.py</strong></a>
+</div>
+-->
+  
+</body>
+
+</html>
+
+

@@ -1,0 +1,25 @@
+$def with (tournament)
+
+
+$def show_comments():
+  $for comment in tournament.comments :
+    <div class="comment">
+    <div class="comments user_post">
+    <div class="username">$comment.user.pseudo</div>
+    $comment.comment_dt.strftime("%d/%m/%y %H:%M")
+    </div>
+    <div class="comment_content">$:formatting.spacesafe(comment.comment)</div>
+    </div>  
+
+
+ 
+<h2>Commentaires ($len(tournament.comments))</h2>
+<br/>
+ 
+$:show_comments()
+
+
+<textarea name="commentaire" id="commentaire" class="comment_textarea"></textarea>
+<br />
+<button name="submit" type="button" onclick="postComment($tournament.id)" class="comment_button">Poster un commentaire</button>
+

@@ -1,0 +1,37 @@
+$def with (season, results)
+
+$def show_actions():
+    $if season.tournaments:
+        <select class="score" name="tournaments" onChange="document.location.href = this.options[this.selectedIndex].value;">
+            <option value="/season/$season.id">Accès direct à un tournoi ...</option>
+            <option value="" disabled="">---------------------------------------------------</option>  
+            $for tournament in season.tournaments:
+                <option value="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($tournament.date_tournoi.strftime("%A %d %B %Y"))</option>    
+        </select>
+
+
+<div class="content">
+
+    <div class="actionbar">
+        <a href="/"><< Accueil</a>
+        <div class="paging">
+            $:show_actions()
+        </div>
+    </div>
+
+    <div class="results">
+  
+        <h2>Saison $season.id ($season.start_year - $season.end_year)</h2>
+        <br/>  
+
+        <div id="results">
+        $:results
+        </div>
+
+        <br/>
+
+    </div>
+    
+</div>
+
+

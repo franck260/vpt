@@ -1,0 +1,59 @@
+$def with (entity)
+
+$code:
+    # Définition des méthodes partagées
+    show_user = lambda result: result.user.pseudo
+    show_status = lambda result: {'A': 'Absent', 'M': 'Peut-être', 'P': 'Présent'}[result.statut]
+    show_attended = lambda result: result.attended
+    show_buyin = lambda result: formatting.append(result.buyin, " €")
+    show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")
+    show_profit = lambda result: formatting.append(result.profit, " €")
+    show_net_profit = lambda result: formatting.append(result.net_profit, " €")
+    show_score = lambda result: result.score
+    
+    # Définition des champs par type d'entité
+    _fields =    { "Tournament" : [("Joueur",          show_user),
+                                   ("Statut",          show_status),
+                                   ("Mise",            show_buyin),
+                                   ("Classement",      show_rank),
+                                   ("Gain",            show_profit),
+                                   ("Gain net",        show_net_profit),
+                                   ("Points",          show_score)
+                                  ],
+                                  
+                   "Season"     : [("Joueur",          show_user),
+                                   ("Classement",      show_rank),
+                                   ("Points",          show_score),
+                                   ("Participations",  show_attended),
+                                   ("Mise totale",     show_buyin),
+                                   ("Gain total",      show_profit),
+                                   ("Gain net total",  show_net_profit)
+                                  ]
+                 } 
+    
+
+
+$def show_results():
+    $if not entity.results:
+        <i>Pas encore de données enregistrées !</i>
+    $else:
+        $ fields=_fields[class_name(entity)]
+        $ headers=zip(*fields)[0]
+        $ formatters=zip(*fields)[1]
+        <table>
+            <tr>
+                $for header in headers:
+                    <th><b>$header</b></th>     
+            </tr>
+            $for result in entity.results:
+                <tr class="$getattr(result, 'statut', 'P')">
+                $for formatter in formatters:
+                    <td>$formatter(result)</td>
+                </tr>      
+        </table> 
+
+ 
+$:show_results()
+
+
+

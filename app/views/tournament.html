@@ -1,0 +1,51 @@
+$def with (tournament, paging, stats, results, comments)
+
+$def show_actions():
+    <a href="/season/$tournament.season.id"><< Retour</a>
+
+    $if tournament.future:
+        <input class="admit"  type="button" value="Oui"       onClick="updateStatus($tournament.id, 'P');">
+        <input class="reject" type="button" value="Non"       onClick="updateStatus($tournament.id, 'A');">
+        <input                type="button" value="Peut-être" onClick="updateStatus($tournament.id, 'M');">
+
+
+<div class="stats" id="stats">
+   $:stats
+</div>
+
+<div class="content">
+
+<div class="actionbar">
+$:show_actions()
+
+<div class="paging">
+$:paging
+</div>
+ 
+
+</div>
+
+<div class="results">
+
+<h2>Tournoi $tournament.position ($tournament.date_tournoi.strftime("%A %d %B %Y"))</h2>
+<br/>
+
+<div id="results">
+$:results
+</div>
+
+<br/>
+<h2>Photos</h2>
+<br/>
+<i>Pas encore de photos pour ce tournoi !</i>
+<br/><br/>
+
+<div id="comments" class="comments">
+$:comments
+</div>
+
+</div>
+
+</div>
+
+

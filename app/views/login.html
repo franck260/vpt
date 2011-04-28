@@ -1,0 +1,18 @@
+$def with (formulaire)
+
+<head>
+  <link href="/css/defaults.css" rel="stylesheet" type="text/css"/>
+  <title>Portail du VPT (Voltaire Poker Tour) : identification</title>
+
+</head>
+
+<body>
+ 
+<form action="" method="post" class="default_form">
+<legend>Veuillez entrer vos identifiants de connexion</legend>
+$if not formulaire.valid: <div class="error">Erreur de connexion : vérifiez votre mot de passe</div>  
+$:formulaire.render_css()
+<br />
+    
+</form>
+</body>
