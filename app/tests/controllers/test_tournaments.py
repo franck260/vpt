@@ -55,8 +55,8 @@ class TestTournaments(ControllerTestCase):
         response = app.request("/tournament/1/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Tournoi 1 (mardi 01 septembre 2009)", response.data)
-        self.assertNotIn("Précédent", response.data)
-        self.assertIn("Suivant", response.data)
+        self.assertNotIn("Tournoi précédent", response.data)
+        self.assertIn("Tournoi suivant", response.data)
         
     def test_view_with_previous_paging(self):
         
@@ -64,8 +64,8 @@ class TestTournaments(ControllerTestCase):
         response = app.request("/tournament/1/2") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Tournoi 2 (vendredi 01 janvier 2010)", response.data)
-        self.assertIn("Précédent", response.data)
-        self.assertNotIn("Suivant", response.data)
+        self.assertIn("Tournoi précédent", response.data)
+        self.assertNotIn("Tournoi suivant", response.data)
 
 
     def test_view_stats_notlogged(self):
