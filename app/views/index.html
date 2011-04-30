@@ -7,7 +7,7 @@ $def with (user, next_tournament)
 $if next_tournament:
 	$user.pseudo, le <a href="tournament/$next_tournament.season_id/$next_tournament.position">prochain tournoi</a> aura lieu le
 	<i>$next_tournament.date_tournoi.strftime("%A %d %B")</i>.<br />
-	Inscris-toi d&eagrave;s maintenant et laisse des commentaires sur la partie &agrave; venir.  
+	Inscris-toi d&egrave;s maintenant et laisse des commentaires sur la partie &agrave; venir.  
 $else:
 	D&eacute;sol&eacute;, $user.pseudo ! Le prochain tournoi n'est pas encore planifi&eacute;.
     

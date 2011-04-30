@@ -13,8 +13,8 @@ from itertools import groupby
 from sqlalchemy import Table, Column, Integer
 from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import mapper, relationship
+import web
 
-                 
                                    
 # Définition de la table
 seasons_table = Table('SEASONS', metadata,
@@ -44,7 +44,6 @@ class Season(Base):
             buyin = sum([result.buyin for result in user_results])
             profit = sum([result.profit for result in user_results if result.profit]) or None
             score = sum([result.score for result in user_results])
-            print user, user_results, buyin, profit, score
             
             season_results.append(SeasonResult(user, attended, buyin, None, profit, score))
         
@@ -52,8 +51,9 @@ class Season(Base):
         season_results.sort(key = lambda r: r.score, reverse = True)
         
         # On affecte un classement
-        for rank, result in enumerate(season_results, start = 1):
-            result.rank = rank            
+        # Hack : Python < 2.7 => for rank, result in enumerate(season_results, start = 1)
+        for rank, result in enumerate(season_results):
+            result.rank = rank + 1           
                     
         return season_results
     
@@ -80,4 +80,4 @@ mapper(Season, seasons_table, properties={
     "tournaments": relationship(Tournament, backref="season", collection_class=ordering_list("position", count_from=1), order_by=[tournaments_table.c.position]) #@UndefinedVariable
 })
 
-print "[MODEL] Armement OK du mapping Season"
+web.debug("[MODEL] Armement OK du mapping Season")

@@ -6,12 +6,12 @@ Created on 20 janv. 2011
 @author: fperez
 '''
 
-from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey
-from sqlalchemy.orm import mapper, relationship
-
 from app.models import metadata, Base
 from app.models.users import User
+from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey
+from sqlalchemy.orm import mapper, relationship
 import datetime
+import web
 
                        
 # Définition de la table
@@ -26,7 +26,7 @@ comments_table = Table('COMMENTS', metadata,
 # Définition de la classe
 class Comment(Base):
     
-    def __init__(self, user = None, comment = None):
+    def __init__(self, user=None, comment=None):
         self.user = user
         self.comment = comment
     
@@ -39,5 +39,5 @@ mapper(Comment, comments_table, properties={
     "user": relationship(User)
 })
 
-print "[MODEL] Armement OK du mapping Comment"
+web.debug("[MODEL] Armement OK du mapping Comment")
 

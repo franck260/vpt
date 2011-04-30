@@ -3,12 +3,12 @@ $def with (entity)
 $code:
     # Definition des methodes partagees
     show_user = lambda result: result.user.pseudo
-    show_status = lambda result: {'A': 'Absent', 'M': 'Peut-&ecirc;tre', 'P': 'Pr&eacute;sent'}[result.statut]
+    show_status = lambda result: {'A': 'Absent', 'M': 'Peut-etre', 'P': 'Present'}[result.statut]
     show_attended = lambda result: result.attended
-    show_buyin = lambda result: formatting.append(result.buyin, " €")
+    show_buyin = lambda result: formatting.append(result.buyin, " euros")
     show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")
-    show_profit = lambda result: formatting.append(result.profit, " €")
-    show_net_profit = lambda result: formatting.append(result.net_profit, " €")
+    show_profit = lambda result: formatting.append(result.profit, " euros")
+    show_net_profit = lambda result: formatting.append(result.net_profit, " euros")
     show_score = lambda result: result.score
     
     # Definition des champs par type d'entite

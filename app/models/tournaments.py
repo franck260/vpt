@@ -13,6 +13,7 @@ from sqlalchemy import Table, Column, Integer, Date, ForeignKey
 from sqlalchemy.orm import mapper, relationship
 from sqlalchemy.sql.expression import desc
 import datetime
+import web
 
                        
 # Définition de la table
@@ -43,7 +44,8 @@ class Tournament(Base):
                     .all()
                     
         ids, positions = zip(*tuples) if tuples else ((), ())
-        _id = lambda position: ids[positions.index(position)] if position in positions else None
+        # Hack : Python < 2.7 => tuple n'est pas itérable
+        _id = lambda position: ids[list(positions).index(position)] if position in positions else None
                    
         return (_id(position), _id(position - 1), _id(position + 1))
         
@@ -120,5 +122,5 @@ mapper(Tournament, tournaments_table, properties={
     "comments": relationship(Comment, backref="tournament", order_by=Comment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable
 })
 
-print "[MODEL] Armement OK du mapping Tournament"
+web.debug("[MODEL] Armement OK du mapping Tournament")
 

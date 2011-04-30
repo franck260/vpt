@@ -9,6 +9,7 @@ Created on 17 nov. 2010
 from app.models import metadata, Base
 from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy.orm import mapper
+import web
 
                        
 # Définition de la table
@@ -40,4 +41,4 @@ class User(Base):
 
 # Définition du mapping
 mapper(User, users_table)
-print "[MODEL] Armement OK du mapping User"
+web.debug("[MODEL] Armement OK du mapping User")

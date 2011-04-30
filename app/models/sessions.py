@@ -6,10 +6,11 @@ Created on 13 janv. 2011
 @author: fperez
 '''
 
+from app.models import metadata, Base
 from sqlalchemy import Table, Column, String, TIMESTAMP
 from sqlalchemy.orm import mapper
+import web
 
-from app.models import metadata, Base
                        
 # Définition de la table
 sessions_table = Table('SESSIONS', metadata,
@@ -32,4 +33,4 @@ class Session(Base):
 
 # Définition du mapping
 mapper(Session, sessions_table)
-print "[MODEL] Armement OK du mapping Session"
+web.debug("[MODEL] Armement OK du mapping Session")

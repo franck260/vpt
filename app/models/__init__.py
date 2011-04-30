@@ -57,9 +57,10 @@ orm = scoped_session(__sessionmaker)
 # Paramétrage de la session par les clients
 def init_sqlalchemy_session(dsn, echo = True):
     
-    engine = create_engine(dsn, echo = echo, listeners=[ConnListener()])
+    # engine = create_engine(dsn, echo = echo, listeners=[ConnListener()])
+    engine = create_engine(dsn, echo = echo)
     __sessionmaker.configure(bind = engine)
-    print "[MODEL] Armement OK de l'engine BDD avec la DSN %s" %dsn
+    web.debug("[MODEL] Armement OK de l'engine BDD avec la DSN %s" %dsn)
     return engine
     
 

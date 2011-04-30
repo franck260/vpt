@@ -1,4 +1,4 @@
-#!/home/franck260/franck-perez.com/ENV/bin/python
+#!/home/franck260/ENV/bin/python
 # -*- coding: utf-8 -*-
 
 '''
@@ -49,7 +49,10 @@ def sqlalchemy_processor(handler):
         orm.commit()
 
 # Définition de la locale
-locale.setlocale(locale.LC_ALL, '')
+try:
+    locale.setlocale(locale.LC_ALL, 'fr_FR')
+except locale.Error:
+    locale.setlocale(locale.LC_ALL, '')
 
 # Init de l'application
 app = web.application(urls, globals())

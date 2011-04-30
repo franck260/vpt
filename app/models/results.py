@@ -10,7 +10,7 @@ from app.models import metadata, Base
 from app.models.users import User
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import mapper, relationship
-
+import web
 
                        
 # Définition de la table
@@ -78,5 +78,5 @@ mapper(Result, results_table, properties={
     "user": relationship(User)
 })
 
-print "[MODEL] Armement OK du mapping Result"
+web.debug("[MODEL] Armement OK du mapping Result")
 
