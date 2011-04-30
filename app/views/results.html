@@ -1,9 +1,9 @@
 $def with (entity)
 
 $code:
-    # Définition des méthodes partagées
+    # Definition des methodes partagees
     show_user = lambda result: result.user.pseudo
-    show_status = lambda result: {'A': 'Absent', 'M': 'Peut-être', 'P': 'Présent'}[result.statut]
+    show_status = lambda result: {'A': 'Absent', 'M': 'Peut-&ecirc;tre', 'P': 'Pr&eacute;sent'}[result.statut]
     show_attended = lambda result: result.attended
     show_buyin = lambda result: formatting.append(result.buyin, " €")
     show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")
@@ -11,7 +11,7 @@ $code:
     show_net_profit = lambda result: formatting.append(result.net_profit, " €")
     show_score = lambda result: result.score
     
-    # Définition des champs par type d'entité
+    # Definition des champs par type d'entite
     _fields =    { "Tournament" : [("Joueur",          show_user),
                                    ("Statut",          show_status),
                                    ("Mise",            show_buyin),
@@ -35,7 +35,7 @@ $code:
 
 $def show_results():
     $if not entity.results:
-        <i>Pas encore de données enregistrées !</i>
+        <i>Pas encore de donn&eacute;es enregistr&eacute;es !</i>
     $else:
         $ fields=_fields[class_name(entity)]
         $ headers=zip(*fields)[0]
