@@ -13,9 +13,8 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest
-from unittest import TestCase
 
-class TestUtils(TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_spacesafe(self):
         

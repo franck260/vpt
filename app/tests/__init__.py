@@ -14,7 +14,6 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest
-from unittest import TestCase
 import datetime
 import hashlib
 
@@ -180,7 +179,7 @@ class TournamentData(DataSet):
         comments = [CommentData.comment_211]
         results = [ResultData.result21_jo, ResultData.result21_fx]
 
-class WebTestCase(TestCase):
+class WebTestCase(unittest.TestCase):
     """ Superclasse des tests s'appuyant sur l'architecture Web (contrôleurs, modèles...) """
         
     def setUp(self):
