@@ -9,6 +9,10 @@ Created on 6 avr. 2011
 # TODO: le __init__ du paquetage père initialise tout le stack applicatif de test !
 
 from app.utils.formatting import spacesafe, append
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 from unittest import TestCase
 
 class TestUtils(TestCase):

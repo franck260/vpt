@@ -10,6 +10,10 @@ from app.models import *
 from app.utils import session
 from fixture import DataSet, SQLAlchemyFixture
 from fixture.style import NamedDataStyle
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 from unittest import TestCase
 import datetime
 import hashlib
