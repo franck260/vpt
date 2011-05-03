@@ -1,4 +1,4 @@
-#!/home/franck260/ENV/bin/python
+#!~/ENV/bin/python
 # -*- coding: utf-8 -*-
 
 '''
