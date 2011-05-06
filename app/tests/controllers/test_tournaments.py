@@ -64,7 +64,7 @@ class TestTournaments(ControllerTestCase):
         response = app.request("/tournament/1/2") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Tournoi 2 (vendredi 01 janvier 2010)", response.data)
-        self.assertIn("Tournoi pr&eacute;c&eacute;dent", response.data)
+        self.assertIn("Tournoi précédent", response.data)
         self.assertNotIn("Tournoi suivant", response.data)
 
 
@@ -78,9 +78,9 @@ class TestTournaments(ControllerTestCase):
         self.login()        
         response = app.request("/stats/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("Pr&eacute;sents: 3", response.data) 
+        self.assertIn("Présents: 3", response.data) 
         self.assertIn("Absents: 1", response.data) 
-        self.assertIn("En jeu: 40 euros", response.data)  
+        self.assertIn("En jeu: 40 €", response.data)  
 
     def test_view_results_notlogged(self):
         response = app.request("/results/1") #@UndefinedVariable

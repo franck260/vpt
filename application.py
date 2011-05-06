@@ -1,4 +1,4 @@
-#!~/ENV/bin/python
+#!/home/franck260/ENV/bin/python
 # -*- coding: utf-8 -*-
 
 '''
@@ -31,7 +31,7 @@ urls = (
     '/logout',                         'app.controllers.account.Logout',
     '/account',                        'app.controllers.account.View',
     
-     '/(?:img|js|css)/.*',             'app.controllers.public.Public'
+     '/public/(?:img|js|css)/.*',      'app.controllers.public.Public'
 )
 
 
@@ -66,7 +66,7 @@ if __name__ == "__main__" :
     session.init_manager()
 
     # Initialisation de la session SQLAlchemy
-    models.init_sqlalchemy_session(config.DATABASE)
+    models.init_sqlalchemy_session(config.DATABASE, echo = False)
 
     # Démarrage du serveur
     app.run()
