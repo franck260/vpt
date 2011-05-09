@@ -255,7 +255,7 @@ input.search {
 
 #reviewed {
     margin-top: 5px;
-    background: url(/img/comments.png) no-repeat 75px 2px; 
+    background: url(/public/img/comments.png) no-repeat 75px 2px; 
 }
 
 .selected#reviewed {
@@ -440,7 +440,7 @@ td.score_column a {
 }*/
 
 #add_handle {
-    background: url(/img/comment_add.png) no-repeat left;
+    background: url(/public/img/comment_add.png) no-repeat left;
 /*    display: block;*/
     margin-top: 10px;
     padding-left: 20px;
@@ -454,7 +454,7 @@ td.score_column a {
 
 .comments .box_title {
     font-weight: normal;
-    background: url(/img/comment.png) no-repeat left;
+    background: url(/public/img/comment.png) no-repeat left;
     padding-left: 20px;
 }
 
@@ -486,7 +486,7 @@ div.referee_score, div.applicant_score, div.applicant_score_details {
 }
 
 .website {
-	background: url(/img/external.png) right no-repeat;
+	background: url(/public/img/external.png) right no-repeat;
 	padding-right: 13px;
 }
 
@@ -496,7 +496,7 @@ div.referee_score, div.applicant_score, div.applicant_score_details {
 }
 
 a.cloud_link {
-    background: url(/img/weather_cloudy.png) no-repeat right;
+    background: url(/public/img/weather_cloudy.png) no-repeat right;
     padding-right: 18px;
 }
 /* end of single result */
@@ -572,7 +572,7 @@ body#account {
 
 /* affiliated */
 .affiliated {
-    background: url(/img/cambridge.png) no-repeat left;
+    background: url(/public/img/cambridge.png) no-repeat left;
     padding-left: 20px;    
 }
 
@@ -593,17 +593,17 @@ div.affiliated {
 }
 
 .stats .admitted{
-    background: url(/img/accept.png) no-repeat left;
+    background: url(/public/img/accept.png) no-repeat left;
     padding-left: 20px;        
 }
 
 .stats .rejected{
-    background: url(/img/delete.png) no-repeat left;
+    background: url(/public/img/delete.png) no-repeat left;
     padding-left: 20px;        
 }
 
 .stats .allocated_amount{
-    background: url(/img/money.png) no-repeat left;
+    background: url(/public/img/money.png) no-repeat left;
     padding-left: 20px;        
 }
 /* stats */
