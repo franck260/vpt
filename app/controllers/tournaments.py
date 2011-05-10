@@ -85,34 +85,3 @@ class View_Part:
         tournament = Tournament.get(tournament_id)
         return views.__getattr__(context)(tournament)
        
-
-#class View_Results :
-#    
-#    @session.configure_session(login_required = True)
-#    def GET(self):
-#        
-#        # Remontée du tournoi
-#        tournament = Tournament.get(web.input().tournament_id)
-#        
-#        return views.results(tournament)
-#
-#class View_Stats :
-#
-#    @session.configure_session(login_required = True)
-#    def GET(self):
-#        
-#        # Remontée du tournoi
-#        tournament = Tournament.get(web.input().tournament_id)
-#        
-#        return views.stats(tournament)
-#
-#class View_Comments:
-#
-#    @session.configure_session(login_required = True)
-#    def GET(self):
-#        
-#        # Remontée du tournoi
-#        tournament = Tournament.get(web.input().tournament_id)
-#        
-#        return views.comments(tournament)
-            

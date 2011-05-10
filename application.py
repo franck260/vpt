@@ -21,9 +21,6 @@ urls = (
     
     '/tournament/(\d+)/(\d+)',         'app.controllers.tournaments.View',
     '/(stats|results|comments)/(\d+)', 'app.controllers.tournaments.View_Part',   
-#    '/tournament_stats',              'app.controllers.tournaments.View_Stats',
-#    '/tournament_results',            'app.controllers.tournaments.View_Results',
-#    '/tournament_comments',           'app.controllers.tournaments.View_Comments',
     '/updateStatus',                   'app.controllers.tournaments.Update_Status',
     '/addComment',                     'app.controllers.tournaments.Add_Comment',
     

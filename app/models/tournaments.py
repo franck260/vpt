@@ -29,6 +29,8 @@ tournaments_table = Table('TOURNAMENTS', metadata,
 
 # Les différents statuts possibles de participation à un tournoi
 # TODO: basculer dans la classe
+# TODO: somme en jeu n'est pas MAJ ?
+# TODO: bug sur la remontée des tournois ?
 
 # Définition de l'objet Tournament
 class Tournament(Base):
