@@ -1,61 +1,51 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 7 janv. 2011
-
-@author: fperez
-'''
-
-#TODO: factoriser tous les ViewXXX
-
 from app.models import Season, Tournament
 from app.utils import session
-from config import views
 from sqlalchemy.sql.expression import desc
+from web import config
 import urllib
 import web
 
-
 class Add_Comment :
     
-    @session.configure_session(login_required = True)
+    @session.configure_session(login_required=True)
     def POST(self):
         
-        # Récupération des paramètres de la requête
+        # Reads the HTTP request parameters
         i = web.input()
         tournament_id = i.tournament_id
         comment = i.comment
         
-        # Conversion ASCII
+        # ASCII conversion of the comment
         comment = urllib.unquote(comment)
         
         if comment:     
                    
-            # Prise en compte du commentaire
             tournament = Tournament.get(tournament_id)
-            tournament.add_comment(session.get_manager().user, comment)
+            tournament.add_comment(config.session_manager.user, comment)
 
         
 
 class Update_Status:
     
-    @session.configure_session(login_required = True)
+    @session.configure_session(login_required=True)
     def POST(self):
         
-        # Récupération des paramètres de la requête
+        # Reads the HTTP request parameters
         i = web.input()
         tournament_id = i.tournament_id
         statut = i.statut
         
-        # Prise en compte du statut
+        # Updates the status
         tournament = Tournament.get(tournament_id)
-        tournament.subscribe(session.get_manager().user, statut)
+        tournament.subscribe(config.session_manager.user, statut)
     
     
     
 class View :
     
-    @session.configure_session(login_required = True)
+    @session.configure_session(login_required=True)
     def GET(self, season_id, position):
         
         tournament_id, previous_tournament_id, next_tournament_id = Tournament.get_tournaments(int(season_id), int(position))
@@ -64,24 +54,24 @@ class View :
             raise web.notfound()
 
         tournament = Tournament.get(tournament_id)
-        user = session.get_manager().user       
-        all_seasons = Season.all(order_by_clause = desc(Season.start_year)) #@UndefinedVariable
+        user = config.session_manager.user       
+        all_seasons = Season.all(order_by_clause=desc(Season.start_year)) #@UndefinedVariable
 
-        return views.layout(views.tournament(tournament,
-                                             views.paging(season_id, previous_tournament_id, next_tournament_id),
-                                             views.stats(tournament),
-                                             views.results(tournament),
-                                             views.comments(tournament)),
-                            user,
-                            all_seasons,
-                            tournament.season.id)
+        return config.views.layout(config.views.tournament(tournament,
+                                                           config.views.paging(season_id, previous_tournament_id, next_tournament_id),
+                                                           config.views.stats(tournament),
+                                                           config.views.results(tournament),
+                                                           config.views.comments(tournament)),
+                                   user,
+                                   all_seasons,
+                                   tournament.season.id)
         
 
 class View_Part:
 
-    @session.configure_session(login_required = True)
+    @session.configure_session(login_required=True)
     def GET(self, context, tournament_id):
         
         tournament = Tournament.get(tournament_id)
-        return views.__getattr__(context)(tournament)
+        return getattr(config.views, context)(tournament)
        

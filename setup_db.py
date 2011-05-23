@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 15 mars 2011
-
-@author: Franck
-'''
-
 from app.models import *
 from fixture import DataSet, SQLAlchemyFixture
 from fixture.style import NamedDataStyle
-import config
+from web import config
 import datetime
 import hashlib
 

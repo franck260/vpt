@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 17 nov. 2010
+""" Session management """
 
-@author: fperez
-'''
-
-
-from app.models import orm, User, Session
+from app.models import User, Session
+from web import config
 from web.session import Store
 import datetime
 import hashlib
 import web
 
-#TODO: vérifier que le composant est multi thread
-
 class SqlAlchemyDBStore(Store):
-    """Store for saving a session in database
+    """
+    Store for saving a session in database
     Needs a table with the following columns:
 
         session_id CHAR(128) UNIQUE NOT NULL,
@@ -33,7 +28,6 @@ class SqlAlchemyDBStore(Store):
         now = datetime.datetime.now()
         s = Session.get(key)
         s.atime = now
-        #orm.commit()
         return self.decode(s.data)
         
     
@@ -43,29 +37,22 @@ class SqlAlchemyDBStore(Store):
         s = Session.get(key)
         if s :
             s.data = pickled
-            #orm.commit()
         else:
             s = Session(key, now, pickled)
-            orm.add(s)
-            #orm.commit()
-
+            config.orm.add(s)
                 
     def __delitem__(self, key):
         s = Session.get(key)
-        orm.delete(s)
-        #orm.commit()
+        config.orm.delete(s)
 
     def cleanup(self, timeout):
         
         timeout = datetime.timedelta(timeout/(24.0*60*60)) #timedelta takes numdays as arg
         last_allowed_time = datetime.datetime.now() - timeout
         
-        orm.query(Session).filter(last_allowed_time > Session.atime).delete()
-        #orm.commit()
+        config.orm.query(Session).filter(last_allowed_time > Session.atime).delete()
 
-
-
-class SessionManager:
+class SessionManager(object):
     
     def __init__(self, session_handler):
         self.session_handler = session_handler
@@ -74,36 +61,36 @@ class SessionManager:
         return "<SessionManager(%s)>" % self.session_handler.__dict__
     
     def login(self, user_id, password):
-        """ Vérifie les identifiants et impacte la session web le cas échéant """
+        """ Tries to log in and returns the status """
         
-        # Remontée du user
+        # Fetches the user
         user = User.get(user_id)
         
-        # Encodage du mot de passe passé en paramètres
+        # Encodes the password
         password_md5 = hashlib.md5(password).hexdigest()
         
-        # On confronte le mot de passe
+        # Checks the password
         if user.password != password_md5:
-            web.debug("Utilisateur non reconnu : %d" %user_id)
+            web.debug("Unknown user_id : %d" %user_id)
             return False
         else :
             self.session_handler.user_id = user_id
             self.session_handler.is_logged = True
-            web.debug('Session MAJ OK  : %s' %self.session_handler)
+            web.debug("Successfully updated session : %s" %self.session_handler)
             return True
         
     def logout(self):
-        """ Se déconnecter """
+        """ Logs out the currently logged user """
         self.session_handler.kill()
     
     @property
     def user(self):
-        """ Renvoie l'utilisateur loggé dans la session """
+        """ Returns the user logged in the session """
         return User.get(self.session_handler.user_id)
     
     @property
     def is_logged(self):
-        """ Renvoie True si l'utilisateur est loggé dans la session """
+        """ Returns true if the user is authenticated """
         return self.session_handler.is_logged
     
     def load(self):
@@ -113,34 +100,36 @@ class SessionManager:
     def save(self):
         self.session_handler._save()
 
-def init_manager(session_handler_cls = web.session.Session):
-    """ Initialisation globale de la session (appeler avant le démarrage de l'application) """
+DefaultSessionHandler = web.session.Session
+
+class MemorySessionHandler(object):
+    """ Simple implementation of a SessionHandler for testing purposes """
     
-    if web.config.get("_session_manager") is None:
-                
-        store = SqlAlchemyDBStore()
-        session_handler = session_handler_cls(app = None, store = store, initializer = {'is_logged': False, 'user_id' : None})
-        session_manager = SessionManager(session_handler)   
-        web.config._session_manager = session_manager
-        
-        web.debug("[WEBSESSION] Armement OK du moteur de session avec le handler %s" %session_handler_cls)
+    def __init__(self, app, store, initializer=None):
+        self.is_logged = False
+        self.user_id = None
+    
+    def _cleanup(self):
+        pass
+    
+    def _load(self):
+        pass
+    
+    def _save(self):
+        pass
+    
+    def kill(self):
+        self.is_logged = False
+        self.user_id = None
 
-def get_manager():
-    """ Récupère la session courante """
-    return web.config._session_manager
-
-
-#def init_session():
-#    """ Initialisation globale de la session (appeler avant le démarrage de l'application) """
-#    
-#    if web.config.get('_session') is None:
-#                
-#        #db = web.database(dbn='sqlite', db='vpt.db')
-#        #store = web.session.DBStore(db, 'sessions')
-#        store = SqlAlchemyDBStore()
-#        session = web.session.Session(app = None, store = store, initializer = {'is_logged': False, 'user' : None})       
-#        web.config._session = session
-
+def init_session_manager(session_handler_cls):
+    """ Instanciates the session manager """
+    
+    store = SqlAlchemyDBStore()
+    session_handler = session_handler_cls(app = None, store = store, initializer = {'is_logged': False, 'user_id' : None})
+    web.debug("[WEBSESSION] Sucessfully instanciated session manager with the handler %s" %session_handler_cls)
+    return SessionManager(session_handler) 
+    
 
 
 def configure_session(enabled = True, login_required = False):
@@ -155,7 +144,7 @@ def configure_session(enabled = True, login_required = False):
             def wrapped_func(*args):
                 
                 #print "[SESSION WRAPPER - SCENARIO 1] [BEGIN] Inside wrapped %s method in %s" %(func.__name__, func.__module__)
-                session_manager = get_manager()
+                session_manager = config.session_manager
                 session_manager.load()
                 
                 try:
@@ -178,7 +167,7 @@ def configure_session(enabled = True, login_required = False):
             def wrapped_func(*args):
                 
                 #print "[SESSION WRAPPER - SCENARIO 2] [BEGIN] Inside wrapped %s method in %s" %(func.__name__, func.__module__)
-                session_manager = get_manager()
+                session_manager = config.session_manager
                 session_manager.load()
                 
                 try :

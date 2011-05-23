@@ -6,11 +6,12 @@ Created on 12 mars 2011
 @author: Franck
 '''
 
-from app.models import orm
 from app.models.seasons import Season
 from app.models.users import User
 from app.tests import dbfixture, SeasonData, TournamentData
 from app.tests.models import ModelTestCase
+from web import config
+
 
 
 class TestSeason(ModelTestCase):
@@ -31,8 +32,8 @@ class TestSeason(ModelTestCase):
     
     def test_get(self):
         
-        season_1 = orm.query(Season).filter(Season.start_year == 2009).one() #@UndefinedVariable
-        season_2 = orm.query(Season).filter(Season.start_year == 2010).one() #@UndefinedVariable
+        season_1 = config.orm.query(Season).filter(Season.start_year == 2009).one() #@UndefinedVariable
+        season_2 = config.orm.query(Season).filter(Season.start_year == 2010).one() #@UndefinedVariable
         
         self.assertEquals(season_1.start_year, 2009)
         self.assertEquals(season_1.end_year, 2010)
@@ -44,12 +45,12 @@ class TestSeason(ModelTestCase):
         
     def test_results(self):
 
-        season_1 = orm.query(Season).filter(Season.start_year == 2009).one() #@UndefinedVariable
-        season_2 = orm.query(Season).filter(Season.start_year == 2010).one() #@UndefinedVariable
+        season_1 = config.orm.query(Season).filter(Season.start_year == 2009).one() #@UndefinedVariable
+        season_2 = config.orm.query(Season).filter(Season.start_year == 2010).one() #@UndefinedVariable
         
-        franck_p = orm.query(User).filter(User.nom == "Perez").one() #@UndefinedVariable
-        nico = orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
-        jo = orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
+        franck_p = config.orm.query(User).filter(User.nom == "Perez").one() #@UndefinedVariable
+        nico = config.orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
+        jo = config.orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
 
         results_season_1 = season_1.results
         

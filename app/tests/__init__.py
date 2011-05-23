@@ -7,36 +7,19 @@ Created on 12 mars 2011
 '''
 
 from app.models import *
+from app.models.meta import metadata
 from app.utils import session
+from application import app
 from fixture import DataSet, SQLAlchemyFixture
 from fixture.style import NamedDataStyle
+from web import config
+import datetime
+import hashlib
+import web
 try:
     import unittest2 as unittest
 except ImportError:
     import unittest
-import datetime
-import hashlib
-
-class MemorySessionHandler:
-    """ Implémentation très simple d'un gestionnaire de session """
-    
-    def __init__(self, app, store, initializer=None):
-        self.is_logged = False
-        self.user_id = None
-    
-    def _cleanup(self):
-        pass
-    
-    def _load(self):
-        pass
-    
-    def _save(self):
-        pass
-    
-    def kill(self):
-        self.is_logged = False
-        self.user_id = None
-
 
 _md5 = lambda s : hashlib.md5(s).hexdigest()
 
@@ -185,18 +168,18 @@ class WebTestCase(unittest.TestCase):
     def setUp(self):
         # remove the session once per test so that 
         # objects do not leak from test to test
-        orm.remove()
+        config.orm.remove()
 
-# Initialisation de la session web
-session.init_manager(MemorySessionHandler)
-    
-# Initialisation de la session SQLAlchemy
-engine = init_sqlalchemy_session("sqlite:///:memory:", echo = False)
-metadata.create_all(engine)
+# Configuration of the application
+app.configure("testing.cfg")
+
+# Creation of the model
+metadata.create_all(config.engine)
+web.debug("[MODEL] Successfully created the model (engine = %s)" % config.engine)
 
 dbfixture = SQLAlchemyFixture(
     env=globals(),
-    engine=engine,
+    engine=config.engine,
     style=NamedDataStyle()
 )
 

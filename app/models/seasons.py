@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 17 nov. 2010
-
-@author: fperez
-'''
-
-from app.models import metadata, Base, orm
+from app.models.meta import metadata, Base
 from app.models.results import Result, SeasonResult
 from app.models.tournaments import Tournament, tournaments_table
 from itertools import groupby
@@ -14,6 +8,7 @@ from sqlalchemy import Table, Column, Integer
 from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import mapper, relationship
 import web
+from web import config
 
                                    
 # Définition de la table
@@ -33,7 +28,7 @@ class Season(Base):
         season_results = []
         
         # On remonte tous les résultats utilisables de la saison (avec un classement)
-        usable_results = orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == self.id).filter(Result.rank != None).order_by(Result.user_id).all() #@UndefinedVariable
+        usable_results = config.orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == self.id).filter(Result.rank != None).order_by(Result.user_id).all() #@UndefinedVariable
         
         # On regroupe les résultats par utilisateur
         for user, iter_user_results in groupby(usable_results, lambda r: r.user):

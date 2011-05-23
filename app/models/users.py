@@ -6,7 +6,7 @@ Created on 17 nov. 2010
 @author: fperez
 '''
 
-from app.models import metadata, Base
+from app.models.meta import metadata, Base
 from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy.orm import mapper
 import web

@@ -6,7 +6,7 @@ Created on 13 janv. 2011
 @author: fperez
 '''
 
-from app.models import metadata, Base
+from app.models.meta import metadata, Base
 from sqlalchemy import Table, Column, String, TIMESTAMP
 from sqlalchemy.orm import mapper
 import web

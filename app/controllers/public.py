@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 19 nov. 2010
-
-@author: fperez
-'''
- 
 from app.utils import session
 import mimetypes
 import web

@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 16 mars 2011
-
-@author: Franck
-'''
-
 from app.tests import WebTestCase, UserData
 from app.utils import session
-import config
+from web import config
 import web
 
 HTTP_OK = "200 OK"
@@ -19,10 +13,10 @@ class ControllerTestCase(WebTestCase):
     """ Superclasse des tests des contrôleurs """
     
     def login(self, user_id = 1, password = "secret"):
-        session.get_manager().login(user_id, password)
+        config.session_manager.login(user_id, password)
         
     def logout(self):
-        session.get_manager().logout()
+        config.session_manager.logout()
     
     def tearDown(self):
         super(ControllerTestCase, self).tearDown()

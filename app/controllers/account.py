@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 17 nov. 2010
-
-@author: fperez
-'''
-
 from app.models import User
 from app.utils import session
-from config import views
+from web import config
 import web
 
 class Logout:
@@ -16,7 +10,7 @@ class Logout:
     @session.configure_session(enabled = True)
     def GET(self):
         
-        session.get_manager().logout()
+        config.session_manager.logout()
         raise web.seeother('/')
         
         
@@ -36,7 +30,7 @@ class Login:
     def GET(self):
         
         formulaire = self.__form(User.all())
-        return views.login(formulaire)
+        return config.views.login(formulaire)
     
     @session.configure_session(enabled = True)
     def POST(self):
@@ -47,12 +41,12 @@ class Login:
         password = i.password
     
         # Activation de la session
-        if session.get_manager().login(user_id, password):
+        if config.session_manager.login(user_id, password):
             raise web.seeother('/')
         else:
             formulaire = self.__form(User.all(), user_id)
             formulaire.valid = False
 
-            return views.login(formulaire)
+            return config.views.login(formulaire)
         
         

@@ -6,15 +6,16 @@ Created on 12 mars 2011
 @author: Franck
 '''
 
-from app.models import orm
 from app.models.results import Result
 from app.models.seasons import Season
 from app.models.tournaments import Tournament
 from app.models.users import User
 from app.tests import dbfixture, TournamentData, UserData
 from app.tests.models import ModelTestCase
-import datetime
 from sqlalchemy.ext.orderinglist import OrderingList
+from web import config
+import datetime
+
 
 
         
@@ -42,9 +43,9 @@ class TestTournament(ModelTestCase):
     
     def test_get(self):
 
-        tournaments_season_1 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 1).all() #@UndefinedVariable
-        tournament_season_2 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
-        tournament_21 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 9, 1)).one() #@UndefinedVariable
+        tournaments_season_1 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 1).all() #@UndefinedVariable
+        tournament_season_2 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 9, 1)).one() #@UndefinedVariable
         
         self.assertEqual(len(tournaments_season_1), 2)
         self.assertEquals(tournament_season_2.season.id, 2)
@@ -67,12 +68,12 @@ class TestTournament(ModelTestCase):
     
     def test_comment(self):
         
-        franck_l = orm.query(User).filter(User.nom == "Lasry").one() #@UndefinedVariable
-        nico = orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
+        franck_l = config.orm.query(User).filter(User.nom == "Lasry").one() #@UndefinedVariable
+        nico = config.orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
         
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
-        tournament_12 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
-        tournament_21 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
 
         self.assertEqual(len(tournament_11.comments), 0)
         self.assertEqual(len(tournament_12.comments), 3)
@@ -80,7 +81,7 @@ class TestTournament(ModelTestCase):
 
         tournament_11.add_comment(franck_l, "Salut Nicolas !")
         tournament_11.add_comment(nico, "Salut Franck !")
-        orm.commit()
+        config.orm.commit()
         
         self.assertEqual(len(tournament_11.comments), 2)
         self.assertEqual(len(tournament_12.comments), 3)
@@ -88,9 +89,9 @@ class TestTournament(ModelTestCase):
         
     def test_nb_presents(self):
         
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
-        tournament_12 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
-        tournament_21 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
         
         self.assertEqual(tournament_11.nb_presents, 3)
         self.assertEqual(tournament_12.nb_presents, 2)
@@ -98,9 +99,9 @@ class TestTournament(ModelTestCase):
     
     def test_nb_absents(self):
         
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
-        tournament_12 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
-        tournament_21 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
          
         self.assertEqual(tournament_11.nb_absents, 1)
         self.assertEqual(tournament_12.nb_absents, 1)
@@ -108,11 +109,11 @@ class TestTournament(ModelTestCase):
         
     def test_subscribe(self):
         
-        franck_l = orm.query(User).filter(User.nom == "Lasry").one() #@UndefinedVariable
-        nico = orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
-        jo = orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
-        fx = orm.query(User).filter(User.pseudo == "FX").one() #@UndefinedVariable
-        tournament_21 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        franck_l = config.orm.query(User).filter(User.nom == "Lasry").one() #@UndefinedVariable
+        nico = config.orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
+        jo = config.orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
+        fx = config.orm.query(User).filter(User.pseudo == "FX").one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
         
         self.assertEqual(len(tournament_21.results), 2)
         
@@ -138,9 +139,9 @@ class TestTournament(ModelTestCase):
     
     def test_future(self):
 
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
-        tournament_12 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
-        tournament_21 = orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
         
         self.assertFalse(tournament_11.future)
         self.assertFalse(tournament_12.future)
@@ -148,8 +149,8 @@ class TestTournament(ModelTestCase):
         
     def test_position(self):
         
-        season_1 = orm.query(Season).filter(Season.id == 1).one() #@UndefinedVariable
-        season_2 = orm.query(Season).filter(Season.id == 2).one() #@UndefinedVariable
+        season_1 = config.orm.query(Season).filter(Season.id == 1).one() #@UndefinedVariable
+        season_2 = config.orm.query(Season).filter(Season.id == 2).one() #@UndefinedVariable
         
         self.assertIsInstance(season_1.tournaments, OrderingList)
         self.assertIsInstance(season_2.tournaments, OrderingList)
@@ -211,7 +212,7 @@ class TestTournament(ModelTestCase):
         self.assertEqual(season_1.tournaments[3].date_tournoi, datetime.date(2010, 2, 1))
         self.assertEqual(season_2.tournaments[0].date_tournoi, datetime.date(2010, 9, 1))
 
-        # orm.commit()
+        # config.orm.commit()
 
 
         

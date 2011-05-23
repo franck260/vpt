@@ -7,12 +7,13 @@ Created on 12 mars 2011
 '''
 
 
-from app.models import orm
 from app.models.results import Result
 from app.models.seasons import Season
 from app.models.tournaments import Tournament
 from app.tests import dbfixture, ResultData, TournamentData
 from app.tests.models import ModelTestCase
+from web import config
+
 
         
 class TestResult(ModelTestCase):
@@ -33,19 +34,19 @@ class TestResult(ModelTestCase):
     
     def test_get(self):
         
-        results_season_1 = orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == 1).all() #@UndefinedVariable
-        results_season_2 = orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == 2).all() #@UndefinedVariable
+        results_season_1 = config.orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == 1).all() #@UndefinedVariable
+        results_season_2 = config.orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == 2).all() #@UndefinedVariable
         
         self.assertEqual(len(results_season_1), 8)
         self.assertEqual(len(results_season_2), 2)
         
     def test_score(self):
         
-        result_franck_l = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one() #@UndefinedVariable
-        result_franck_p = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 2).one() #@UndefinedVariable
-        result_fx = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 3).one() #@UndefinedVariable
-        result_jo = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 4).one() #@UndefinedVariable
-        result_nico = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 5).one() #@UndefinedVariable
+        result_franck_l = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one() #@UndefinedVariable
+        result_franck_p = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 2).one() #@UndefinedVariable
+        result_fx = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 3).one() #@UndefinedVariable
+        result_jo = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 4).one() #@UndefinedVariable
+        result_nico = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 5).one() #@UndefinedVariable
         
         self.assertIsNone(result_franck_l.score)
         self.assertIsNone(result_fx.score)

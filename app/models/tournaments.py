@@ -6,7 +6,7 @@ Created on 17 nov. 2010
 @author: fperez
 '''
 
-from app.models import orm, metadata, Base
+from app.models.meta import metadata, Base
 from app.models.comments import Comment
 from app.models.results import Result, results_table
 from sqlalchemy import Table, Column, Integer, Date, ForeignKey
@@ -14,6 +14,7 @@ from sqlalchemy.orm import mapper, relationship
 from sqlalchemy.sql.expression import desc
 import datetime
 import web
+from web import config
 
                        
 # Définition de la table
@@ -40,10 +41,10 @@ class Tournament(Base):
         """ Retourne un tuple du type (tournament_id, previous_tournament_id, next_tournament_id) """
         
         # Si position = 2, tuples est du type [(9, 1), (10, 2), (11, 3)]
-        tuples = orm.query(Tournament.id, Tournament.position)                          \
-                    .filter(Tournament.season_id == season_id)                          \
-                    .filter(Tournament.position.between(position - 1, position + 1))    \
-                    .all()
+        tuples = config.orm.query(Tournament.id, Tournament.position)                          \
+                           .filter(Tournament.season_id == season_id)                          \
+                           .filter(Tournament.position.between(position - 1, position + 1))    \
+                           .all()
                     
         ids, positions = zip(*tuples) if tuples else ((), ())
         # Hack : Python < 2.7 => tuple n'est pas itérable
@@ -56,10 +57,10 @@ class Tournament(Base):
     def next_tournament():
         """ Renvoie le prochain tournoi, en terme de date absolue """
         
-        return orm.query(Tournament)                                              \
-                  .filter(Tournament.date_tournoi >= datetime.date.today())       \
-                  .order_by(Tournament.date_tournoi)                              \
-                  .first()                                                 
+        return config.orm.query(Tournament)                                              \
+                         .filter(Tournament.date_tournoi >= datetime.date.today())       \
+                         .order_by(Tournament.date_tournoi)                              \
+                         .first()                                                 
         
 #    def __init__(self, date_tournoi, season, results) :
 #        

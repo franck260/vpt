@@ -1,20 +1,19 @@
 #!/home/franck260/ENV/bin/python
 # -*- coding: utf-8 -*-
 
-'''
-Created on 17 nov. 2010
+""" Main application class """
 
-@author: fperez
-'''
-
-from app import models
-from app.models import orm
-from app.utils import session
-import config
+from app.models import meta
+from app.utils import formatting, session
+from web import config
+import ConfigParser
 import locale
 import web
 
-# Paramétrage des URLS
+
+
+
+# Application's URLs
 urls = (
     '/',                               'app.controllers.main.Index',
     '/season/(\d+)',                   'app.controllers.main.View_Season',
@@ -32,38 +31,70 @@ urls = (
 )
 
 
-# buyin en place d'un processor pour effectuer un commit par requête
-def sqlalchemy_processor(handler):
-    try:
-        return handler()
-    except web.HTTPError:
-        orm.commit()
-        raise
-    except:
-        orm.rollback()
-        raise
-    finally:
-        orm.commit()
-
-# Définition de la locale
+# Enforces the locale
 try:
     locale.setlocale(locale.LC_ALL, 'fr_FR')
 except locale.Error:
     locale.setlocale(locale.LC_ALL, '')
 
-# Init de l'application
-app = web.application(urls, globals())
-app.add_processor(sqlalchemy_processor)
+def _sqlalchemy_processor(handler):
+    """ Makes sure a commit appends at the end of each request """
+    try:
+        return handler()
+    except web.HTTPError:
+        config.orm.commit()
+        raise
+    except:
+        config.orm.rollback()
+        raise
+    finally:
+        config.orm.commit()
+    
+
+class WebApplication(web.application):
+    """ Web application with additional features (configuration management...) """
+    
+    def __init__(self, mapping, fvars):
+        
+        # Parent constructor
+        web.application.__init__(self, mapping, fvars) #@UndefinedVariable
+        
+        # Dynamic import of the session module
+        #self.session_module = __import__("app.utils.session", fromlist = ["app.utils"])
+        
+        # The views are bound once for all to the configuration
+        config.views = web.template.render("app/views/", globals={
+            "formatting": formatting,
+            "zip": zip,
+            "getattr": getattr,
+            "class_name": lambda x: x.__class__.__name__
+        })
+        
+        # The ORM is bound once since it dynamically loads the engine from the configuration
+        config.orm = meta.init_orm(lambda : config.engine)
+        
+        # SQL Alchemy processor
+        self.add_processor(_sqlalchemy_processor)    
+    
+    def configure(self, config_filename):
+        
+        # Reads the configuration file
+        config_file = ConfigParser.ConfigParser()
+        config_file.read(config_filename)
+        
+        # Initializes the components
+        config.engine = meta.init_engine(config_file.get("sqlalchemy", "dsn"), config_file.getboolean("sqlalchemy", "echo"))
+        config.debug = config_file.getboolean("application", "debug")
+        config.session_manager = session.init_session_manager(getattr(session, config_file.get("session", "handler_cls")))
+
+# The application is instantiated once and should be configured with the configure() method
+app = WebApplication(urls, globals())
 
 
 if __name__ == "__main__" :
+    
+    # Configures the application
+    app.configure("development.cfg")
 
-    #TODO: améliorer nommages
-    # Initialisation de la session web
-    session.init_manager()
-
-    # Initialisation de la session SQLAlchemy
-    models.init_sqlalchemy_session(config.DATABASE, echo = False)
-
-    # Démarrage du serveur
+    # Starts the development server
     app.run()

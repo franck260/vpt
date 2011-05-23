@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 20 janv. 2011
-
-@author: fperez
-'''
-
-from app.models import metadata, Base
+from app.models.meta import metadata, Base
 from app.models.users import User
 from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import mapper, relationship
 import datetime
 import web
+
 
                        
 # Définition de la table

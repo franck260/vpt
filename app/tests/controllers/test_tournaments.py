@@ -6,14 +6,15 @@ Created on 16 mars 2011
 @author: Franck
 '''
 
-from app.models import orm
 from app.models.results import Result
 from app.models.tournaments import Tournament
 from app.tests import dbfixture, TournamentData, UserData
 from app.tests.controllers import ControllerTestCase, HTTP_OK, HTTP_SEE_OTHER, \
     HTTP_NOT_FOUND
 from application import app
+from web import config
 import datetime
+
 
 
 
@@ -112,33 +113,33 @@ class TestTournaments(ControllerTestCase):
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
     def test_update_status_new(self):
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
         self.assertEqual(len(tournament_11.results), 5)
-        self.assertFalse(orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).all()) #@UndefinedVariable
+        self.assertFalse(config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).all()) #@UndefinedVariable
         
         self.login(user_id=6)
         response = app.request("/updateStatus", method="POST", data={"tournament_id" : 1, "statut" : Result.STATUSES.P}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         
         self.assertEqual(len(tournament_11.results), 6)
-        inserted_row = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).one() #@UndefinedVariable
+        inserted_row = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).one() #@UndefinedVariable
         self.assertEquals(inserted_row.statut, Result.STATUSES.P)
         
         #TODO devrait être fait par la fixture
-        orm.delete(inserted_row)
-        orm.commit()
+        config.orm.delete(inserted_row)
+        config.orm.commit()
 
     def test_update_status_existing(self):
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
         self.assertEqual(len(tournament_11.results), 5)
-        self.assertTrue(orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one()) #@UndefinedVariable
+        self.assertTrue(config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one()) #@UndefinedVariable
         
         self.login(user_id=1)
         response = app.request("/updateStatus", method="POST", data={"tournament_id" : 1, "statut" : Result.STATUSES.M}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         
         self.assertEqual(len(tournament_11.results), 5)
-        updated_row = orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one() #@UndefinedVariable
+        updated_row = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one() #@UndefinedVariable
         self.assertEquals(updated_row.statut, Result.STATUSES.M)
            
     def test_add_comment_notlogged(self):
@@ -146,7 +147,7 @@ class TestTournaments(ControllerTestCase):
         self.assertEqual(response.status, HTTP_SEE_OTHER)
         
     def test_add_comment(self):
-        tournament_11 = orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
         self.assertEqual(len(tournament_11.comments), 0)
         self.login()
         response = app.request("/addComment", method="POST", data={"tournament_id" : 1, "comment" : "Salut les copains"}) #@UndefinedVariable
