@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from app.models import *
+from app.models.meta import metadata
+from application import app
 from fixture import DataSet, SQLAlchemyFixture
 from fixture.style import NamedDataStyle
 from web import config
 import datetime
 import hashlib
 
+
 _md5 = lambda s : hashlib.md5(s).hexdigest()
 
 class UserData(DataSet):
     class franck:
         prenom = u"Franck"
-        nom = u"Perez"
+        nom = u"P"
         pseudo = u"Franck P"
-        email = u"franck.perez@gmail.com"
+        email = u"franck.p@gmail.com"
         is_admin = 1
         password = _md5("vpt")
     class jo:
@@ -169,19 +172,19 @@ class TournamentData(DataSet):
         date_tournoi = datetime.date(2011, 5, 27)
         buyin = 10        
         season = SeasonData.season_5
-        
-engine = init_sqlalchemy_session(config.DATABASE)
+
+app.configure("development.cfg")
 
 dbfixture = SQLAlchemyFixture(
     env=globals(),
-    engine=engine,
+    engine=config.engine,
     style=NamedDataStyle()
 )
 
 if __name__ == "__main__" :
     
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
+    metadata.drop_all(config.engine)
+    metadata.create_all(config.engine)
     dbfixture.data(UserData, TournamentData).setup()
     
 
