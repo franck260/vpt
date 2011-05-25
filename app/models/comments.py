@@ -2,23 +2,19 @@
 
 from app.models.meta import metadata, Base
 from app.models.users import User
-from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey
+from sqlalchemy import Table, Column, Integer, Text, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import mapper, relationship
 import datetime
 import web
 
-
-                       
-# Définition de la table
-comments_table = Table('COMMENTS', metadata,
-                      Column('id', Integer, primary_key=True, nullable=False),
-                      Column('tournament_id', Integer, ForeignKey('TOURNAMENTS.id'), nullable=False),
-                      Column('user_id', Integer, ForeignKey('USERS.id'), nullable=False),
-                      Column('comment', String, nullable=False),
-                      Column('comment_dt', TIMESTAMP, default=datetime.datetime.now(), nullable=False)                  
+comments_table = Table("COMMENTS", metadata,
+                      Column("id", Integer, primary_key=True, nullable=False),
+                      Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False),
+                      Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
+                      Column("comment", Text, nullable=False),
+                      Column("comment_dt", TIMESTAMP, default=datetime.datetime.now(), nullable=False)                  
                       )
 
-# Définition de la classe
 class Comment(Base):
     
     def __init__(self, user=None, comment=None):

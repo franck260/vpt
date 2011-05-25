@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 17 nov. 2010
-
-@author: fperez
-'''
-
 from app.models.meta import metadata, Base
 from app.models.comments import Comment
 from app.models.results import Result, results_table
@@ -17,13 +11,12 @@ import web
 from web import config
 
                        
-# Définition de la table
-tournaments_table = Table('TOURNAMENTS', metadata,
-                          Column('id', Integer, primary_key=True, nullable=False),
-                          Column('date_tournoi', Date, nullable=False),
-                          Column('buyin', Integer, nullable=False),
-                          Column('season_id', Integer, ForeignKey('SEASONS.id'), nullable=False),
-                          Column('position', Integer, nullable=True)
+tournaments_table = Table("TOURNAMENTS", metadata,
+                          Column("id", Integer, primary_key=True, nullable=False),
+                          Column("date_tournoi", Date, nullable=False),
+                          Column("buyin", Integer, nullable=False),
+                          Column("season_id", Integer, ForeignKey("SEASONS.id"), nullable=False),
+                          Column("position", Integer, nullable=True)
                           )
 
 
@@ -33,7 +26,6 @@ tournaments_table = Table('TOURNAMENTS', metadata,
 # TODO: somme en jeu n'est pas MAJ ?
 # TODO: bug sur la remontée des tournois ?
 
-# Définition de l'objet Tournament
 class Tournament(Base):
     
     @staticmethod

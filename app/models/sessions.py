@@ -1,25 +1,17 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 13 janv. 2011
-
-@author: fperez
-'''
-
 from app.models.meta import metadata, Base
-from sqlalchemy import Table, Column, String, TIMESTAMP
+from sqlalchemy import Table, Column, String, Text, TIMESTAMP
 from sqlalchemy.orm import mapper
 import web
 
                        
-# Définition de la table
-sessions_table = Table('SESSIONS', metadata,
-                       Column('session_id', String(128), primary_key=True),
-                       Column('atime', TIMESTAMP, nullable=False),
-                       Column('data', String)
+sessions_table = Table("SESSIONS", metadata,
+                       Column("session_id", String(128), primary_key=True),
+                       Column("atime", TIMESTAMP, nullable=False),
+                       Column("data", Text)
                        )
 
-# Définition de la classe
 class Session(Base):
     
     def __init__(self, session_id, atime, data) :

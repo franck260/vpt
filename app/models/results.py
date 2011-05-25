@@ -6,16 +6,14 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import mapper, relationship
 import web
 
-                       
-# Définition de la table
-results_table = Table('RESULTS', metadata,
-                      Column('id', Integer, primary_key=True, nullable=False),
-                      Column('tournament_id', Integer, ForeignKey('TOURNAMENTS.id'), nullable=False),
-                      Column('user_id', Integer, ForeignKey('USERS.id'), nullable=False),
-                      Column('statut', String(1), nullable=False),
-                      Column('buyin', Integer, nullable=True),
-                      Column('rank', Integer, nullable=True),
-                      Column('profit', Integer, nullable=True),
+results_table = Table("RESULTS", metadata,
+                      Column("id", Integer, primary_key=True, nullable=False),
+                      Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False),
+                      Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
+                      Column("statut", String(1), nullable=False),
+                      Column("buyin", Integer, nullable=True),
+                      Column("rank", Integer, nullable=True),
+                      Column("profit", Integer, nullable=True),
                       )
 
 # Enumération simple
@@ -40,7 +38,6 @@ class _Result(Base):
         return self.profit - self.buyin  
 
 
-# Définition de la classe
 class Result(_Result):
     
     STATUSES = Enum(["A", "M", "P"])

@@ -8,6 +8,7 @@ from fixture.style import NamedDataStyle
 from web import config
 import datetime
 import hashlib
+import sys
 
 
 _md5 = lambda s : hashlib.md5(s).hexdigest()
@@ -173,19 +174,17 @@ class TournamentData(DataSet):
         buyin = 10        
         season = SeasonData.season_5
 
-app.configure("development.cfg")
+if __name__ == "__main__":
+    
+    # The configuration file belongs to the arguments
+    app.configure(sys.argv[1])
 
-dbfixture = SQLAlchemyFixture(
-    env=globals(),
-    engine=config.engine,
-    style=NamedDataStyle()
-)
-
-if __name__ == "__main__" :
+    dbfixture = SQLAlchemyFixture(
+        env=globals(),
+        engine=config.engine,
+        style=NamedDataStyle()
+    )
     
     metadata.drop_all(config.engine)
     metadata.create_all(config.engine)
     dbfixture.data(UserData, TournamentData).setup()
-    
-
-

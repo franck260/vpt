@@ -1,29 +1,21 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 17 nov. 2010
-
-@author: fperez
-'''
-
 from app.models.meta import metadata, Base
-from sqlalchemy import Table, Column, Integer, String
+from sqlalchemy import Table, Column, Integer, String, Text
 from sqlalchemy.orm import mapper
 import web
 
-                       
-# Définition de la table
-users_table = Table('USERS', metadata,
-                    Column('id', Integer, primary_key=True, nullable=False),
-                    Column('prenom', String, nullable=False),
-                    Column('nom', String, nullable=False),
-                    Column('pseudo', String, nullable=False),
-                    Column('email', String, nullable=False),
-                    Column('is_admin', Integer, nullable=False),
-                    Column('password', String, nullable=False),
+# TODO password should have a size
+users_table = Table("USERS", metadata,
+                    Column("id", Integer, primary_key=True, nullable=False),
+                    Column("prenom", String(20), nullable=False),
+                    Column("nom", String(20), nullable=False),
+                    Column("pseudo", String(20), nullable=False),
+                    Column("email", String(50), nullable=False),
+                    Column("is_admin", Integer, nullable=False),
+                    Column("password", Text, nullable=False),
                     )
 
-# Définition de l'objet User
 class User(Base):
     
 #    def __init__(self, prenom, nom, pseudo, email, is_admin, password) :

@@ -11,14 +11,12 @@ import web
 from web import config
 
                                    
-# Définition de la table
-seasons_table = Table('SEASONS', metadata,
-                      Column('id', Integer, primary_key=True, nullable=False),
-                      Column('start_year', Integer, nullable=False),
-                      Column('end_year', Integer, nullable=False),
+seasons_table = Table("SEASONS", metadata,
+                      Column("id", Integer, primary_key=True, nullable=False),
+                      Column("start_year", Integer, nullable=False),
+                      Column("end_year", Integer, nullable=False),
                       )
 
-# Définition de l'objet Season
 class Season(Base):
     
     @property

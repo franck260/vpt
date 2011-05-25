@@ -86,15 +86,21 @@ class WebApplication(web.application):
         config.engine = meta.init_engine(config_file.get("sqlalchemy", "dsn"), config_file.getboolean("sqlalchemy", "echo"))
         config.debug = config_file.getboolean("application", "debug")
         config.session_manager = session.init_session_manager(getattr(session, config_file.get("session", "handler_cls")))
+        
+        web.debug("[CONFIGURATION] Sucessfully configured the application from %s" %config_filename)
 
 # The application is instantiated once and should be configured with the configure() method
 app = WebApplication(urls, globals())
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
     
     # Configures the application
     app.configure("development.cfg")
 
     # Starts the development server
     app.run()
+else:
+    
+    # Enable FCGI
+    web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)

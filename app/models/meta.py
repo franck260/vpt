@@ -16,7 +16,7 @@ class SessionFactory(object):
         engine = self.engine_factory()
         self.sessionmaker.configure(bind = engine)
         session = self.sessionmaker()
-        # web.debug("[MODEL] Sucessfully instanciated DB session %s bound to %s" %(session, engine))
+        web.debug("[MODEL] Sucessfully instanciated DB session %s bound to %s" %(session, engine))
         return session
         
 def init_orm(engine_factory):
