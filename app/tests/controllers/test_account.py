@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 16 mars 2011
-
-@author: Franck
-'''
 
 from app.tests import dbfixture, UserData
 from app.tests.controllers import ControllerTestCase, HTTP_OK, HTTP_SEE_OTHER
@@ -12,7 +7,6 @@ from application import app
 from web import config
 
 
-#TODO: mocker la table SESSIONS plutôt que d'attaquer le composant
 
 class TestAccount(ControllerTestCase):
     
@@ -48,13 +42,13 @@ class TestAccount(ControllerTestCase):
     def test_login_POST_OK(self):
 
         self.assertFalse(config.session_manager.is_logged)
-        response = app.request("/login", method="POST", data={"user_id" : 1, "password" : "secret"}) #@UndefinedVariable
+        response = app.request("/login", method="POST", data={"email" : "jolevy23@gmail.com", "password" : "secret4"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
         self.assertTrue(config.session_manager.is_logged)  
 
     def test_login_POST_KO(self):
 
         self.assertFalse(config.session_manager.is_logged)
-        response = app.request("/login", method="POST", data={"user_id" : 1, "password" : "error"}) #@UndefinedVariable
+        response = app.request("/login", method="POST", data={"email" : "jolevy23@gmail.com", "password" : "secret2"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertFalse(config.session_manager.is_logged)  

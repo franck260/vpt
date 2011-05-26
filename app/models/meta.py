@@ -36,14 +36,14 @@ class Base(object):
     @classmethod
     def all(cls, order_by_clause = None):
         
-        # Fabrication de la query
+        # Creation of the query
         query = config.orm.query(cls)
         
-        # Ajout de l'éventuel tri à la requête
+        # Takes into account the optional order_by clause
         if order_by_clause is not None :
             query = query.order_by(order_by_clause)
         
-        # Exécution de la requête
+        # Runs the query
         return query.all()
     
     @classmethod

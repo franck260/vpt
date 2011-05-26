@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 16 mars 2011
-
-@author: Franck
-'''
-
-from app.models.results import Result
-from app.models.tournaments import Tournament
+from app.models import Result, Tournament
 from app.tests import dbfixture, TournamentData, UserData
 from app.tests.controllers import ControllerTestCase, HTTP_OK, HTTP_SEE_OTHER, \
     HTTP_NOT_FOUND
 from application import app
 from web import config
 import datetime
+
 
 
 
@@ -117,7 +111,7 @@ class TestTournaments(ControllerTestCase):
         self.assertEqual(len(tournament_11.results), 5)
         self.assertFalse(config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).all()) #@UndefinedVariable
         
-        self.login(user_id=6)
+        self.login("rolland.quillevere@gmail.com", "secret6")
         response = app.request("/updateStatus", method="POST", data={"tournament_id" : 1, "statut" : Result.STATUSES.P}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         
@@ -134,7 +128,7 @@ class TestTournaments(ControllerTestCase):
         self.assertEqual(len(tournament_11.results), 5)
         self.assertTrue(config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one()) #@UndefinedVariable
         
-        self.login(user_id=1)
+        self.login("franck.lasry@gmail.com", "secret1")
         response = app.request("/updateStatus", method="POST", data={"tournament_id" : 1, "statut" : Result.STATUSES.M}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         

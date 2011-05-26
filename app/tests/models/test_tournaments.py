@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 12 mars 2011
-
-@author: Franck
-'''
-
-from app.models.results import Result
-from app.models.seasons import Season
-from app.models.tournaments import Tournament
-from app.models.users import User
+from app.models import Result, Season, Tournament, User
 from app.tests import dbfixture, TournamentData, UserData
 from app.tests.models import ModelTestCase
 from sqlalchemy.ext.orderinglist import OrderingList

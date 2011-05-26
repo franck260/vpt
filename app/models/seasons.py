@@ -68,9 +68,8 @@ class Season(Base):
 #        self._order_entity(len(self) - 1, entity, self.reorder_on_append)
 
 
-# Définition du mapping : les tournois sont remontés dynamiquement
 mapper(Season, seasons_table, properties={
     "tournaments": relationship(Tournament, backref="season", collection_class=ordering_list("position", count_from=1), order_by=[tournaments_table.c.position]) #@UndefinedVariable
 })
 
-web.debug("[MODEL] Armement OK du mapping Season")
+web.debug("[MODEL] Successfully mapped Season class")

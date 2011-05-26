@@ -16,8 +16,9 @@ results_table = Table("RESULTS", metadata,
                       Column("profit", Integer, nullable=True),
                       )
 
-# Enumération simple
 class Enum(set):
+    """ Simple enumeration class """
+    
     def __getattr__(self, name):
         if name in self:
             return name
@@ -61,13 +62,11 @@ class SeasonResult(_Result):
         self.rank = rank
         self.profit = profit
         self.score = score
-
         
 
-# Définition du mapping
 mapper(Result, results_table, properties={
     "user": relationship(User)
 })
 
-web.debug("[MODEL] Armement OK du mapping Result")
+web.debug("[MODEL] Successfully mapped Result class")
 

@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 16 mars 2011
-
-@author: Franck
-'''
 
 from app.tests import SeasonData, dbfixture, UserData, TournamentData
 from app.tests.controllers import ControllerTestCase, HTTP_OK, HTTP_SEE_OTHER

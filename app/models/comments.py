@@ -22,13 +22,12 @@ class Comment(Base):
         self.comment = comment
     
     def __repr__(self) : 
-        return "<Comment('%s','%s','%s')>" % (self.user.pseudo, self.comment, self.comment_dt)
+        return "<Comment(%s,%s,%s)>" % (self.user.pseudo, self.comment, self.comment_dt)
     
         
-# Définition du mapping
 mapper(Comment, comments_table, properties={
     "user": relationship(User)
 })
 
-web.debug("[MODEL] Armement OK du mapping Comment")
+web.debug("[MODEL] Successfully mapped Comment class")
 

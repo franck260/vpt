@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 6 avr. 2011
-
-@author: Franck
-'''
-
-# TODO: le __init__ du paquetage père initialise tout le stack applicatif de test !
-
 from app.utils.formatting import spacesafe, append
 try:
     import unittest2 as unittest
 except ImportError:
     import unittest
 
+# TODO: le __init__ du paquetage père initialise tout le stack applicatif de test !
+
+
 class TestUtils(unittest.TestCase):
 
     def test_spacesafe(self):
         
         self.assertEquals(spacesafe("test"), "test")
-        self.assertEquals(spacesafe("test avec espace"), "test&nbsp;avec&nbsp;espace")
-        self.assertEquals(spacesafe("test avec espace et\nretour chariot"), "test&nbsp;avec&nbsp;espace&nbsp;et<br />retour&nbsp;chariot")
+        self.assertEquals(spacesafe("test with space"), "test&nbsp;with&nbsp;space")
+        self.assertEquals(spacesafe("test with space and\nbackslash"), "test&nbsp;with&nbsp;space&nbsp;and<br />backslash")
         
     def test_append(self):
         

@@ -21,8 +21,7 @@ class Session(Base):
         self.data = data
         
     def __repr__(self) : 
-        return "<Session('%s','%s','%s')>" % (self.session_id, self.atime, self.data)
+        return "<Session(%s,%s,%s)>" % (self.session_id, self.atime, self.data)
 
-# Définition du mapping
 mapper(Session, sessions_table)
-web.debug("[MODEL] Armement OK du mapping Session")
+web.debug("[MODEL] Successfully mapped Session class")

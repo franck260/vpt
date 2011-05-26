@@ -9,12 +9,10 @@ class Public:
     
     @session.configure_session(enabled = False)
     def GET(self): 
-        # public_dir = 'public'
         try:
             path = web.ctx.path
             file_name = path.split('/')[-1]
             web.header('Content-type', mime_type(file_name))
-            # return open(public_dir + web.ctx.path, 'rb').read()
             return open(path[1:], 'rb').read()
         except IOError:
             raise web.notfound()

@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 12 mars 2011
-
-@author: Franck
-'''
-
 from app.models import *
 from app.models.meta import metadata
 from app.utils import session
@@ -31,7 +25,7 @@ class UserData(DataSet):
         pseudo = "Franck"
         email = "franck.lasry@gmail.com"
         is_admin = 0
-        password = _md5("secret")
+        password = _md5("secret1")
     class franck_p:
         # id = 2
         prenom = "Franck"
@@ -39,7 +33,7 @@ class UserData(DataSet):
         pseudo = "Franck"
         email = "franck.perez@gmail.com"
         is_admin = 1
-        password = _md5("secret")
+        password = _md5("secret2")
     class fx:
         # id = 3
         prenom = "Francois-Xavier"
@@ -47,7 +41,7 @@ class UserData(DataSet):
         pseudo = "FX"
         email = "fxclair@gmail.com"
         is_admin = 0
-        password = _md5("secret")
+        password = _md5("secret3")
     class jo:
         # id = 4
         prenom = "Jonathan"
@@ -55,7 +49,7 @@ class UserData(DataSet):
         pseudo = "Jo"
         email = "jolevy23@gmail.com"
         is_admin = 0
-        password = _md5("secret")
+        password = _md5("secret4")
     class nico:
         # id = 5
         prenom = "Nicolas"
@@ -63,7 +57,7 @@ class UserData(DataSet):
         pseudo = "Nico"
         email = "chavesnicolas@gmail.com"
         is_admin = 0
-        password = _md5("secret")
+        password = _md5("secret5")
     class rolland:
         # id = 6
         prenom = "Rolland"
@@ -71,7 +65,7 @@ class UserData(DataSet):
         pseudo = "Rolex"
         email = "rolland.quillevere@gmail.com"
         is_admin = 0
-        password = _md5("secret")
+        password = _md5("secret6")
 
 
 class SeasonData(DataSet):
@@ -163,7 +157,7 @@ class TournamentData(DataSet):
         results = [ResultData.result21_jo, ResultData.result21_fx]
 
 class WebTestCase(unittest.TestCase):
-    """ Superclasse des tests s'appuyant sur l'architecture Web (contrôleurs, modèles...) """
+    """ Parent of all test classes based on a Web architecture (controllers, models...) """
         
     def setUp(self):
         # remove the session once per test so that 

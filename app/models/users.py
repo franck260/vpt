@@ -11,7 +11,7 @@ users_table = Table("USERS", metadata,
                     Column("prenom", String(20), nullable=False),
                     Column("nom", String(20), nullable=False),
                     Column("pseudo", String(20), nullable=False),
-                    Column("email", String(50), nullable=False),
+                    Column("email", String(50), unique = True, nullable=False),
                     Column("is_admin", Integer, nullable=False),
                     Column("password", Text, nullable=False),
                     )
@@ -29,8 +29,7 @@ class User(Base):
         
         
     def __repr__(self) : 
-        return "<User('%s','%s','%s','%s','%s','%s')>" % (self.prenom, self.nom, self.pseudo, self.email, self.is_admin, self.password)
+        return "<User(%s,%s,%s,%s,%s,%s)>" % (self.prenom, self.nom, self.pseudo, self.email, self.is_admin, self.password)
 
-# Définition du mapping
 mapper(User, users_table)
-web.debug("[MODEL] Armement OK du mapping User")
+web.debug("[MODEL] Successfully mapped User class")

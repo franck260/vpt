@@ -21,9 +21,6 @@ tournaments_table = Table("TOURNAMENTS", metadata,
 
 
 
-# Les différents statuts possibles de participation à un tournoi
-# TODO: basculer dans la classe
-# TODO: somme en jeu n'est pas MAJ ?
 # TODO: bug sur la remontée des tournois ?
 
 class Tournament(Base):
@@ -111,11 +108,9 @@ class Tournament(Base):
     def ordered_results(self):
         return dict([(result.user, result) for result in self.results])
 
-# Définition du mapping
 mapper(Tournament, tournaments_table, properties={
     "results": relationship(Result, backref="tournament", order_by=[desc(results_table.c.statut), results_table.c.rank, results_table.c.user_id], cascade="save-update, merge, delete"), #@UndefinedVariable
     "comments": relationship(Comment, backref="tournament", order_by=Comment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable
 })
-
-web.debug("[MODEL] Armement OK du mapping Tournament")
+web.debug("[MODEL] Successfully mapped Tournament class")
 

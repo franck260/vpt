@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 12 mars 2011
-
-@author: Franck
-'''
-
-from app.models.users import User
+from app.models import User
 from app.tests import dbfixture, UserData
 from app.tests.models import ModelTestCase
 from web import config

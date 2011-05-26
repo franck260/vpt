@@ -10,10 +10,10 @@ HTTP_SEE_OTHER = "303 See Other"
 HTTP_NOT_FOUND = "404 Not Found"
 
 class ControllerTestCase(WebTestCase):
-    """ Superclasse des tests des contrôleurs """
+    """ Parent of all controllers test classes """
     
-    def login(self, user_id = 1, password = "secret"):
-        config.session_manager.login(user_id, password)
+    def login(self, email = "franck.lasry@gmail.com", password = "secret1"):
+        config.session_manager.login(email, password)
         
     def logout(self):
         config.session_manager.logout()

@@ -8,6 +8,7 @@ from web.session import Store
 import datetime
 import hashlib
 import web
+from sqlalchemy.orm.exc import NoResultFound
 
 class SqlAlchemyDBStore(Store):
     """
@@ -60,21 +61,25 @@ class SessionManager(object):
     def __repr__(self) :
         return "<SessionManager(%s)>" % self.session_handler.__dict__
     
-    def login(self, user_id, password):
+    def login(self, email, password):
         """ Tries to log in and returns the status """
         
         # Fetches the user
-        user = User.get(user_id)
+        try:
+            user = config.orm.query(User).filter(User.email == email).one() #@UndefinedVariable
+        except NoResultFound:
+            web.debug("Unknown user : %s" %email)
+            return False
         
         # Encodes the password
         password_md5 = hashlib.md5(password).hexdigest()
         
         # Checks the password
         if user.password != password_md5:
-            web.debug("Unknown user_id : %d" %user_id)
+            web.debug("Incorrect password for user : %s" %email)
             return False
         else :
-            self.session_handler.user_id = user_id
+            self.session_handler.user_id = user.id
             self.session_handler.is_logged = True
             web.debug("Successfully updated session : %s" %self.session_handler)
             return True

@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
-Created on 12 mars 2011
-
-@author: Franck
-'''
-
-from app.models.comments import Comment
-from app.models.seasons import Season
-from app.models.tournaments import Tournament
+from app.models import Comment, Season, Tournament
 from app.tests import dbfixture, CommentData, TournamentData
 from app.tests.models import ModelTestCase
 from web import config

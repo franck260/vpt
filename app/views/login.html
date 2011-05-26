@@ -1,4 +1,4 @@
-$def with (formulaire)
+$def with (login_form)
 
 <head>
   <link href="/public/css/defaults.css" rel="stylesheet" type="text/css"/>
@@ -10,8 +10,8 @@ $def with (formulaire)
  
 <form action="" method="post" class="default_form">
 <legend>Veuillez entrer vos identifiants de connexion</legend>
-$if not formulaire.valid: <div class="error">Erreur de connexion : vérifiez votre mot de passe</div>  
-$:formulaire.render_css()
+$if not login_form.valid: <div class="error">Erreur de connexion : vérifiez votre mot de passe</div>  
+$:login_form.render_css()
 <br />
     
 </form>
