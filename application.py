@@ -10,25 +10,21 @@ import ConfigParser
 import locale
 import web
 
-
-
-
 # Application's URLs
 urls = (
-    '/',                               'app.controllers.main.Index',
-    '/season/(\d+)',                   'app.controllers.main.View_Season',
+    '/',                                    'app.controllers.main.Index',
+    '/season/(\d+)',                        'app.controllers.main.View_Season',
+
+    '/tournament/(\d+)/(\d+)',              'app.controllers.tournaments.View',
+    '/(statistics|results|comments)/(\d+)', 'app.controllers.tournaments.View_Part',   
+    '/updateStatus',                        'app.controllers.tournaments.Update_Status',
+    '/addComment',                          'app.controllers.tournaments.Add_Comment',
     
-    '/tournament/(\d+)/(\d+)',         'app.controllers.tournaments.View',
-    '/stats/(\d+)',                    'app.controllers.tournaments.View_Stats',    
-    '/(results|comments)/(\d+)',       'app.controllers.tournaments.View_Part',   
-    '/updateStatus',                   'app.controllers.tournaments.Update_Status',
-    '/addComment',                     'app.controllers.tournaments.Add_Comment',
+    '/login',                               'app.controllers.account.Login',
+    '/logout',                              'app.controllers.account.Logout',
+    '/account',                             'app.controllers.account.View',
     
-    '/login',                          'app.controllers.account.Login',
-    '/logout',                         'app.controllers.account.Logout',
-    '/account',                        'app.controllers.account.View',
-    
-     '/public/(?:img|js|css)/.*',      'app.controllers.public.Public'
+    '/public/(?:img|js|css)/.*',            'app.controllers.public.Public'
 )
 
 

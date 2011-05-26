@@ -69,15 +69,15 @@ class TestTournaments(ControllerTestCase):
         self.assertNotIn("Tournoi suivant", response.data)
 
 
-    def test_view_stats_notlogged(self):
+    def test_view_statistics_notlogged(self):
         
-        response = app.request("/stats/1") #@UndefinedVariable
+        response = app.request("/statistics/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
-    def test_view_stats(self):
+    def test_view_statistics(self):
 
         self.login()        
-        response = app.request("/stats/1") #@UndefinedVariable
+        response = app.request("/statistics/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Présents: 3", response.data) 
         self.assertIn("Absents: 1", response.data) 

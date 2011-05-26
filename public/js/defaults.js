@@ -16,7 +16,7 @@ function updateStatus(tournament_id, statut) {
     $.post(/* url  */     "/updateStatus",
      	   /* data */     {tournament_id: tournament_id, statut:statut },
      	   /* callback */ function(data) {
-                               $("#stats").load("/stats/" + tournament_id);
+                               $("#statistics").load("/statistics/" + tournament_id);
                                $("#results").load("/results/" + tournament_id);                             
                            });
 

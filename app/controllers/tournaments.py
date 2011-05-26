@@ -59,22 +59,12 @@ class View :
 
         return config.views.layout(config.views.tournament(tournament,
                                                            config.views.paging(season_id, previous_tournament_id, next_tournament_id),
-                                                           config.views.stats(tournament),
+                                                           config.views.statistics(tournament),
                                                            config.views.results(tournament),
                                                            config.views.comments(tournament)),
                                    user,
                                    all_seasons,
                                    tournament.season.id)
-
-
-class View_Stats:
-
-    @session.configure_session(login_required=True)
-    def GET(self, tournament_id):
-        
-        tournament = Tournament.get(tournament_id)
-        return config.views.stats(tournament)
-
 
 class View_Part:
 
