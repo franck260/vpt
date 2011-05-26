@@ -19,7 +19,8 @@ urls = (
     '/season/(\d+)',                   'app.controllers.main.View_Season',
     
     '/tournament/(\d+)/(\d+)',         'app.controllers.tournaments.View',
-    '/(stats|results|comments)/(\d+)', 'app.controllers.tournaments.View_Part',   
+    '/stats/(\d+)',                    'app.controllers.tournaments.View_Stats',    
+    '/(results|comments)/(\d+)',       'app.controllers.tournaments.View_Part',   
     '/updateStatus',                   'app.controllers.tournaments.Update_Status',
     '/addComment',                     'app.controllers.tournaments.Add_Comment',
     
