@@ -59,9 +59,6 @@ class WebApplication(web.application):
         # Parent constructor
         web.application.__init__(self, mapping, fvars) #@UndefinedVariable
         
-        # Dynamic import of the session module
-        #self.session_module = __import__("app.utils.session", fromlist = ["app.utils"])
-        
         # The views are bound once for all to the configuration
         config.views = web.template.render("app/views/", globals={
             "formatting": formatting,
