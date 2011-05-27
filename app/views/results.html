@@ -3,7 +3,7 @@ $def with (entity)
 $code:
     # Définition des methodes partagées
     show_user = lambda result: result.user.pseudo
-    show_status = lambda result: {'A': 'Absent', 'M': 'Peut-être', 'P': 'Présent'}[result.statut]
+    show_status = lambda result: {result_statuses.A: 'Absent', result_statuses.M: 'Peut-être', result_statuses.P: 'Présent'}[result.statut]
     show_attended = lambda result: result.attended
     show_buyin = lambda result: formatting.append(result.buyin, " €")
     show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")
@@ -46,7 +46,7 @@ $def show_results():
                     <th><b>$header</b></th>     
             </tr>
             $for result in entity.results:
-                <tr class="$getattr(result, 'statut', 'P')">
+                <tr class="$getattr(result, 'statut', result_statuses.P)">
                 $for formatter in formatters:
                     <td>$formatter(result)</td>
                 </tr>      

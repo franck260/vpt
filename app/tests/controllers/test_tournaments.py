@@ -10,8 +10,6 @@ import datetime
 
 
 
-
-
 class TestTournaments(ControllerTestCase):
     
     def setUp(self):
@@ -119,7 +117,7 @@ class TestTournaments(ControllerTestCase):
         inserted_row = config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).one() #@UndefinedVariable
         self.assertEquals(inserted_row.statut, Result.STATUSES.P)
         
-        #TODO devrait être fait par la fixture
+        #TODO: should be done by the fixture
         config.orm.delete(inserted_row)
         config.orm.commit()
 

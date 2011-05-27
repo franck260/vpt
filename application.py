@@ -9,11 +9,13 @@ from web import config
 import ConfigParser
 import locale
 import web
+from app.models.results import Result
 
 # Application's URLs
 urls = (
     '/',                                    'app.controllers.main.Index',
-    '/season/(\d+)',                        'app.controllers.main.View_Season',
+    
+    '/season/(\d+)',                        'app.controllers.seasons.View',
 
     '/tournament/(\d+)/(\d+)',              'app.controllers.tournaments.View',
     '/(statistics|results|comments)/(\d+)', 'app.controllers.tournaments.View_Part',   
@@ -61,7 +63,8 @@ class WebApplication(web.application):
             "formatting": formatting,
             "zip": zip,
             "getattr": getattr,
-            "class_name": lambda x: x.__class__.__name__
+            "class_name": lambda x: x.__class__.__name__,
+            "result_statuses": Result.STATUSES
         })
         
         # The ORM is bound once since it dynamically loads the engine from the configuration

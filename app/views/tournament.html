@@ -4,9 +4,9 @@ $def show_actions():
     <a href="/season/$tournament.season.id"><< Retour</a>
 
     $if tournament.future:
-        <input class="admit"  type="button" value="Oui"       onClick="updateStatus($tournament.id, 'P');">
-        <input class="reject" type="button" value="Non"       onClick="updateStatus($tournament.id, 'A');">
-        <input                type="button" value="Peut-être" onClick="updateStatus($tournament.id, 'M');">
+        <input class="admit"  type="button" value="Oui"       onClick="updateStatus($tournament.id, '$result_statuses.P');">
+        <input class="reject" type="button" value="Non"       onClick="updateStatus($tournament.id, '$result_statuses.A');">
+        <input                type="button" value="Peut-être" onClick="updateStatus($tournament.id, '$result_statuses.M');">
 
 
 <div class="stats" id="statistics">
