@@ -26,7 +26,7 @@ urls = (
     '/logout',                              'app.controllers.account.Logout',
     '/account',                             'app.controllers.account.View',
     
-    '/public/(?:img|js|css)/.*',            'app.controllers.public.Public'
+    '/public/(?:img|js|css|doc)/.*',        'app.controllers.public.Public'
 )
 
 

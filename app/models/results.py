@@ -2,9 +2,11 @@
 
 from app.models.meta import metadata, Base
 from app.models.users import User
+from app.utils import Enum
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import mapper, relationship
 import web
+
 
 results_table = Table("RESULTS", metadata,
                       Column("id", Integer, primary_key=True, nullable=False),
@@ -16,13 +18,7 @@ results_table = Table("RESULTS", metadata,
                       Column("profit", Integer, nullable=True),
                       )
 
-class Enum(set):
-    """ Simple enumeration class """
-    
-    def __getattr__(self, name):
-        if name in self:
-            return name
-        raise AttributeError
+
 
 class _Result(Base):
     

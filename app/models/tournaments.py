@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.models.meta import metadata, Base
-from app.models.comments import Comment
+from app.models.comments import TournamentComment
 from app.models.results import Result, results_table
 from sqlalchemy import Table, Column, Integer, Date, ForeignKey
 from sqlalchemy.orm import mapper, relationship
@@ -83,7 +83,7 @@ class Tournament(Base):
     def add_comment(self, user, comment):
         """ Ajoute le commentaire passé en paramètre au tournoi courant """
         
-        self.comments.append(Comment(user, comment))
+        self.comments.append(TournamentComment(user, comment))
     
     def _count_results(self, status):
         return [result.statut for result in self.results].count(status)
@@ -110,7 +110,7 @@ class Tournament(Base):
 
 mapper(Tournament, tournaments_table, properties={
     "results": relationship(Result, backref="tournament", order_by=[desc(results_table.c.statut), results_table.c.rank, results_table.c.user_id], cascade="save-update, merge, delete"), #@UndefinedVariable
-    "comments": relationship(Comment, backref="tournament", order_by=Comment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable
+    "comments": relationship(TournamentComment, backref="tournament", order_by=TournamentComment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable
 })
 web.debug("[MODEL] Successfully mapped Tournament class")
 

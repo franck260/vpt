@@ -4,15 +4,22 @@ $def with (user, next_tournament)
 <div class="content">
 
 <div class="results">
+
+<h3>Prochain tournoi</h3>
+
 $if next_tournament:
-	$user.pseudo, le <a href="tournament/$next_tournament.season_id/$next_tournament.position">prochain tournoi</a> aura lieu le
-	<i>$next_tournament.date_tournoi.strftime("%A %d %B")</i>.<br />
-	Inscris-toi dès maintenant et laisse des commentaires sur la partie à venir.  
+	Il aura lieu le <i>$next_tournament.date_tournoi.strftime("%A %d %B")</i> : 
+	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
 $else:
-	Désolé, $user.pseudo ! Le prochain tournoi n'est pas encore planifié.
-    
+	Le prochain tournoi n'est pas encore planifié.
 
+<br/><br/>  
+<h3>Charte du VPT</h3>
+Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.
 
+<br/><br/>  
+<h3>Actualités</h3>
+<i>27 mai 2011</i> : lancement du site
 
 </div>
 

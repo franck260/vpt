@@ -123,7 +123,7 @@ class ResultData(DataSet):
         statut = Result.STATUSES.P
         buyin = 10
     
-class CommentData(DataSet):
+class TournamentCommentData(DataSet):
     class comment_121:
         user = UserData.franck_p
         comment = "Hello"
@@ -147,13 +147,13 @@ class TournamentData(DataSet):
         date_tournoi = datetime.date(2010, 1, 1)
         buyin = 10
         season = SeasonData.season_1
-        comments = [CommentData.comment_121, CommentData.comment_122, CommentData.comment_123]
+        comments = [TournamentCommentData.comment_121, TournamentCommentData.comment_122, TournamentCommentData.comment_123]
         results = [ResultData.result12_franck_p, ResultData.result12_jo, ResultData.result12_fx]
     class tournament_21:
         date_tournoi = datetime.date(2010, 9, 1)
         buyin = 10        
         season = SeasonData.season_2
-        comments = [CommentData.comment_211]
+        comments = [TournamentCommentData.comment_211]
         results = [ResultData.result21_jo, ResultData.result21_fx]
 
 class WebTestCase(unittest.TestCase):
