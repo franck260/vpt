@@ -7,14 +7,7 @@ from sqlalchemy.ext.orderinglist import OrderingList
 from web import config
 import datetime
 
-
-
-        
-#TODO: tester inscription et vérifier le basculement des paramètres
-#TODO: sortir l'enum
-#TODO: renommer anglais / français
-#TODO: tester next_tournament
-#TODO: test_position doit commit, supprimer le tournoi (bug sur la cascade)
+#TODO: test_position should commit and remove the tournament (cascade bug)
 
 class TestTournament(ModelTestCase):
     
@@ -44,13 +37,16 @@ class TestTournament(ModelTestCase):
     
     def test_get_tournaments(self):
         
-        self.assertEquals(Tournament.get_tournaments(1, 1), (1, None, 2))
-        self.assertEquals(Tournament.get_tournaments(1, 2), (2, 1, None))
-        self.assertEquals(Tournament.get_tournaments(1, 3), (None, 2, None))
+        # These tests work because a TournamentData has a similar structure to a Tournament
+        # When Tournament.__eq__ is called, it compares the fields without caring of the parameters' actual types
+            
+        self.assertEquals(Tournament.get_tournaments(1, 1), (TournamentData.tournament_11, None, TournamentData.tournament_12))
+        self.assertEquals(Tournament.get_tournaments(1, 2), (TournamentData.tournament_12, TournamentData.tournament_11, None))
+        self.assertEquals(Tournament.get_tournaments(1, 3), (None, TournamentData.tournament_12, None))
         self.assertEquals(Tournament.get_tournaments(1, 4), (None, None, None))
         
-        self.assertEquals(Tournament.get_tournaments(2, 1), (3, None, None))
-        self.assertEquals(Tournament.get_tournaments(2, 2), (None, 3, None))
+        self.assertEquals(Tournament.get_tournaments(2, 1), (TournamentData.tournament_21, None, None))
+        self.assertEquals(Tournament.get_tournaments(2, 2), (None, TournamentData.tournament_21, None))
         self.assertEquals(Tournament.get_tournaments(2, 3), (None, None, None))
         
         self.assertEquals(Tournament.get_tournaments(42, 1), (None, None, None))
@@ -203,7 +199,6 @@ class TestTournament(ModelTestCase):
         self.assertEqual(season_1.tournaments[3].date_tournoi, datetime.date(2010, 2, 1))
         self.assertEqual(season_2.tournaments[0].date_tournoi, datetime.date(2010, 9, 1))
 
-        # config.orm.commit()
 
 
         

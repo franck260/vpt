@@ -48,17 +48,16 @@ class View :
     @session.configure_session(login_required=True)
     def GET(self, season_id, position):
         
-        tournament_id, previous_tournament_id, next_tournament_id = Tournament.get_tournaments(int(season_id), int(position))
+        tournament, previous_tournament, next_tournament = Tournament.get_tournaments(int(season_id), int(position))
 
-        if tournament_id is None:
+        if tournament is None:
             raise web.notfound()
 
-        tournament = Tournament.get(tournament_id)
         user = config.session_manager.user       
         all_seasons = Season.all(order_by_clause=desc(Season.start_year)) #@UndefinedVariable
 
         return config.views.layout(config.views.tournament(tournament,
-                                                           config.views.paging(season_id, previous_tournament_id, next_tournament_id),
+                                                           config.views.paging(season_id, previous_tournament, next_tournament),
                                                            config.views.statistics(tournament),
                                                            config.views.results(tournament),
                                                            config.views.comments(tournament)),
