@@ -30,18 +30,14 @@ class Tournament(Base):
         Each item may be None (the resulting tuple has a constant size).
         """
         
-        # If position = 2 for instance, tuples will look like : [(<T>, 1), (<T>, 2), (<T>, 3)]
-        tuples = config.orm.query(Tournament, Tournament.position)                             \
+        # Fetches the tournament and its surrounders (if any)
+        tournaments = config.orm.query(Tournament)                                             \
                            .filter(Tournament.season_id == season_id)                          \
                            .filter(Tournament.position.between(position - 1, position + 1))    \
                            .all()
         
-        tournaments, positions = zip(*tuples) if tuples else ((), ())
-        
-        # Python < 2.7 => a tuple is not iterable and must be turned into a list
-        _tournament = lambda position: tournaments[list(positions).index(position)] if position in positions else None
-                   
-        return (_tournament(position), _tournament(position - 1), _tournament(position + 1))
+        tournaments_by_position = dict([(tournament.position, tournament) for tournament in tournaments])
+        return (tournaments_by_position.get(position), tournaments_by_position.get(position - 1), tournaments_by_position.get(position + 1))
         
     
     @staticmethod
