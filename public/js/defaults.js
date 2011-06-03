@@ -3,7 +3,7 @@ function postComment(tournament_id) {
     var commentaire = $('#commentaire')[0].value;
     
     $.post(/* url  */     "/addComment",
-    	   /* data */     {tournament_id: tournament_id, comment:escape(commentaire) },
+    	   /* data */     {tournament_id: tournament_id, comment:commentaire },
     	   /* callback */ function(data) {
                               $("#comments").load("/comments/" + tournament_id);
                           });

@@ -4,7 +4,6 @@ from app.models import Season, Tournament
 from app.utils import session
 from sqlalchemy.sql.expression import desc
 from web import config
-import urllib
 import web
 
 class Add_Comment :
@@ -16,9 +15,6 @@ class Add_Comment :
         i = web.input()
         tournament_id = i.tournament_id
         comment = i.comment
-        
-        # ASCII conversion of the comment
-        comment = urllib.unquote(comment)
         
         if comment:     
                    
