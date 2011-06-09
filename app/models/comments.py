@@ -3,7 +3,7 @@
 from app.models.meta import metadata, Base
 from app.models.users import User
 from app.utils import Enum
-from sqlalchemy import Table, Column, Integer, Text, String, TIMESTAMP, \
+from sqlalchemy import Table, Column, Integer, Text, String, DateTime, \
     ForeignKey
 from sqlalchemy.orm import mapper, relationship
 import datetime
@@ -14,7 +14,7 @@ comments_table = Table("COMMENTS", metadata,
                        Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
                        Column("type", String(1), nullable=False),
                        Column("comment", Text, nullable=False),
-                       Column("comment_dt", TIMESTAMP, default=datetime.datetime.now(), nullable=False)
+                       Column("comment_dt", DateTime, default=datetime.datetime.now, nullable=False)
                        )
 
 tournament_comments_table = Table("TOURNAMENT_COMMENTS", metadata,
