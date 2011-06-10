@@ -23,7 +23,7 @@ results_table = Table("RESULTS", metadata,
 class _Result(Base):
     
     def __repr__(self):
-        #TODO: afficher le nom de la classe
+        #TODO: display the actual class
         return "<Result(%s,%s,%s)>" % (self.user.pseudo, self.buyin, self.rank)
 
     @property
@@ -36,9 +36,15 @@ class _Result(Base):
 
 
 class Result(_Result):
+    """ Represents a tournament result """
     
     STATUSES = Enum(["A", "M", "P"])
     MIN_SCORE = 5
+
+    @property
+    def actual(self):
+        """ Is the result actual, i.e. does it represent real data (to be displayed, for instance) """
+        return self.statut == Result.STATUSES.P
 
     @property
     def score(self):
@@ -46,10 +52,10 @@ class Result(_Result):
         if self.rank is None:
             return None
         
-        return 100 - 100 * self.rank / self.tournament.nb_presents or self.MIN_SCORE
-        #return 100 * round(1 - float(self.rank) / self.tournament.nb_presents, 2) or 0
+        return 100 - 100 * self.rank / self.tournament.nb_attending_players or self.MIN_SCORE
     
 class SeasonResult(_Result):
+    """ Represents a season result """
     
     def __init__(self, user, attended, buyin, rank, profit, score):
         self.user = user
@@ -58,6 +64,11 @@ class SeasonResult(_Result):
         self.rank = rank
         self.profit = profit
         self.score = score
+
+    @property
+    def actual(self):
+        """ Is the result actual, i.e. does it represent real data (to be displayed, for instance) ? """
+        return True
         
 
 mapper(Result, results_table, properties={
