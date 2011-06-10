@@ -22,13 +22,13 @@ class Season(Base):
     @property
     def results(self):
         
-        # Initialisation de la liste résultat
+        # Initializes the resulting list
         season_results = []
         
-        # On remonte tous les résultats utilisables de la saison (avec un classement)
+        # Fetches all usable results of the season (with a rank)
         usable_results = config.orm.query(Result).join(Result.tournament).join(Tournament.season).filter(Season.id == self.id).filter(Result.rank != None).order_by(Result.user_id).all() #@UndefinedVariable
         
-        # On regroupe les résultats par utilisateur
+        # Groups the results by user (works because the results are ordered)
         for user, iter_user_results in groupby(usable_results, lambda r: r.user):
             
             user_results = list(iter_user_results)
@@ -40,10 +40,10 @@ class Season(Base):
             
             season_results.append(SeasonResult(user, attended, buyin, None, profit, score))
         
-        # On trie la liste par score
+        # Sorts the list by score
         season_results.sort(key = lambda r: r.score, reverse = True)
         
-        # On affecte un classement
+        # Calculates the rank
         # Hack : Python < 2.7 => for rank, result in enumerate(season_results, start = 1)
         for rank, result in enumerate(season_results):
             result.rank = rank + 1           
@@ -52,20 +52,6 @@ class Season(Base):
     
     def __repr__(self) : 
         return "<Season(%s,%s)>" % (self.start_year, self.end_year)
-
-#def my_ordering_list(attr, count_from=None, **kw):
-#
-#    kw = _unsugar_count_from(count_from=count_from, **kw)
-#    return lambda: MyOrderingList(attr, **kw)
-#
-#class MyOrderingList(OrderingList):
-#            
-#    def append(self, entity):
-#        print "Entrée dans le append customisé"
-#        super(OrderingList, self).append(entity)
-#        self.sort(key = lambda tournament: tournament.date_tournoi)
-#        print self
-#        self._order_entity(len(self) - 1, entity, self.reorder_on_append)
 
 
 mapper(Season, seasons_table, properties={
