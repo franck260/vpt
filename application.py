@@ -4,12 +4,12 @@
 """ Main application class """
 
 from app.models import meta
-from app.utils import formatting, session
+from app.models.results import Result
+from app.utils import formatting, dates, session
 from web import config
 import ConfigParser
 import locale
 import web
-from app.models.results import Result
 
 # Application's URLs
 urls = (
@@ -32,9 +32,9 @@ urls = (
 
 # Enforces the locale
 try:
-    locale.setlocale(locale.LC_ALL, 'fr_FR')
+    locale.setlocale(locale.LC_ALL, "fr_FR")
 except locale.Error:
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, "")
 
 def _sqlalchemy_processor(handler):
     """ Makes sure a commit appends at the end of each request """
@@ -61,9 +61,11 @@ class WebApplication(web.application):
         # The views are bound once for all to the configuration
         config.views = web.template.render("app/views/", globals={
             "formatting": formatting,
+            "dates": dates,
             "zip": zip,
             "getattr": getattr,
             "class_name": lambda x: x.__class__.__name__,
+            "config": config,
             "result_statuses": Result.STATUSES
         })
         
