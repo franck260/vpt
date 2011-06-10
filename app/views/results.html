@@ -3,7 +3,6 @@ $def with (entity)
 $code:
     # Définition des methodes partagées
     show_user = lambda result: result.user.pseudo
-    show_status = lambda result: {result_statuses.A: 'Absent', result_statuses.M: 'Peut-être', result_statuses.P: 'Présent'}[result.statut]
     show_attended = lambda result: result.attended
     show_buyin = lambda result: formatting.append(result.buyin, " €")
     show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")
@@ -13,7 +12,6 @@ $code:
     
     # Définition des champs par type d'entité
     _fields =    { "Tournament" : [("Joueur",          show_user),
-                                   ("Statut",          show_status),
                                    ("Mise",            show_buyin),
                                    ("Classement",      show_rank),
                                    ("Gain",            show_profit),
@@ -21,8 +19,8 @@ $code:
                                    ("Points",          show_score)
                                   ],
                                   
-                   "Season"     : [("Joueur",          show_user),
-                                   ("Classement",      show_rank),
+                   "Season"     : [("Classement",      show_rank),
+                                   ("Joueur",          show_user),
                                    ("Points",          show_score),
                                    ("Participations",  show_attended),
                                    ("Mise totale",     show_buyin),
@@ -34,26 +32,23 @@ $code:
 
 
 $def show_results():
-    $if not entity.results:
+    $ filtered_results = filter(lambda result: result.actual, entity.results)
+    $if not filtered_results:
         <i>Pas encore de données enregistrées !</i>
     $else:
         $ fields=_fields[class_name(entity)]
         $ headers=zip(*fields)[0]
         $ formatters=zip(*fields)[1]
-        <table>
+        <table class="results">
             <tr>
                 $for header in headers:
                     <th><b>$header</b></th>     
             </tr>
-            $for result in entity.results:
-                <tr class="$getattr(result, 'statut', result_statuses.P)">
+            $for result in filtered_results:
+                <tr>
                 $for formatter in formatters:
                     <td>$formatter(result)</td>
-                </tr>      
+                </tr>
         </table> 
 
- 
 $:show_results()
-
-
-

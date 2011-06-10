@@ -1,28 +1,28 @@
-$def with (user, next_tournament)
+$def with (next_tournament)
+
+$def show_next_tournament():
+    $if next_tournament:
+    	Il aura lieu le <i>$next_tournament.date_tournoi.strftime("%A %d %B")</i> : 
+    	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
+    $else:
+	    Le prochain tournoi n'est pas encore planifié.
 
 
-<div class="content">
-
-<div class="results">
-
-<h3>Prochain tournoi</h3>
-
-$if next_tournament:
-	Il aura lieu le <i>$next_tournament.date_tournoi.strftime("%A %d %B")</i> : 
-	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
-$else:
-	Le prochain tournoi n'est pas encore planifié.
-
-<br/><br/>  
-<h3>Charte du VPT</h3>
-Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.
-
-<br/><br/>  
-<h3>Actualités</h3>
-<i>27 mai 2011</i> : lancement du site
-
+<div class="post"> 
+    <h2>Bienvenue</h2> 
+    <p>Ce portail permet de gérer et suivre les tournois du VPT.</p> 
+ 
+	<h2>Prochain tournoi</h2> 
+	<p>$:show_next_tournament()</p> 
+	
+	<h2>Charte du VPT</h2>
+	<p>Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.</p>
+	
+	<h2>Actualités du site</h2>
+	<ul> 
+        <li><i>10 juin 2011</i> : nouveau design, corrections de bugs & publication des derniers résultats</li> 
+        <li><i>27 mai 2011</i> : lancement du site</li> 
+    </ul> 
+	
 </div>
-
-</div>
-
 

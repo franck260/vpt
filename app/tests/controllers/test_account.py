@@ -37,7 +37,7 @@ class TestAccount(ControllerTestCase):
         
         response = app.request("/login", method="GET") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("Veuillez entrer vos identifiants de connexion", response.data)
+        self.assertIn("Identification requise", response.data)
  
     def test_login_POST_OK(self):
 

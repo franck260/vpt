@@ -1,609 +1,310 @@
-/* 
-- need some design clean up on comments, referee letter look
-*/
-
-/* comments */
-
-/*.comments.user_post{
-  width:240px;
-  border:none;
-  float:left;
-}*/
-
-.comment{
-  clear:both;
-  border-top:1px solid #bbb;
-  margin:0;
-  padding:10px 0 19px 0;
-  min-height:35px;
+html,body,div,span,
+applet,object,iframe,
+h1,h2,h3,h4,h5,h6,p,blockquote,pre,
+a,abbr,acronym,address,big,cite,code,
+del,dfn,em,font,img,ins,kbd,q,s,samp,
+small,strike,strong,sub,sup,tt,var,
+dd,dl,dt,li,ol,ul,
+fieldset,form,label,legend,
+table,caption,tbody,tfoot,thead,tr,th,td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-weight: normal;
+	font-style: normal;
+	font-size: 100%;
+	line-height: 1;
+	font-family: inherit;
+	text-align: left;
 }
 
-
-.comment .comment_content{
-  /*font-size:93%;*/
-  font-size:100%;
-  margin-left:265px;
-  width:550px;
-  padding:2px 0 0 0;
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
-.comment_content{
-  font-size:108%;
-  padding:0 20px;
+ol,ul {
+	list-style: none;
 }
 
-.user_post{
-  padding:4px;
-  margin:0;
-  /*font-size:77%;*/
-  font-size:90%;
-  border:1px solid #ddd;
+q:before,q:after,
+blockquote:before,blockquote:after {
+	content: "";
 }
 
-.user_post .user_icon{
-  float:left;
-  padding:0 6px 5px 0;
-}
-
-.user_post .username{
-  font-weight:bold;
-}
-
-.comments.user_post {
-  /*width:240px;*/
-  width:140px;
-  border:none;
-  float:left;
-}
-
-.comment_textarea{
-  width:550px;
-  height:80px;
-  margin-left:265px;
-  padding:2px 0 0 0;  
-}
-
-.comment_button{
-  margin-left:265px;
-  padding:2px 0 0 0;
-  color:#ffffff;
-  background-color:#007fff;
-  border-color:#56aaff;
-  border-width:thin;
-  font-weight:bold;
-  width:200px;
-  height:25px;
-}
-
-
-/* defaults */
-body, h3, ul, li, form {
-	margin: 0px;
-	padding: 0px;
-}
-
-body, form {
-    font-family: arial, sans-serif;
-    font-size: 13px;
-}
-
-a {
-    color : #0000CC;
-}
-
-a img {
-	border: 0pt;
-}
-
-.error {
-    /* font: 100% arial, helvetica, sans-serif; */
-    font-weight: bold;
-    color: red;
-}
-
-.default_form {
-    padding: 15px;
-    background-color : #DFDFDF;
-    -moz-border-radius: 10px;
-    float: left;
-    margin: 0px 20px;
-}
-
-.default_form label, .default_form input {
+form.login_form label, form.login_form input {
     display: block;
     margin: 3px 0px;
-}
-
-.default_form input {
-    width: 200px;
-}
-
-.wrong {
-    color: red;
-}
-
-.result_wrapper {
-    border-top : solid 5px #DFDFDF;
-    border-bottom : solid 5px #DFDFDF;
-    border-left : solid 5px #DFDFDF;
-	padding: 0px 10px;
-    overflow: auto;
-}
-
-.result_wrapper h1, h2, h3, h4 {
-    margin: 5px 0px;
-}
-
-.simple_box, .box {
-    padding: 5px;
-	margin: 10px 0px;
-	border: 1px solid #CFCFCF;
-	padding: 10px 5px;
-}
-
-.box {
-    background: #EFEFEF;
-}
-
-.box_title {
-    margin: 5px 0px;
-}
-
-.box .sub_title {
-    margin: 5px 0px;
-}
-
-.box_content {
-	background: white;
-	line-height: 19px;
-    padding: 5px;
-}
-
-/* end of defaults */
-
-a.selected {
-	text-decoration: none;
-	font-weight: bold;
-	color: #000000;
-}
-
-a.animated {
-    text-decoration: none;
-}
-
-a.animated:hover {
-	font-weight: bold;
-	text-decoration: underline;
-}
-
-/* top menu */
-.topmenu {
-    height : 25px;
-    line-height : 25px;
-    border-bottom : solid 1px #C0C0C0;
-    margin-bottom : 15px;
-    /* IE bug to have quicklinks on top */
-    position: relative;
-    z-index: 2;
-}
-
-.topmenu a {
-/*    margin-left : 10px;*/
-}
-
-li.logo {
-	position: relative;
-	top:3px;
-}
-
-ul.extlinks {
-	font-size: 12px;
-	margin: -2px 3px 0;
-	position: absolute;
-	right: 0px;
-	top: 3px;
-}
-
-ul.extlinks li {
-	display: inline;
-    border-right: 1px solid #C0C0C0;
-    padding: 0px 10px;
-}
-
-ul.extlinks li.last {
-    padding-right: 0px;
-    border: none;
-}
-
-li.login a {
-    text-decoration: none;
-    color: black;
-    font-size: 11px;
-}
-
-/* end of top menu */
-
-/* search box */
-.searchbar {
-    height : 10px;
-    line-height : 25px;
-    padding-left : 8%;
-    margin-bottom : 15px;
-}
-
-input.search {
-	width: 200px;
-}
-/* end of search box */
-
-/* left menu */
-.leftmenu {
-    float : left;
-    padding-top : 15px;
-    width : 8%;
-	font-size: 90%;
-}
-
-.leftmenu a {
-    display : block;
-    padding : 5px 10px 5px 5px;
-}
-
-.leftmenu .selected {
-    background-color : #DFDFDF;
-}
-
-#reviewed {
-    margin-top: 5px;
-    background: url(/public/img/comments.png) no-repeat 75px 2px; 
-}
-
-.selected#reviewed {
-    background-color : #DFDFDF;
-}
-/* end left menu */
-
-
-/* content div */
-.content {
-    float : left;
-    display: inline;
-    width : 92%;
-    border-top : solid 5px #DFDFDF;
-    border-bottom : solid 5px #DFDFDF;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-bottomleft: 10px;
-}
-/* end of content div */
-
-/* action bar */
-.actionbar {
-    position: relative;
-    height : 25px;
-    padding-left : 5px;
-    background-color : #DFDFDF;
-}
-
-.actionbar input {
-    width : 100px;
-    font-weight : bold;
-    margin-right : 5px;
-}
-
-.actionbar a {
-    margin-right : 10px;    
-}
-
-input.reject {
-    background-color : #CF0000;
-}
-
-input.admit {
-    background-color : #01AF00;
-}
-
-.paging a {
-    margin-right : 0px
-}
-
-.paging {
-    position : absolute;
-    top: 4px;
-    right: 5px;
-    /* font-weight: bold; */
-}
-
-.score {
-    background-color: #FFE09F;
-    /* position : absolute;
-    top: 2px;
-    right: 140px; */
-}
-
-input.score {
-    width: 150px;
-}
-/* end of action bar */
-
-/* results */
-table {
-    /* IE need to apply at the table level */
-    empty-cells : show;
-    border-collapse : collapse;
-	width: 100%;
-}
-
-table td, table th {
-    font-size : 90%;
-    white-space : nowrap;
-    overflow : hidden;
-	table-layout: fixed;
-	padding-left: 10px;
-	max-width: 185px;
-/*	max-width: 350px; */
-    overflow: hidden;
-}
-
-th#calculated_vote, th#status, th#travel_support_budget, th#referee_rating, th#number_comments  {
-	text-align: center;
-}
-
-th#interests {
-    width: 40%;
-}
-
-td.score_column {
-	text-align: center;
-}
-
-td.score_column a {
-    color: black;
-    font-size: 9px;    
-}
-
-.results {
-    border-top : solid 5px #DFDFDF;
-    border-bottom : solid 5px #DFDFDF;
-    border-left : solid 5px #DFDFDF;
-    min-height : 200px;
-    height : auto;
-}
-
-/* for IE */
-* html .results, * html .result {
-    height : 200px;
-}
-
-.results tr {
-    height : 25px;
-    vertical-align : top;
-}
-
-.results td, .results th {
-    border-bottom : 1px dotted;
-    padding-top: 3px;
-}
-
-.results th {
-    font-size: 13px;
-    font-weight: normal;
-    /* background-color: #EFEFEF; */
-    text-align: left;
-    
-    
-    background:#b9c9fe;
-    /* border-top:4px solid #aabcfe; */
-    /* border-bottom:1px solid #fff; */
-    /* color:#039; */
-    /* padding:8px; */
-    
-}
-
-.results td.checkbox {
-    padding-left: 0px;
-	width: 1px;
-}
-
-.results tr.updates {
-    font-weight : bold;
-}
-
-.results tr.P {
-    background:#d0dafd;
-    /* color:#339; */
-}
-
-.results tr.M {
-    background:#e8edff;
-}
-
-.results tr.A {
-}
-
-
-/* end of results */
-
-/* single result ie see an applicant */
-.back {
-	margin-left: 5px;
-}
-
-.applicant {
-    float: left;
-    width: 70%;
-}
-
-/*.comments {
-    float: right;
-    width: 29%;
-    margin-top: 20px;
-}*/
-
-#add_handle {
-    background: url(/public/img/comment_add.png) no-repeat left;
-/*    display: block;*/
-    margin-top: 10px;
-    padding-left: 20px;
-    margin-bottom: 10px;
-}
-
-/*.comments .box {
-    background: #FADCB3;
-    border: 1px solid #EF9A2C;
-}
-
-.comments .box_title {
-    font-weight: normal;
-    background: url(/public/img/comment.png) no-repeat left;
-    padding-left: 20px;
-}
-
-.comments textarea{
-	width: 99%;
-    height : 100px;
-    font-family: arial, sans-serif;
-	display: block;
-    font-size: 13px;
-}*/
-
-#add_comment {
-    margin-bottom: 10px;
-}
-
-div.referee_score, div.applicant_score, div.applicant_score_details {
-	margin: 10px 0px;
-	padding: 0px;
-	border: none;
-}
-
-.applicant_score_details {
-    font-size: 10px;
-}
-
-.applicant_score img {
-	position: relative;
-	top: 2px;
-}
-
-.website {
-	background: url(/public/img/external.png) right no-repeat;
-	padding-right: 13px;
-}
-
-.applicant #travel_support {
-    border: 1px solid #FF2F2F;
-    background: #FF8F8F;
-}
-
-a.cloud_link {
-    background: url(/public/img/weather_cloudy.png) no-repeat right;
-    padding-right: 18px;
-}
-/* end of single result */
-
-/* copyright */
-.copyright {
-    -moz-border-radius-bottomleft: 10px;
-    background-color: #EFEFEF;
-    float: right;
-    font-size: 12px;
-    font-style: italic;
-    line-height: 22px;
-    padding-right: 10px;
-    text-align: right;
-    width: 290px;
-	margin-bottom: 15px;
-}
-
-.copyright strong {
-    font-style: normal;
-}
-/* copyright */
-
-/* settings */
-#content_settings .default_form {
-    margin: 10px 0px;
-    clear: both;
     width: 300px;
 }
 
-#content_settings .default_form legend {
-/*    font-weight: bold;*/
+form.login_form button {
+    padding:2px 0 0 0;
+    color:white;
+    background-color:black;
+    border-color:#56aaff;
+    border-width:thin;
+    font-weight:bold;
+    width:100px;
+    height:25px;
+    margin: 10px 0;
 }
-/* end ofsettings */
 
-/* forgot password */
-.forgot_password_form {
-    clear: both;
-    margin-top: 20px;
-/*    position: absolute;
-    margin-top: 290px;*/
-}
-/* end forgot password */
-
-/* success message */
-.on_success_message {
+div.login_error {
     font-weight: bold;
-    color: green;
-}
-/* end of success message */
-
-/* register, sign in and forgot password */
-body#account {
-    width: 600px;
-    margin: 0px auto;
+    color: red;
+    margin: 0 0 20px 0;
 }
 
-#account .default_form {
-    width: 230px;
-}
-/* end of register, sign in and forgot password */
-
-/* how to use */
-#account .help {
-    line-height: 22px;
+div.comment_wrapper {
+    clear:both;
+    /* border-top:0.5px dotted #eee; */
+    margin:0;
+    padding:10px 0 19px 0;
+    min-height:35px;
 }
 
-#account .help h1 {
-    font-size: 16px;
-    margin: 10px 0px;
-}
-/* how to use */
-
-/* affiliated */
-.affiliated {
-    background: url(/public/img/cambridge.png) no-repeat left;
-    padding-left: 20px;    
+div.comment_information {
+    /* width:140px;
+    border:none; */
+    float:left;
 }
 
-div.affiliated {
-    margin: 10px 0px;
-}
-/* affiliated */
-
-.grant {
-    margin-top: 10px;
+div.comment_user {
+    font-weight:bold;
 }
 
-/* stats */
-.stats {
+div.comment_date {
+    font-size:90%;
+}
+
+div.comment_content {
+    margin-left:200px;
+    /* width:550px;
+    padding:2px 0 0 0; */
+    
+}
+
+textarea.comment_textarea {
+    width:550px;
+    height:80px;
+    margin-left:200px;
+    padding:2px 0 0 0;  
+}
+
+button.comment_button {
+    margin-left:200px;
+    padding:2px 0 0 0;
+    color:white;
+    background-color:black;
+    border-color:#56aaff;
+    border-width:thin;
+    font-weight:bold;
+    width:200px;
+    height:25px;
+}
+
+table.results { 
+    /* width: 480px; */
+    width: 100%;
+    border: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+table.results th {
+    padding: 6px 3px;
+    text-align: left;
+    background-color:black;
+    color:white;
+    border: 1px black solid;
+}
+
+table.results td {
+    padding: 6px 3px;
+    text-align: left;
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+    /* border-left: 1px black solid;
+    border-right: 1px black solid; */
+}
+
+table.stats td {
+    padding: 4px;
+    text-align: left;
+    border: 1px black dotted;
+}
+
+table.stats { 
+    width: 410px;
+    border: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    table-layout: fixed;
+}
+
+table.stats td A {
+    text-decoration: none;
+    font-weight:bold;
+    color:grey;
+}
+
+table.stats td.title {
+    font-weight: bold;
+}
+
+div.wrapper {
+    font-family:Georgia,serif;
+    margin:0 auto;
+    padding-top:20px;
+    position:relative;
+    width:960px;
+}
+
+h1 a {
+    color:#222222;
+    font-size:60px;
+    letter-spacing:-2px;
+    padding:5px 5px 5px 0;
+    text-decoration:none;
+    word-spacing:5px;
+}
+
+h1 span {
+    color:#111;
+    font-weight:bold;
+}
+
+div.header {
+    clear: both;
+    position: relative;
+    float: left;
+    width: 100%;
+}
+div.header ul li {
+    margin-bottom: 5px;
+    margin-top: 15px;
+    float: left;
+    margin-right: 15px;
+}
+
+div.header ul li a {
+    color:#111;
+    /*text-transform: lowercase;*/
+    font-family: Arial, sans-serif;
+    display:block;
+    font-size:20px;
+    padding:2px;
+    text-decoration:none;
+}
+
+div.header ul li a:hover {
+    color:#c70000;
+}
+
+ul.notifications {
+    width:280px;
+    float: left;
+    margin-top: 15px;
+    margin-right: 5px;
+    font-family: Arial, sans-serif;
+}
+ul.notifications li {
+    margin-bottom:10px;
+    overflow: hidden;
+    padding:5px;
+    border-bottom: 1px solid #eee;
+}
+
+ul.notifications li h3 {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+	font-weight: bold;
+}
+
+ul.notifications li h3 a {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+	font-weight: bold;
+    text-decoration: none;
+    color:#111;
+}
+
+ul.notifications li h3 a:hover {
+    color:#c70000;
+    text-decoration: underline;
+}
+
+ul.notifications li div p {
+    padding-left:10px;
+    padding-right:10px;
+    font-size:12px;
+    line-height:14px;
+}
+
+ul.notifications li div p a {
+    color:#333;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+}
+ul.notifications li div p a:hover, div.post h2 a:hover, div.post a:hover {
+  	color:#c70000;
+	text-decoration: underline;
+}
+
+ul.notifications li.footer div p {
+    line-height:17px;
+}
+
+div.content {
     position: absolute;
-    top: 45px;
-    right: 8px;
+    top: -10px;
+    right: 0px;
+    width: 660px;
 }
 
-.stats .admitted{
-    background: url(/public/img/accept.png) no-repeat left;
-    padding-left: 20px;        
+div.post {
+    border-bottom:2px dashed #eee;
+    padding-bottom:20px;
+    padding-top:10px;
+    margin-bottom: 20px;
+	font-size: 14px;
 }
 
-.stats .rejected{
-    background: url(/public/img/delete.png) no-repeat left;
-    padding-left: 20px;        
+div.post p a, div.post ul li a {
+    color:#000000;
+    font-weight:bold;
+    text-decoration:none;
 }
 
-.stats .allocated_amount{
-    background: url(/public/img/money.png) no-repeat left;
-    padding-left: 20px;        
+div.post p a:hover {
+    text-decoration:underline;
 }
-/* stats */
+
+div.post h2 {
+    color:#111;
+    display:block;
+    font-size:25px;
+    font-weight: bold;
+	letter-spacing:-1px;
+	word-spacing: 4px;
+	margin-top: 30px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #eee;
+}
+div.post h2 a {
+	color: #111;
+	text-decoration:none;
+	font-weight: bold;
+}
+div.post p, div.post ul {
+	padding:15px 25px 5px;
+	line-height: 20px;
+	font-family: Arial, sans-serif;
+}
+
+div.post ul li {
+    line-height: 23px;
+    margin-left: 45px;
+    list-style-type: circle;
+}

@@ -1,46 +1,22 @@
 $def with (season, results)
 
-$def show_actions():
-    $if season.tournaments:
-        <select class="score" name="tournaments" onChange="document.location.href = this.options[this.selectedIndex].value;">
-            <option value="/season/$season.id">Accès direct à un tournoi ...</option>
-            <option value="" disabled="">---------------------------------------------------</option>  
-            $for tournament in season.tournaments:
-                <option value="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($tournament.date_tournoi.strftime("%A %d %B %Y"))</option>    
-        </select>
+<div class="post"> 
+<h2>Saison $season.id ($season.start_year - $season.end_year)</h2>
 
+<p>
+<div id="results">
+$:results
+</div>
+</p>
 
-<div class="content">
+<h2>Mode de calcul</h2>
+<ul>
+    <li>Ce système récompense les <i>performances</i> et <i>l'assiduité</i></li>
+    <li>En effet, pour chaque tournoi, un <i>nombre de points</i> est affecté en fonction du classement et du nombre de participants</li>
+    <li>Par exemple, remporter un tournoi de 6 personnes rapporte 100 * (1 - 1/6) = 84 points, tandis que le second sera crédité de 100 * (1 - 2/6) = 67 points</li>
+    <li>Le dernier obtient une <i>prime de présence</i> de 5 points, tandis qu'une absence rapporte 0 point</li>
+</ul>
 
-    <div class="actionbar">
-        <a href="/"><< Accueil</a>
-        <div class="paging">
-            $:show_actions()
-        </div>
-    </div>
-
-    <div class="results">
-  
-        <h2>Saison $season.id ($season.start_year - $season.end_year)</h2>
-        <br/>  
-
-        <div id="results">
-            $:results
-        </div>
-
-        <br/>
-        
-        <h2>Mode de calcul</h2>
-        <ol>
-			<li>Ce système récompense les <i>performances</i> et <i>l'assiduité</i></li>
-			<li>En effet, pour chaque tournoi, un <i>nombre de points</i> est affecté en fonction du classement et du nombre de participants</li>
-			<li>Par exemple, remporter un tournoi de 6 personnes rapporte 100 * (1 - 1/6) = 84 points, tandis que le second sera crédité de 100 * (1 - 2/6) = 67 points</li>
-			<li>Le dernier obtient une <i>prime de présence</i> de 5 points, tandis qu'une absence rapporte 0 point</li>
-        </ol>
-        <br/><br/>
-
-    </div>
-    
 </div>
 
 

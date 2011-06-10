@@ -39,26 +39,6 @@ class TestTournaments(ControllerTestCase):
         response = app.request("/tournament/2/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Tournoi 1 (mercredi 01 septembre 2010)", response.data)
-        self.assertNotIn("Précédent", response.data)
-        self.assertNotIn("Suivant", response.data)
-
-    def test_view_with_next_paging(self):
-        
-        self.login()
-        response = app.request("/tournament/1/1") #@UndefinedVariable
-        self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("Tournoi 1 (mardi 01 septembre 2009)", response.data)
-        self.assertNotIn("Tournoi précédent", response.data)
-        self.assertIn("Tournoi suivant", response.data)
-        
-    def test_view_with_previous_paging(self):
-        
-        self.login()
-        response = app.request("/tournament/1/2") #@UndefinedVariable
-        self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("Tournoi 2 (vendredi 01 janvier 2010)", response.data)
-        self.assertIn("Tournoi précédent", response.data)
-        self.assertNotIn("Tournoi suivant", response.data)
 
 
     def test_view_statistics_notlogged(self):
@@ -71,9 +51,9 @@ class TestTournaments(ControllerTestCase):
         self.login()        
         response = app.request("/statistics/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("Présents: 3", response.data) 
-        self.assertIn("Absents: 1", response.data) 
-        self.assertIn("En jeu: 40 €", response.data)  
+        self.assertIn("Nombre de participants</td><td>3</td>", response.data) 
+        self.assertIn("Absents</td><td>" + UserData.franck_l.pseudo + "</td>", response.data) 
+        self.assertIn("Somme en jeu</td><td>40 €</td>", response.data)  
 
     def test_view_results_notlogged(self):
         response = app.request("/results/1") #@UndefinedVariable
@@ -83,11 +63,11 @@ class TestTournaments(ControllerTestCase):
         self.login()
         response = app.request("/results/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertIn(UserData.franck_l.pseudo, response.data)
+        self.assertNotIn(UserData.franck_l.pseudo, response.data)
         self.assertIn(UserData.franck_p.pseudo, response.data)
         self.assertIn(UserData.jo.pseudo, response.data)
         self.assertIn(UserData.nico.pseudo, response.data)
-        self.assertIn(UserData.fx.pseudo, response.data)
+        self.assertNotIn(UserData.fx.pseudo, response.data)
         self.assertNotIn(UserData.rolland.pseudo, response.data)
         
     def test_view_comments_notlogged(self):

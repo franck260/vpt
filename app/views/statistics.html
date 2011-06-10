@@ -1,11 +1,45 @@
 $def with (tournament)
 
-<span class="admitted">Présents: $tournament.nb_presents</span> - 
-<span class="rejected">Absents: $tournament.nb_absents</span> -  
-<span class="allocated_amount">En jeu: $tournament.somme_en_jeu €</span>
+$code:
+    format_players = lambda results: ",".join([result.user.pseudo for result in results])
+
+$def show_subscription_button(status, label, extra_text):
+    $if config.session_manager.user in [result.user for result in tournament.results_by_status(status)]:
+        <span style="font-weight: bold" id="$("subscribtion_link_" + status)">$label</span>
+    $else:
+        <a id="$("subscribtion_link_" + status)" href="javascript:updateStatus($tournament.id, '$status');">$label</a>
+    $:extra_text
 
 
+$def show_subscription_box():
+    $if tournament.future:
+        <tr style="background-color: #F0F0F0;"><td class="title">Ma participation</td><td>
+        $:show_subscription_button(result_statuses.P, "Oui", "&nbsp;|&nbsp;")
+        $:show_subscription_button(result_statuses.A, "Non", "&nbsp;|&nbsp;")
+        $:show_subscription_button(result_statuses.M, "Peut-être", "&nbsp; &nbsp;")
+        <img style="display: none;" id="subscribtion_ajax_animation" src="/public/img/ajax-loader.gif" />
+        </td></tr>
+        
+$def show_attending_players():
+    <tr><td class="title">Nombre de participants</td><td>$tournament.nb_attending_players</td></tr>
 
+$def show_sum_in_play():
+    <tr><td class="title">Somme en jeu</td><td>$tournament.sum_in_play €</td></tr>
+
+$def show_players_by_status(status, header):
+    $ players = format_players(tournament.results_by_status(status))
+    $if players:
+        <tr><td class="title">$header</td><td>$players</td></tr>
+
+<p>
+<table class="stats">
+    $:show_subscription_box()
+    $:show_attending_players()
+    $:show_sum_in_play()
+    $:show_players_by_status(result_statuses.A, "Absents")
+    $:show_players_by_status(result_statuses.M, "Peut-être")				
+</table>
+</p>
 
 
 

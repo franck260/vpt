@@ -1,48 +1,41 @@
-$def with (tournament, paging, stats, results, comments)
+$def with (tournament, statistics, results, comments)
 
-$def show_actions():
-    <a href="/season/$tournament.season.id"><< Retour</a>
+$def show_comments_components():
+    <textarea id="comment_textarea" class="comment_textarea"></textarea> 
+    <br /> 
+    <button id="comment_button" name="submit" type="button" onclick="postComment($tournament.id)" class="comment_button">Poster un commentaire</button> 
+    &nbsp; &nbsp;<img style="display: none;" id="comment_ajax_animation" src="/public/img/ajax-loader.gif" />
 
-    $if tournament.future:
-        <input class="admit"  type="button" value="Je serai là !"   onClick="updateStatus($tournament.id, '$result_statuses.P');">
-        <input class="reject" type="button" value="Non"             onClick="updateStatus($tournament.id, '$result_statuses.A');">
-        <input                type="button" value="Peut-être"       onClick="updateStatus($tournament.id, '$result_statuses.M');">
+<div class="post"> 
+<h2>Tournoi $tournament.position ($tournament.date_tournoi.strftime("%A %d %B %Y"))</h2> 
 
-
-<div class="stats" id="statistics">
-   $:stats
+<div id="statistics">
+$:statistics
 </div>
 
-<div class="content">
+<h2>Résultats</h2>
+<p>
+<div id="results">
+$:results
+</div>
+</p>
 
-    <div class="actionbar">
-        $:show_actions()
 
-        <div class="paging">
-            $:paging
-        </div>
- 
-    </div>
+<h2>Photos</h2> 
 
-    <div class="results">
-        <h2>Tournoi $tournament.position ($tournament.date_tournoi.strftime("%A %d %B %Y"))</h2>
-        <br/>
+<div id="pictures">
+<p><i>Pas encore de photos pour ce tournoi !</i></p>
+</div>
 
-        <div id="results">
-            $:results
-        </div>
 
-        <br/>
-        <h2>Photos</h2>
-        <br/>
-        <i>Pas encore de photos pour ce tournoi !</i>
-        <br/><br/>
+<div id="comments">				
+$:comments
+</div>
+$:show_comments_components()
 
-        <div id="comments" class="comments">
-            $:comments
-        </div>
-    </div>
 
 </div>
+        
+
 
 

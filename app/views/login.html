@@ -1,18 +1,16 @@
 $def with (login_form)
 
-<head>
-  <link href="/public/css/defaults.css" rel="stylesheet" type="text/css"/>
-  <title>Portail du VPT (Voltaire Poker Tour) : identification</title>
-
-</head>
-
-<body>
+<div class="post"> 
+<h2>Identification requise</h2>
  
-<form action="" method="post" class="default_form">
-<legend>Veuillez entrer vos identifiants de connexion</legend>
-$if not login_form.valid: <div class="error">Erreur de connexion : vérifiez votre mot de passe</div>  
-$:login_form.render_css()
-<br />
-    
+ <p>
+<form action="" method="post" class="login_form">
+
+    $if not login_form.valid:
+        <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div>
+        
+    $:login_form.render_css()
+
 </form>
-</body>
+</p>
+</div>
