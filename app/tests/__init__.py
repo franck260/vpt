@@ -22,7 +22,7 @@ class UserData(DataSet):
         # id = 1
         prenom = "Franck"
         nom = "Lasry"
-        pseudo = "Franck"
+        pseudo = "Franck L"
         email = "franck.lasry@gmail.com"
         is_admin = 0
         password = _md5("secret1")
@@ -30,7 +30,7 @@ class UserData(DataSet):
         # id = 2
         prenom = "Franck"
         nom = "Perez"
-        pseudo = "Franck"
+        pseudo = "Franck P"
         email = "franck.perez@gmail.com"
         is_admin = 1
         password = _md5("secret2")

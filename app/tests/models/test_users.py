@@ -26,7 +26,7 @@ class TestUser(ModelTestCase):
         
         franck_l = config.orm.query(User).filter(User.nom == "Lasry").one() #@UndefinedVariable
         jo = config.orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
-        francks = config.orm.query(User).filter(User.pseudo == "Franck").all() #@UndefinedVariable
+        francks = config.orm.query(User).filter(User.pseudo.like("Franck%")).all() #@UndefinedVariable
         
         self.assertEquals(franck_l.prenom, "Franck")
         self.assertEquals(jo.prenom, "Jonathan")
