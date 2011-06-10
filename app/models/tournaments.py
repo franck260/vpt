@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from app.models.meta import metadata, Base
 from app.models.comments import TournamentComment
+from app.models.meta import metadata, Base
 from app.models.results import Result, results_table
 from sqlalchemy import Table, Column, Integer, Date, ForeignKey
 from sqlalchemy.orm import mapper, relationship
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.expression import desc
+from web import config
 import datetime
 import web
-from web import config
+
 
                        
 tournaments_table = Table("TOURNAMENTS", metadata,
@@ -22,22 +24,18 @@ tournaments_table = Table("TOURNAMENTS", metadata,
 class Tournament(Base):
     
     @staticmethod
-    def get_tournaments(season_id, position):
-        """
-        Returns a tuple composed of 3 items : (tournament, previous_tournament, next_tournament)
-        where tournament.season_id and tournament.position correspond to the parameters.
+    def get_tournament(season_id, position):
+        """ Returns the tournament matching the parameters, or None if it could not be found """
         
-        Each item may be None (the resulting tuple has a constant size).
-        """
+        try:
+            tournament = config.orm.query(Tournament)                      \
+                               .filter(Tournament.season_id == season_id)  \
+                               .filter(Tournament.position == position)    \
+                               .one()
+        except NoResultFound:
+            tournament = None
         
-        # Fetches the tournament and its surrounders (if any)
-        tournaments = config.orm.query(Tournament)                                             \
-                           .filter(Tournament.season_id == season_id)                          \
-                           .filter(Tournament.position.between(position - 1, position + 1))    \
-                           .all()
-        
-        tournaments_by_position = dict([(tournament.position, tournament) for tournament in tournaments])
-        return (tournaments_by_position.get(position), tournaments_by_position.get(position - 1), tournaments_by_position.get(position + 1))
+        return tournament
         
     
     @staticmethod
@@ -62,7 +60,7 @@ class Tournament(Base):
         buyin = self.buyin if statut == Result.STATUSES.P else None
             
         # Fetches the result already in the database (if any)
-        current_result = self.ordered_results.get(user)
+        current_result = self.results_by_user.get(user)
         
         if not current_result :
             current_result = Result()
@@ -79,29 +77,27 @@ class Tournament(Base):
         """ Adds the comment to this tournament instance """
         self.comments.append(TournamentComment(user, comment))
     
-    def _count_results(self, status):
-        return [result.statut for result in self.results].count(status)
-    
     @property
-    def nb_presents(self):
-        return self._count_results(Result.STATUSES.P)
-    
-    @property
-    def nb_absents(self):
-        return self._count_results(Result.STATUSES.A)
-    
-    @property
-    def somme_en_jeu(self):
-        return sum([result.buyin for result in self.results if result.statut == Result.STATUSES.P])
+    def sum_in_play(self):
+        return sum([result.buyin for result in self.results_by_status(Result.STATUSES.P)])
     
     @property
     def future(self):
         return datetime.date.today() <= self.date_tournoi
     
     @property
-    def ordered_results(self):
+    def nb_attending_players(self):
+        """ Handy method which returns the number of actually attending players """
+        return len(self.results_by_status(Result.STATUSES.P))
+    
+    @property
+    def results_by_user(self):
         return dict([(result.user, result) for result in self.results])
 
+    def results_by_status(self, status):
+        """ Returns the tournament results, ordered and filtered by status """
+        return filter(lambda result: result.statut == status, self.results)
+    
 mapper(Tournament, tournaments_table, properties={
     "results": relationship(Result, backref="tournament", order_by=[desc(results_table.c.statut), results_table.c.rank, results_table.c.user_id], cascade="save-update, merge, delete"), #@UndefinedVariable
     "comments": relationship(TournamentComment, backref="tournament", order_by=TournamentComment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable

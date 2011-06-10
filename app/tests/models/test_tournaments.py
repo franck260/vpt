@@ -35,23 +35,55 @@ class TestTournament(ModelTestCase):
         self.assertEquals(tournament_season_2.season.id, 2)
         self.assertTrue(tournament_season_2 is tournament_21)
     
-    def test_get_tournaments(self):
+    def test_get_tournament(self):
         
         # These tests work because a TournamentData has a similar structure to a Tournament
         # When Tournament.__eq__ is called, it compares the fields without caring of the parameters' actual types
             
-        self.assertEquals(Tournament.get_tournaments(1, 1), (TournamentData.tournament_11, None, TournamentData.tournament_12))
-        self.assertEquals(Tournament.get_tournaments(1, 2), (TournamentData.tournament_12, TournamentData.tournament_11, None))
-        self.assertEquals(Tournament.get_tournaments(1, 3), (None, TournamentData.tournament_12, None))
-        self.assertEquals(Tournament.get_tournaments(1, 4), (None, None, None))
+        self.assertEquals(Tournament.get_tournament(1, 1), TournamentData.tournament_11)
+        self.assertEquals(Tournament.get_tournament(1, 2), TournamentData.tournament_12)
+        self.assertEquals(Tournament.get_tournament(1, 3), None)
+        self.assertEquals(Tournament.get_tournament(1, 4), None)
         
-        self.assertEquals(Tournament.get_tournaments(2, 1), (TournamentData.tournament_21, None, None))
-        self.assertEquals(Tournament.get_tournaments(2, 2), (None, TournamentData.tournament_21, None))
-        self.assertEquals(Tournament.get_tournaments(2, 3), (None, None, None))
+        self.assertEquals(Tournament.get_tournament(2, 1), TournamentData.tournament_21)
+        self.assertEquals(Tournament.get_tournament(2, 2), None)
+        self.assertEquals(Tournament.get_tournament(2, 3), None)
         
-        self.assertEquals(Tournament.get_tournaments(42, 1), (None, None, None))
-        self.assertEquals(Tournament.get_tournaments(42, 9), (None, None, None))
+        self.assertEquals(Tournament.get_tournament(42, 1), None)
+        self.assertEquals(Tournament.get_tournament(42, 9), None)
 
+    def test_sum_in_play(self):
+        
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
+        
+        self.assertEquals(tournament_11.sum_in_play, 40)
+        self.assertEquals(tournament_12.sum_in_play, 10)
+        self.assertEquals(tournament_21.sum_in_play, 20)
+    
+    def test_results_by_status(self):
+        
+        def _check_results(results, expected_length, expected_status):
+            self.assertEquals(len(results), expected_length)
+            for result in results:
+                self.assertEquals(result.statut, expected_status)
+        
+        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
+        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable 
+        
+        _check_results(tournament_11.results_by_status(Result.STATUSES.P), 3, Result.STATUSES.P)  
+        _check_results(tournament_11.results_by_status(Result.STATUSES.M), 1, Result.STATUSES.M)
+        _check_results(tournament_11.results_by_status(Result.STATUSES.A), 1, Result.STATUSES.A)
+        
+        _check_results(tournament_12.results_by_status(Result.STATUSES.P), 2, Result.STATUSES.P)  
+        _check_results(tournament_12.results_by_status(Result.STATUSES.M), 0, Result.STATUSES.M)
+        _check_results(tournament_12.results_by_status(Result.STATUSES.A), 1, Result.STATUSES.A)
+        
+        _check_results(tournament_21.results_by_status(Result.STATUSES.P), 2, Result.STATUSES.P)  
+        _check_results(tournament_21.results_by_status(Result.STATUSES.M), 0, Result.STATUSES.M)
+        _check_results(tournament_21.results_by_status(Result.STATUSES.A), 0, Result.STATUSES.A)
     
     def test_comment(self):
         
@@ -73,26 +105,17 @@ class TestTournament(ModelTestCase):
         self.assertEqual(len(tournament_11.comments), 2)
         self.assertEqual(len(tournament_12.comments), 3)
         self.assertEqual(len(tournament_21.comments), 1)
-        
-    def test_nb_presents(self):
-        
-        tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
-        tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
-        tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
-        
-        self.assertEqual(tournament_11.nb_presents, 3)
-        self.assertEqual(tournament_12.nb_presents, 2)
-        self.assertEqual(tournament_21.nb_presents, 2)
-    
-    def test_nb_absents(self):
+
+    def test_nb_attending_players(self):
         
         tournament_11 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
         tournament_12 = config.orm.query(Tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
         tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
-         
-        self.assertEqual(tournament_11.nb_absents, 1)
-        self.assertEqual(tournament_12.nb_absents, 1)
-        self.assertEqual(tournament_21.nb_absents, 0)
+        
+        self.assertEqual(tournament_11.nb_attending_players, 3)
+        self.assertEqual(tournament_12.nb_attending_players, 2)
+        self.assertEqual(tournament_21.nb_attending_players, 2)
+
         
     def test_subscribe(self):
         
@@ -109,20 +132,20 @@ class TestTournament(ModelTestCase):
         tournament_21.subscribe(jo, Result.STATUSES.M) 
            
         self.assertEqual(len(tournament_21.results), 4)
-        self.assertEqual(tournament_21.ordered_results.get(franck_l).statut, Result.STATUSES.P)
-        self.assertEqual(tournament_21.ordered_results.get(nico).statut, Result.STATUSES.P)
-        self.assertEqual(tournament_21.ordered_results.get(jo).statut, Result.STATUSES.M)
-        self.assertEqual(tournament_21.ordered_results.get(fx).statut, Result.STATUSES.P)
+        self.assertEqual(tournament_21.results_by_user.get(franck_l).statut, Result.STATUSES.P)
+        self.assertEqual(tournament_21.results_by_user.get(nico).statut, Result.STATUSES.P)
+        self.assertEqual(tournament_21.results_by_user.get(jo).statut, Result.STATUSES.M)
+        self.assertEqual(tournament_21.results_by_user.get(fx).statut, Result.STATUSES.P)
         
         tournament_21.subscribe(franck_l, Result.STATUSES.A)
         tournament_21.subscribe(nico, Result.STATUSES.M)
         tournament_21.subscribe(jo, Result.STATUSES.M)
         
         self.assertEqual(len(tournament_21.results), 4)
-        self.assertEqual(tournament_21.ordered_results.get(franck_l).statut, Result.STATUSES.A)
-        self.assertEqual(tournament_21.ordered_results.get(nico).statut, Result.STATUSES.M)
-        self.assertEqual(tournament_21.ordered_results.get(jo).statut, Result.STATUSES.M)
-        self.assertEqual(tournament_21.ordered_results.get(fx).statut, Result.STATUSES.P)
+        self.assertEqual(tournament_21.results_by_user.get(franck_l).statut, Result.STATUSES.A)
+        self.assertEqual(tournament_21.results_by_user.get(nico).statut, Result.STATUSES.M)
+        self.assertEqual(tournament_21.results_by_user.get(jo).statut, Result.STATUSES.M)
+        self.assertEqual(tournament_21.results_by_user.get(fx).statut, Result.STATUSES.P)
     
     def test_future(self):
 
