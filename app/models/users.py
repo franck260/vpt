@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.models.meta import metadata, Base
-from sqlalchemy import Table, Column, Integer, String, Text
+from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy.orm import mapper
 import web
 
@@ -13,7 +13,7 @@ users_table = Table("USERS", metadata,
                     Column("pseudo", String(20), nullable=False),
                     Column("email", String(50), unique = True, nullable=False),
                     Column("is_admin", Integer, nullable=False),
-                    Column("password", Text, nullable=False),
+                    Column("password", String(32), nullable=False),
                     )
 
 class User(Base):
