@@ -49,7 +49,7 @@ class TestSeason(ModelTestCase):
         
         self.assertEqual(len(results_season_1), 3)
         
-        # TODO: mettre Nico absent au tournoi 2 et garantir attended
+        # TODO: Nico missing at #T2 & make sure attended is OK
         self.assertEqual(results_season_1[0].user, franck_p)
         self.assertEqual(results_season_1[0].attended, 2)
         self.assertEqual(results_season_1[0].buyin, 15)
