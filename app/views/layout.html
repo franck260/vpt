@@ -2,12 +2,12 @@ $def with (content, seasons = None)
 
 $def show_left_menu():
     $if seasons is not None:
-        <li><h3>Mon compte</h3></li>
+        <li><h3><a href="/account">Mon compte</a></h3></li>
         <li><div><p><a href="/logout">Déconnexion</a></p></div></li>    
 	    $for season in seasons:
 	        <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
 	        $for tournament in season.tournaments:
-	            <li><div><p><a href="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($tournament.date_tournoi.strftime("%d/%m/%Y"))</a></p></div></li>
+	            <li><div><p><a href="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($tournament.tournament_dt.strftime("%d/%m/%Y"))</a></p></div></li>
 
                 	            
   

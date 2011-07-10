@@ -2,7 +2,7 @@ $def with (next_tournament)
 
 $def show_next_tournament():
     $if next_tournament:
-    	Il aura lieu le <i>$next_tournament.date_tournoi.strftime("%A %d %B")</i> : 
+    	Il aura lieu le <i>$next_tournament.tournament_dt.strftime("%A %d %B")</i> : 
     	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
     $else:
 	    Le prochain tournoi n'est pas encore planifié.
@@ -20,6 +20,7 @@ $def show_next_tournament():
 	
 	<h2>Actualités du site</h2>
 	<ul> 
+        <li><i>9 juillet 2011</i> : fonctionnalité d'édition de profil & publication des derniers résultats</li> 
         <li><i>10 juin 2011</i> : nouveau design, corrections de bugs & publication des derniers résultats</li> 
         <li><i>27 mai 2011</i> : lancement du site</li> 
     </ul> 

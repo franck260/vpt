@@ -2,7 +2,6 @@
 
 from app.models import Season, Tournament
 from app.utils import session
-from sqlalchemy.sql.expression import desc
 from web import config
 import web
 
@@ -31,11 +30,11 @@ class Update_Status:
         # Reads the HTTP request parameters
         i = web.input()
         tournament_id = i.tournament_id
-        statut = i.statut
+        status = i.status
         
         # Updates the status
         tournament = Tournament.get(tournament_id)
-        tournament.subscribe(config.session_manager.user, statut)
+        tournament.subscribe(config.session_manager.user, status)
     
     
     
@@ -49,13 +48,11 @@ class View :
         if tournament is None:
             raise web.notfound()
 
-        all_seasons = Season.all(order_by_clause=desc(Season.start_year)) #@UndefinedVariable
-
         return config.views.layout(config.views.tournament(tournament,
                                                            config.views.statistics(tournament),
                                                            config.views.results(tournament),
                                                            config.views.comments(tournament)),
-                                   all_seasons)
+                                   Season.all())
 
 class View_Part:
 

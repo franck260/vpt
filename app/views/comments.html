@@ -4,7 +4,7 @@ $def show_comments():
     $for comment in tournament.comments:
         <div class="comment_wrapper"> 
             <div class="comment_information">
-                <div class="comment_user">$comment.user.pseudo</div> 
+                <div class="comment_user">$comment.user.pseudonym</div> 
                 <div class="comment_date">$dates.change_timezone(comment.comment_dt).strftime("%d/%m/%y %H:%M")</div>
             </div>
             <div class="comment_content">$:formatting.spacesafe(comment.comment)</div> 

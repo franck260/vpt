@@ -31,7 +31,7 @@ class TestSeasons(ControllerTestCase):
         self.assertEqual(response.status, HTTP_OK)
         
         self.assertIn("<h2>Saison 1 (2009 - 2010)</h2>", response.data)
-        self.assertIn("<td>%s</td>" % UserData.franck_p.pseudo, response.data)
-        self.assertIn("<td>%s</td>" % UserData.jo.pseudo, response.data)
-        self.assertIn("<td>%s</td>" % UserData.nico.pseudo, response.data)
+        self.assertIn("<td>%s</td>" % UserData.franck_p.pseudonym, response.data)
+        self.assertIn("<td>%s</td>" % UserData.jo.pseudonym, response.data)
+        self.assertIn("<td>%s</td>" % UserData.nico.pseudonym, response.data)
         

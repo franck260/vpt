@@ -12,7 +12,7 @@ results_table = Table("RESULTS", metadata,
                       Column("id", Integer, primary_key=True, nullable=False),
                       Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False),
                       Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
-                      Column("statut", String(1), nullable=False),
+                      Column("status", String(1), nullable=False),
                       Column("buyin", Integer, nullable=True),
                       Column("rank", Integer, nullable=True),
                       Column("profit", Integer, nullable=True),
@@ -24,7 +24,7 @@ class _Result(Base):
     
     def __repr__(self):
         #TODO: display the actual class
-        return "<Result(%s,%s,%s)>" % (self.user.pseudo, self.buyin, self.rank)
+        return "<Result(%s,%s,%s)>" % (self.user.pseudonym, self.buyin, self.rank)
 
     @property
     def net_profit(self):
@@ -38,13 +38,16 @@ class _Result(Base):
 class Result(_Result):
     """ Represents a tournament result """
     
+    # A = Absent, M = Missing, P = Present
     STATUSES = Enum(["A", "M", "P"])
+    
+    # The last player of the game does not get 0 but MIN_SCORE instead
     MIN_SCORE = 5
 
     @property
     def actual(self):
         """ Is the result actual, i.e. does it represent real data (to be displayed, for instance) """
-        return self.statut == Result.STATUSES.P
+        return self.status == Result.STATUSES.P
 
     @property
     def score(self):

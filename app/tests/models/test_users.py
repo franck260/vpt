@@ -24,12 +24,12 @@ class TestUser(ModelTestCase):
     
     def test_get(self):
         
-        franck_l = config.orm.query(User).filter(User.nom == "Lasry").one() #@UndefinedVariable
-        jo = config.orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
-        francks = config.orm.query(User).filter(User.pseudo.like("Franck%")).all() #@UndefinedVariable
+        franck_l = config.orm.query(User).filter(User.last_name == "Lasry").one() #@UndefinedVariable
+        jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
+        francks = config.orm.query(User).filter(User.pseudonym.like("Franck%")).all() #@UndefinedVariable
         
-        self.assertEquals(franck_l.prenom, "Franck")
-        self.assertEquals(jo.prenom, "Jonathan")
+        self.assertEquals(franck_l.first_name, "Franck")
+        self.assertEquals(jo.first_name, "Jonathan")
         self.assertEqual(len(francks), 2)
                 
     

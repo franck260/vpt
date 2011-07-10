@@ -2,7 +2,7 @@ $def with (entity)
 
 $code:
     # Définition des methodes partagées
-    show_user = lambda result: result.user.pseudo
+    show_user = lambda result: result.user.pseudonym
     show_attended = lambda result: result.attended
     show_buyin = lambda result: formatting.append(result.buyin, " €")
     show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")

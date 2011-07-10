@@ -24,8 +24,8 @@ class TestTournamentComment(ModelTestCase):
     
     def test_get(self):
         
-        comments_11 = config.orm.query(TournamentComment).join(TournamentComment.tournament).filter(Tournament.date_tournoi == datetime.date(2009, 9, 1)).all() #@UndefinedVariable
-        comments_12 = config.orm.query(TournamentComment).join(TournamentComment.tournament).filter(Tournament.date_tournoi == datetime.date(2010, 1, 1)).all() #@UndefinedVariable
+        comments_11 = config.orm.query(TournamentComment).join(TournamentComment.tournament).filter(Tournament.tournament_dt == datetime.date(2009, 9, 1)).all() #@UndefinedVariable
+        comments_12 = config.orm.query(TournamentComment).join(TournamentComment.tournament).filter(Tournament.tournament_dt == datetime.date(2010, 1, 1)).all() #@UndefinedVariable
         comments_21 = config.orm.query(TournamentComment).join(TournamentComment.tournament).join(Tournament.season).filter(Season.id == 2).all() #@UndefinedVariable
         
         self.assertEqual(len(comments_11), 0)

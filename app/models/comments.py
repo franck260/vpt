@@ -33,7 +33,7 @@ class BaseComment(Base):
         self.comment = comment
     
     def __repr__(self) : 
-        return "<Comment(%s,%s,%s)>" % (self.user.pseudo, self.comment, self.comment_dt)
+        return "<Comment(%s,%s,%s)>" % (self.user.pseudonym, self.comment, self.comment_dt)
 
 class TournamentComment(BaseComment):
     """ Tournament comments """

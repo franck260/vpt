@@ -1,7 +1,7 @@
 $def with (tournament)
 
 $code:
-    format_players = lambda results: ",".join([result.user.pseudo for result in results])
+    format_players = lambda results: ",".join([result.user.pseudonym for result in results])
 
 $def show_subscription_button(status, label, extra_text):
     $if config.session_manager.user in [result.user for result in tournament.results_by_status(status)]:

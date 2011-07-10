@@ -15,7 +15,7 @@ import web
                        
 tournaments_table = Table("TOURNAMENTS", metadata,
                           Column("id", Integer, primary_key=True, nullable=False),
-                          Column("date_tournoi", Date, nullable=False),
+                          Column("tournament_dt", Date, nullable=False),
                           Column("buyin", Integer, nullable=False),
                           Column("season_id", Integer, ForeignKey("SEASONS.id"), nullable=False),
                           Column("position", Integer, nullable=True)
@@ -43,21 +43,21 @@ class Tournament(Base):
         """ Returns the next scheduled tournament, based on the system date """
         
         return config.orm.query(Tournament)                                              \
-                         .filter(Tournament.date_tournoi >= datetime.date.today())       \
-                         .order_by(Tournament.date_tournoi)                              \
+                         .filter(Tournament.tournament_dt >= datetime.date.today())       \
+                         .order_by(Tournament.tournament_dt)                              \
                          .first()                                                 
         
     def __repr__(self) : 
-        return "<Tournament(#%s-%s, %s, %d)>" % (self.season.id, self.position, self.date_tournoi, self.buyin)
+        return "<Tournament(#%s-%s, %s, %d)>" % (self.season.id, self.position, self.tournament_dt, self.buyin)
     
     def __eq__(self, other):
-        return self.date_tournoi == other.date_tournoi and self.buyin == other.buyin
+        return self.tournament_dt == other.tournament_dt and self.buyin == other.buyin
     
-    def subscribe(self, user, statut):
+    def subscribe(self, user, status):
         """ Subscribes or modifies the subscription (INSERT OR UPDATE) of the user for this tournament instance """
         
         # Calculates the buyin
-        buyin = self.buyin if statut == Result.STATUSES.P else None
+        buyin = self.buyin if status == Result.STATUSES.P else None
             
         # Fetches the result already in the database (if any)
         current_result = self.results_by_user.get(user)
@@ -67,7 +67,7 @@ class Tournament(Base):
             self.results.append(current_result)
             current_result.user = user
 
-        current_result.statut = statut
+        current_result.status = status
         current_result.buyin = buyin
         current_result.rank = None
         current_result.profit = None
@@ -83,7 +83,7 @@ class Tournament(Base):
     
     @property
     def future(self):
-        return datetime.date.today() <= self.date_tournoi
+        return datetime.date.today() <= self.tournament_dt
     
     @property
     def nb_attending_players(self):
@@ -96,10 +96,10 @@ class Tournament(Base):
 
     def results_by_status(self, status):
         """ Returns the tournament results, ordered and filtered by status """
-        return filter(lambda result: result.statut == status, self.results)
+        return filter(lambda result: result.status == status, self.results)
     
 mapper(Tournament, tournaments_table, properties={
-    "results": relationship(Result, backref="tournament", order_by=[desc(results_table.c.statut), results_table.c.rank, results_table.c.user_id], cascade="save-update, merge, delete"), #@UndefinedVariable
+    "results": relationship(Result, backref="tournament", order_by=[desc(results_table.c.status), results_table.c.rank, results_table.c.user_id], cascade="save-update, merge, delete"), #@UndefinedVariable
     "comments": relationship(TournamentComment, backref="tournament", order_by=TournamentComment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable
 })
 web.debug("[MODEL] Successfully mapped Tournament class")

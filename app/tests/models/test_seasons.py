@@ -22,6 +22,10 @@ class TestSeason(ModelTestCase):
         all_seasons = Season.all()
         print all_seasons
         self.assertEqual(len(all_seasons), 2)
+        
+        # Checks the order by clause
+        self.assertEqual(all_seasons[0].id, 2)
+        self.assertEqual(all_seasons[1].id, 1)
     
     def test_get(self):
         
@@ -41,9 +45,9 @@ class TestSeason(ModelTestCase):
         season_1 = config.orm.query(Season).filter(Season.start_year == 2009).one() #@UndefinedVariable
         season_2 = config.orm.query(Season).filter(Season.start_year == 2010).one() #@UndefinedVariable
         
-        franck_p = config.orm.query(User).filter(User.nom == "Perez").one() #@UndefinedVariable
-        nico = config.orm.query(User).filter(User.prenom == "Nicolas").one() #@UndefinedVariable
-        jo = config.orm.query(User).filter(User.prenom == "Jonathan").one() #@UndefinedVariable
+        franck_p = config.orm.query(User).filter(User.last_name == "Perez").one() #@UndefinedVariable
+        nico = config.orm.query(User).filter(User.first_name == "Nicolas").one() #@UndefinedVariable
+        jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
 
         results_season_1 = season_1.results
         
