@@ -7,8 +7,9 @@ from itertools import groupby
 from sqlalchemy import Table, Column, Integer
 from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm import mapper, relationship
-import web
+from sqlalchemy.sql.expression import desc
 from web import config
+import web
 
                                    
 seasons_table = Table("SEASONS", metadata,
@@ -18,6 +19,11 @@ seasons_table = Table("SEASONS", metadata,
                       )
 
 class Season(Base):
+    
+    @classmethod
+    def all(cls):
+        """ Overrides the default all method to guarantee the order by """
+        return Base.all.im_func(Season, order_by_clause=desc(Season.start_year)) #@UndefinedVariable
     
     @property
     def results(self):
