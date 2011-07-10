@@ -10,6 +10,8 @@ import hashlib
 import web
 from sqlalchemy.orm.exc import NoResultFound
 
+to_md5 = lambda s : hashlib.md5(s).hexdigest()
+
 class SqlAlchemyDBStore(Store):
     """
     Store for saving a session in database
@@ -72,7 +74,7 @@ class SessionManager(object):
             return False
         
         # Encodes the password
-        password_md5 = hashlib.md5(password).hexdigest()
+        password_md5 = to_md5(password)
         
         # Checks the password
         if user.password != password_md5:
