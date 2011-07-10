@@ -3,11 +3,11 @@ $def with (login_form)
 <div class="post"> 
 <h2>Identification requise</h2>
  
- <p>
+<p>
 <form action="" method="post" class="login_form">
 
     $if not login_form.valid:
-        <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div>
+        <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div><br/>
         
     $:login_form.render_css()
 
