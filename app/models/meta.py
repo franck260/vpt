@@ -14,7 +14,7 @@ class SessionFactory(object):
     
     def __call__(self):
         engine = self.engine_factory()
-        self.sessionmaker.configure(bind = engine)
+        self.sessionmaker.configure(bind=engine)
         session = self.sessionmaker()
         web.debug("[MODEL] Sucessfully instanciated DB session %s bound to %s" %(session, engine))
         return session
@@ -23,7 +23,7 @@ def init_orm(engine_factory):
     return scoped_session(SessionFactory(engine_factory))
 
 def init_engine(dsn, echo):
-    engine = create_engine(dsn, echo = echo)
+    engine = create_engine(dsn, echo=echo)
     web.debug("[MODEL] Successfully instantiated DB engine (DSN = %s, echo = %s)" %(dsn, echo))
     return engine
 
@@ -34,7 +34,7 @@ class Base(object):
     """ Parent of all model classes """
     
     @classmethod
-    def all(cls, order_by_clause = None):
+    def all(cls, order_by_clause=None):
         
         # Creation of the query
         query = config.orm.query(cls)
