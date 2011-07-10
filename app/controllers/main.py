@@ -3,8 +3,6 @@
 from app.models import Season, Tournament
 from app.utils import session
 from web import config
-from sqlalchemy.sql.expression import desc
-
 
 class Index :
     
@@ -12,9 +10,6 @@ class Index :
     def GET(self):
         
         next_tournament = Tournament.next_tournament()
-        all_seasons = Season.all(order_by_clause = desc(Season.start_year)) #@UndefinedVariable
-
         
-        return config.views.layout(config.views.index(next_tournament),
-                                   all_seasons)
+        return config.views.layout(config.views.index(next_tournament), Season.all())
     
