@@ -29,7 +29,7 @@ function updateStatus(tournament_id, status) {
     
     // Triggers the server call 
     $.post(/* url  */     "/updateStatus",
-           /* data */     {tournament_id: tournament_id, statut:status },
+           /* data */     {tournament_id: tournament_id, status:status },
            /* callback */ function(data) {
                                $("#statistics").load("/statistics/" + tournament_id);
                                $("#results").load("/results/" + tournament_id);
@@ -55,11 +55,13 @@ function postComment(tournament_id) {
         $.post(/* url  */     "/addComment",
                /* data */     {tournament_id: tournament_id, comment:comment },
                /* callback */ function(data) {
-                                  $("#comments").load("/comments/" + tournament_id);
-                                  $("#comment_ajax_animation").hide();
-                                  $("#comment_textarea")[0].value = "";
-                                  $("#comment_textarea").attr("disabled", false);
-                                  $("#comment_button").attr("disabled", false);
+                                  $("#comments").load(/* url  */     "/comments/" + tournament_id,
+                                                      /* callback */ function(data) {
+                                                                         $("#comment_ajax_animation").hide();
+                                                                         $("#comment_textarea")[0].value = "";
+                                                                         $("#comment_textarea").attr("disabled", false);
+                                                                         $("#comment_button").attr("disabled", false);
+                                                                     });
                               });    
     }
     
