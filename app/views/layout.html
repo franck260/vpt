@@ -1,16 +1,13 @@
-$def with (content, seasons = None)
+$def with (content, all_seasons=None)
 
 $def show_left_menu():
-    $if seasons is not None:
+    $if all_seasons is not None:
         <li><h3><a href="/account">Mon compte</a></h3></li>
         <li><div><p><a href="/logout">Déconnexion</a></p></div></li>    
-	    $for season in seasons:
+	    $for season in all_seasons:
 	        <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
 	        $for tournament in season.tournaments:
 	            <li><div><p><a href="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($tournament.tournament_dt.strftime("%d/%m/%Y"))</a></p></div></li>
-
-                	            
-  
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
@@ -25,7 +22,6 @@ $def show_left_menu():
     <script type="text/javascript" src="/public/js/defaults.js"></script> 
     <link href="/public/css/defaults.css" rel="stylesheet" type="text/css"/> 
 </head> 
- 
  
 <body>  
 
