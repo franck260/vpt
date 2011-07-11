@@ -38,7 +38,13 @@ form.login_form label, form.login_form input {
     width: 300px;
 }
 
-form.login_form button {
+form.user_form label, form.user_form input {
+    display: block;
+    margin: 3px 0px;
+    width: 300px;
+}
+
+form.login_form button, form.user_form button {
     padding:2px 0 0 0;
     color:white;
     background-color:black;
@@ -50,10 +56,11 @@ form.login_form button {
     margin: 10px 0;
 }
 
-div.login_error {
+div.login_error, span.field_error {
     font-weight: bold;
     color: red;
-    margin: 0 0 20px 0;
+    /* margin: 0 0 0 0; */
+    display: block;
 }
 
 div.comment_wrapper {

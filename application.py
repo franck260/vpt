@@ -15,16 +15,18 @@ import web
 urls = (
     '/',                                    'app.controllers.main.Index',
     
+    '/login',                               'app.controllers.account.Login',
+    '/logout',                              'app.controllers.account.Logout',
+    '/account',                             'app.controllers.account.View',
+    '/update_user',                         'app.controllers.account.Update_User',
+    '/update_password',                     'app.controllers.account.Update_Password',
+
     '/season/(\d+)',                        'app.controllers.seasons.View',
 
     '/tournament/(\d+)/(\d+)',              'app.controllers.tournaments.View',
     '/(statistics|results|comments)/(\d+)', 'app.controllers.tournaments.View_Part',   
     '/updateStatus',                        'app.controllers.tournaments.Update_Status',
     '/addComment',                          'app.controllers.tournaments.Add_Comment',
-    
-    '/login',                               'app.controllers.account.Login',
-    '/logout',                              'app.controllers.account.Logout',
-    '/account',                             'app.controllers.account.View',
     
     '/public/(?:img|js|css|doc)/.*',        'app.controllers.public.Public'
 )
