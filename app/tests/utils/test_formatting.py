@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from app.utils.formatting import spacesafe, append
+from app.utils.formatting import spacesafe, append, first_lower
 try:
     import unittest2 as unittest
 except ImportError:
@@ -9,6 +9,13 @@ except ImportError:
 # TODO: the __init__ method initializes too many things
 
 class TestFormatting(unittest.TestCase):
+
+    def test_first_lower(self):
+        
+        self.assertEquals(first_lower(None), "")
+        self.assertEquals(first_lower(""), "")
+        self.assertEquals(first_lower("Hey buddies"), "hey buddies")
+        self.assertEquals(first_lower("Hey Buddies"), "hey Buddies")
 
     def test_spacesafe(self):
         
