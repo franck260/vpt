@@ -155,6 +155,17 @@ class TournamentData(DataSet):
         season = SeasonData.season_2
         comments = [TournamentCommentData.comment_211]
         results = [ResultData.result21_jo, ResultData.result21_fx]
+        
+class NewsData(DataSet):
+    class news_1:
+        news = u"Lancement du site"
+        news_dt = datetime.date(2011, 5, 27)
+    class news_2:
+        news = u"Nouveau design, corrections de bugs & publication des derniers résultats"
+        news_dt = datetime.date(2011, 6, 10)
+    class news_3:
+        news = u"Fonctionnalité d'édition de profil & publication des derniers résultats"
+        news_dt = datetime.date(2011, 7, 12)
 
 class WebTestCase(unittest.TestCase):
     """ Parent of all test classes based on a Web architecture (controllers, models...) """

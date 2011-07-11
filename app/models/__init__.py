@@ -7,5 +7,6 @@ from app.models.results import Result
 from app.models.tournaments import Tournament
 from app.models.seasons import Season
 from app.models.sessions import Session
+from app.models.news import News
 
 

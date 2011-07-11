@@ -1,4 +1,4 @@
-$def with (next_tournament)
+$def with (next_tournament, all_news)
 
 $def show_next_tournament():
     $if next_tournament:
@@ -19,10 +19,9 @@ $def show_next_tournament():
 	<p>Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.</p>
 	
 	<h2>Actualités du site</h2>
-	<ul> 
-        <li><i>9 juillet 2011</i> : fonctionnalité d'édition de profil & publication des derniers résultats</li> 
-        <li><i>10 juin 2011</i> : nouveau design, corrections de bugs & publication des derniers résultats</li> 
-        <li><i>27 mai 2011</i> : lancement du site</li> 
+	<ul>
+	    $for news in all_news:
+	        <li><i>$news.news_dt.strftime("%d %B %Y")</i> : $:formatting.first_lower(news.news)</li>
     </ul> 
 	
 </div>
