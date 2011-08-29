@@ -8,7 +8,10 @@ from application import app
 from web import config
 import copy
 import datetime
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json 
 
 
 
