@@ -19,12 +19,13 @@ class TestNews(ModelTestCase):
     def test_all(self):
         
         all_news = News.all()
-        self.assertEqual(len(all_news), 3)
+        self.assertEqual(len(all_news), 4)
         
         # Checks the order by clause
-        self.assertEqual(all_news[0].news_dt, datetime.date(2011, 7, 12))
-        self.assertEqual(all_news[1].news_dt, datetime.date(2011, 6, 10))
-        self.assertEqual(all_news[2].news_dt, datetime.date(2011, 5, 27))
+        self.assertEqual(all_news[0].news_dt, datetime.date(2011, 8, 15))
+        self.assertEqual(all_news[1].news_dt, datetime.date(2011, 7, 13))
+        self.assertEqual(all_news[2].news_dt, datetime.date(2011, 6, 10))
+        self.assertEqual(all_news[3].news_dt, datetime.date(2011, 5, 27))
     
     
     

@@ -7,6 +7,7 @@ import web
 
 HTTP_OK = "200 OK"
 HTTP_SEE_OTHER = "303 See Other"
+HTTP_FORBIDDEN = "403 Forbidden"
 HTTP_NOT_FOUND = "404 Not Found"
 
 class ControllerTestCase(WebTestCase):

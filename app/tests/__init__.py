@@ -118,10 +118,14 @@ class ResultData(DataSet):
         user = UserData.jo
         status = Result.STATUSES.P
         buyin = 10
+        rank = None
+        profit = None
     class result21_fx:
         user = UserData.fx
         status = Result.STATUSES.P
         buyin = 10
+        rank = None
+        profit = None
     
 class TournamentCommentData(DataSet):
     class comment_121:
@@ -150,7 +154,7 @@ class TournamentData(DataSet):
         comments = [TournamentCommentData.comment_121, TournamentCommentData.comment_122, TournamentCommentData.comment_123]
         results = [ResultData.result12_franck_p, ResultData.result12_jo, ResultData.result12_fx]
     class tournament_21:
-        tournament_dt = datetime.date(2010, 9, 1)
+        tournament_dt = datetime.date(2010, 8, 1)
         buyin = 10        
         season = SeasonData.season_2
         comments = [TournamentCommentData.comment_211]
@@ -165,7 +169,10 @@ class NewsData(DataSet):
         news_dt = datetime.date(2011, 6, 10)
     class news_3:
         news = u"Fonctionnalité d'édition de profil & publication des derniers résultats"
-        news_dt = datetime.date(2011, 7, 12)
+        news_dt = datetime.date(2011, 7, 13)
+    class news_4:
+        news = u"Publication des derniers résultats"
+        news_dt = datetime.date(2011, 8, 15)
 
 class WebTestCase(unittest.TestCase):
     """ Parent of all test classes based on a Web architecture (controllers, models...) """
