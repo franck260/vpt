@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+#TODO: test login redirection
 
 from app.controllers import forms
 from app.models import Season
@@ -66,14 +67,15 @@ class Login:
     @session.configure_session(enabled=True)
     def POST(self):
         
-        # Reads the form parameters
-        i = web.input()
+        # Reads the form parameters & the previously requested path (if any)
+        i = web.input(next="/")
         email = i.email
         password = i.password
+        requested_path = i.next
     
-        # Tries to log in
+        # Tries to log in, and redirects to the previously requested path (if any)
         if config.session_manager.login(email, password):
-            raise web.seeother("/")
+            raise web.seeother(requested_path)
         else:
             login_form = forms.login_form(email)
             login_form.valid = False
