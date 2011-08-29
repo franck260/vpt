@@ -1,0 +1,10 @@
+$def with (tournament, results_fieldset)
+
+<p>
+<form action="javascript:updateResults($tournament.id);" id="admin_results_form" class="results_form">
+<table class="admin_results">
+$:results_fieldset.render()
+</table>
+<button type="submit">Modifier</button>
+</form>
+</p>

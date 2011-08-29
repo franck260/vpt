@@ -2,10 +2,12 @@
 
 """ All the input forms used by the controllers """
 
-from app.models import User
+from app.models import User, Result
+from app.utils import formatting
 from app.utils.session import to_md5
 from formalchemy import FieldSet, validators
 from formalchemy.fields import Field
+from formalchemy.tables import Grid
 import web
 
 def login_form(email = None):
@@ -55,14 +57,56 @@ class PasswordFieldSet(FieldSet):
         
         FieldSet.__init__(self, User)
 
-        self.add(Field("old_password"))
-        self.add(Field("new_password"))
-        self.add(Field("new_password_confirm"))
+        self.append(Field("old_password"))
+        self.append(Field("new_password"))
+        self.append(Field("new_password_confirm"))
         
-        inc = [self.old_password.password().label(u"Ancien mot de passe").required().validate(self.old_password_validator),
-               self.new_password.password().label(u"Nouveau mot de passe").required().validate(validators.minlength(4)),
-               self.new_password_confirm.password().label(u"Nouveau mot de passe (confirmation)").required().validate(validators.minlength(4)).validate(self.new_password_validator),
+        inc = [self.old_password.label(u"Ancien mot de passe").password().required().validate(self.old_password_validator),
+               self.new_password.label(u"Nouveau mot de passe").password().required().validate(validators.minlength(4)),
+               self.new_password_confirm.label(u"Nouveau mot de passe (confirmation)").password().required().validate(validators.minlength(4)).validate(self.new_password_validator),
                ]
         
         self.configure(include=inc)
 
+class ResultsFieldSet(Grid):
+    """ FormAlchemy form used to edit tournament results """
+    
+    @staticmethod
+    def required_for(statuses):
+        
+        @validators.accepts_none
+        def f(value, field):
+            status = field.parent.to_dict(with_prefix=False)["status"]
+            if status in statuses and value is None:
+                raise validators.ValidationError("Mandatory value (status=%s)" %status)
+            
+        return f
+
+    @staticmethod
+    def forbidden_for(statuses):
+        
+        @validators.accepts_none
+        def f(value, field):
+            status = field.parent.to_dict(with_prefix=False)["status"]
+            if status in statuses and value is not None:
+                raise validators.ValidationError("Forbidden value (status=%s)" %status)
+            
+        return f
+    
+    def __init__(self):
+        
+        Grid.__init__(self, Result)
+        
+        STATUS_OPTIONS = [(u"Présent", Result.STATUSES.P), (u"Absent", Result.STATUSES.A), (u"Peut-être", Result.STATUSES.M)]
+        RANK_OPTIONS = [(u"", None)] + [(formatting.append(i, formatting.to_rank), i) for i in range(1, len(User.all()))]
+
+        self.append(Field("pseudonym", value=lambda result: result.user.pseudonym))
+        
+        inc = [self.pseudonym.label(u"Joueur").readonly(),
+               self.status.label(u"Statut").dropdown(options=STATUS_OPTIONS),
+               self.buyin.label(u"Mise").validate(self.required_for([Result.STATUSES.P])).validate(self.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
+               self.rank.label(u"Classement").dropdown(options=RANK_OPTIONS).validate(self.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
+               self.profit.label(u"Gain").validate(self.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
+               ]
+        
+        self.configure(include=inc)

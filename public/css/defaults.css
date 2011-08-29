@@ -44,7 +44,12 @@ form.user_form label, form.user_form input {
     width: 300px;
 }
 
-form.login_form button, form.user_form button {
+form.results_form label, form.results_form input {
+    display: block;
+    width: 110px;
+}
+
+form.login_form button, form.user_form button, form.results_form button {
     padding:2px 0 0 0;
     color:white;
     background-color:black;
@@ -56,7 +61,7 @@ form.login_form button, form.user_form button {
     margin: 10px 0;
 }
 
-div.login_error, span.field_error {
+div.login_error, span.field_error, span.grid_error {
     font-weight: bold;
     color: red;
     /* margin: 0 0 0 0; */
@@ -119,12 +124,21 @@ table.results {
     border-spacing: 0px;
 }
 
-table.results th {
+table.admin_results { 
+    /* width: 480px; */
+    width: 100%;
+    border: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+table.results th, table.admin_results th {
     padding: 6px 3px;
     text-align: left;
     background-color:black;
     color:white;
     border: 1px black solid;
+    font-weight:bold;
 }
 
 table.results td {
@@ -134,6 +148,11 @@ table.results td {
     border-bottom: 1px black solid;
     /* border-left: 1px black solid;
     border-right: 1px black solid; */
+}
+
+table.admin_results td {
+    padding: 1px 2px;
+    text-align: left;
 }
 
 table.stats td {
