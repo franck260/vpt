@@ -10,7 +10,7 @@ class View:
     @session.configure_session(login_required = True)
     def GET(self, id):
 
-        season = Season.get(id)
+        season = Season.get(int(id))
         
         return config.views.layout(config.views.season(season, config.views.results(season)), Season.all())
 
