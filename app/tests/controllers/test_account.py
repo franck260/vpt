@@ -58,13 +58,13 @@ class TestAccount(ControllerTestCase):
     
     def test_account_notlogged(self):
         
-        response = app.request("/account") #@UndefinedVariable
+        response = app.request("/admin/account") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
  
     def test_account(self):
         
         self.login()
-        response = app.request("/account") #@UndefinedVariable
+        response = app.request("/admin/account") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         
         self.assertIn("Mon compte", response.data)
@@ -79,7 +79,7 @@ class TestAccount(ControllerTestCase):
         
     def test_update_user_notlogged(self):
         
-        response = app.request("/update_user", method="POST") #@UndefinedVariable
+        response = app.request("/update/user", method="POST") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
         
     def test_update_user(self):
@@ -107,21 +107,21 @@ class TestAccount(ControllerTestCase):
             invalid_user_data[key] = ""
             
             # Makes sure the server rejects the update
-            response = app.request("/update_user", method="POST", data=invalid_user_data) #@UndefinedVariable
+            response = app.request("/update/user", method="POST", data=invalid_user_data) #@UndefinedVariable
             self.assertEqual(response.status, HTTP_OK)
             self.assertIn("Please enter a value", response.data)
             self.assertEqual(config.session_manager.user, UserData.franck_l)
             self.assertNotEqual(config.session_manager.user, updated_user)
         
         # Makes sure that the update works with valid data        
-        response = app.request("/update_user", method="POST", data=updated_user_data) #@UndefinedVariable
+        response = app.request("/update/user", method="POST", data=updated_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
         self.assertEqual(config.session_manager.user, updated_user)
         self.assertNotEqual(config.session_manager.user, UserData.franck_l)
         
     def test_update_password_notlogged(self):
         
-        response = app.request("/update_password", method="POST") #@UndefinedVariable
+        response = app.request("/update/password", method="POST") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
         
     def test_update_password(self):
@@ -145,7 +145,7 @@ class TestAccount(ControllerTestCase):
         # Makes sure that the update fails with invalid data (1)
         invalid_user_data = copy.deepcopy(updated_user_data)
         invalid_user_data["User-1-old_password"] = ""
-        response = app.request("/update_password", method="POST", data=invalid_user_data) #@UndefinedVariable
+        response = app.request("/update/password", method="POST", data=invalid_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Please enter a value", response.data)
         self.assertNotIn("Passwords do not match", response.data)
@@ -155,7 +155,7 @@ class TestAccount(ControllerTestCase):
         # Makes sure that the update fails with invalid data (2)
         invalid_user_data = copy.deepcopy(updated_user_data)
         invalid_user_data["User-1-old_password"] = "invalid"
-        response = app.request("/update_password", method="POST", data=invalid_user_data) #@UndefinedVariable
+        response = app.request("/update/password", method="POST", data=invalid_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Invalid value", response.data)
         self.assertNotIn("Passwords do not match", response.data)
@@ -165,7 +165,7 @@ class TestAccount(ControllerTestCase):
         # Makes sure that the update fails with invalid data (3)
         invalid_user_data = copy.deepcopy(updated_user_data)
         invalid_user_data["User-1-new_password"] = ""
-        response = app.request("/update_password", method="POST", data=invalid_user_data) #@UndefinedVariable
+        response = app.request("/update/password", method="POST", data=invalid_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Please enter a value", response.data)
         self.assertIn("Passwords do not match", response.data)
@@ -175,7 +175,7 @@ class TestAccount(ControllerTestCase):
         # Makes sure that the update fails with invalid data (4)
         invalid_user_data = copy.deepcopy(updated_user_data)
         invalid_user_data["User-1-new_password"] = "a"
-        response = app.request("/update_password", method="POST", data=invalid_user_data) #@UndefinedVariable
+        response = app.request("/update/password", method="POST", data=invalid_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Value must be at least 4 characters long", response.data)
         self.assertIn("Passwords do not match", response.data)
@@ -185,7 +185,7 @@ class TestAccount(ControllerTestCase):
         # Makes sure that the update fails with invalid data (5)
         invalid_user_data = copy.deepcopy(updated_user_data)
         invalid_user_data["User-1-new_password"] = NEW_PASSWORD + "a"
-        response = app.request("/update_password", method="POST", data=invalid_user_data) #@UndefinedVariable
+        response = app.request("/update/password", method="POST", data=invalid_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertNotIn("Value must be at least 4 characters long", response.data)
         self.assertIn("Passwords do not match", response.data)
@@ -193,7 +193,7 @@ class TestAccount(ControllerTestCase):
         self.assertNotEqual(config.session_manager.user, updated_user)   
             
         # Makes sure that the update works with valid data        
-        response = app.request("/update_password", method="POST", data = updated_user_data) #@UndefinedVariable
+        response = app.request("/update/password", method="POST", data=updated_user_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
         self.assertEqual(config.session_manager.user, updated_user)
         self.assertNotEqual(config.session_manager.user, UserData.franck_l)
