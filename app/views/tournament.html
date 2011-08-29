@@ -1,19 +1,34 @@
 $def with (tournament, statistics, results, comments)
 
+$def show_administration_link_if_authorized():
+    $if config.session_manager.user.is_admin:
+        <a href="#" onclick="unlockResults($tournament.id);" id="admin_results_link"> <img src="/public/img/lock.png" /></a>
+
 $def show_comments_components():
     <textarea id="comment_textarea" class="comment_textarea"></textarea> 
     <br /> 
-    <button id="comment_button" name="submit" type="button" onclick="postComment($tournament.id)" class="comment_button">Poster un commentaire</button> 
-    &nbsp; &nbsp;<img style="display: none;" id="comment_ajax_animation" src="/public/img/ajax-loader.gif" />
+    <button id="comment_button" name="submit" type="button" onclick="postComment($tournament.id);" class="comment_button">Poster un commentaire</button> 
+    &nbsp; &nbsp;
+    $:formatting.ajax_animation("comment_ajax_animation")
 
 <div class="post"> 
-<h2>Tournoi $tournament.position ($tournament.tournament_dt.strftime("%A %d %B %Y"))</h2> 
+<h2>
+Tournoi $tournament.position ($:formatting.format_date(tournament.tournament_dt, "%A %d %B %Y")) 
+$:formatting.ajax_animation("statistics_ajax_animation")
+</h2> 
 
 <div id="statistics">
 $:statistics
 </div>
 
-<h2>Résultats</h2>
+<h2>
+$if tournament.future:
+    Inscriptions 
+$else:
+    Résultats 
+$:show_administration_link_if_authorized()
+$:formatting.ajax_animation("results_ajax_animation")
+</h2>
 
 <div id="results">
 $:results
@@ -34,6 +49,3 @@ $:show_comments_components()
 
 </div>
         
-
-
-

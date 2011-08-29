@@ -5,7 +5,7 @@ $code:
     show_user = lambda result: result.user.pseudonym
     show_attended = lambda result: result.attended
     show_buyin = lambda result: formatting.append(result.buyin, " €")
-    show_rank = lambda result: formatting.append(result.rank, lambda s: "er" if s == 1 else "e")
+    show_rank = lambda result: formatting.append(result.rank, formatting.to_rank)
     show_profit = lambda result: formatting.append(result.profit, " €")
     show_net_profit = lambda result: formatting.append(result.net_profit, " €")
     show_score = lambda result: result.score
@@ -43,7 +43,7 @@ $def show_results():
             <tr>
                 $for header in headers:
                     <th><b>$header</b></th>     
-            </tr>
+            </tr> 
             $for result in filtered_results:
                 <tr>
                 $for formatter in formatters:

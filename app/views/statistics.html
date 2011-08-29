@@ -17,7 +17,7 @@ $def show_subscription_box():
         $:show_subscription_button(result_statuses.P, "Oui", "&nbsp;|&nbsp;")
         $:show_subscription_button(result_statuses.A, "Non", "&nbsp;|&nbsp;")
         $:show_subscription_button(result_statuses.M, "Peut-être", "&nbsp; &nbsp;")
-        <img style="display: none;" id="subscribtion_ajax_animation" src="/public/img/ajax-loader.gif" />
+        $:formatting.ajax_animation("subscribtion_ajax_animation")
         </td></tr>
         
 $def show_attending_players():
