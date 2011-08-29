@@ -29,7 +29,7 @@ class TestTournament(ModelTestCase):
 
         tournaments_season_1 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 1).all() #@UndefinedVariable
         tournament_season_2 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
-        tournament_21 = config.orm.query(Tournament).filter(Tournament.tournament_dt == datetime.date(2010, 9, 1)).one() #@UndefinedVariable
+        tournament_21 = config.orm.query(Tournament).filter(Tournament.tournament_dt == datetime.date(2010, 8, 1)).one() #@UndefinedVariable
         
         self.assertEqual(len(tournaments_season_1), 2)
         self.assertEquals(tournament_season_2.season.id, 2)
@@ -174,7 +174,7 @@ class TestTournament(ModelTestCase):
     
         self.assertEqual(season_1.tournaments[0].tournament_dt, datetime.date(2009, 9, 1))
         self.assertEqual(season_1.tournaments[1].tournament_dt, datetime.date(2010, 1, 1))
-        self.assertEqual(season_2.tournaments[0].tournament_dt, datetime.date(2010, 9, 1))
+        self.assertEqual(season_2.tournaments[0].tournament_dt, datetime.date(2010, 8, 1))
         
         tournament_13 = Tournament()
         tournament_13.tournament_dt = datetime.date(2010, 2, 1)
@@ -196,7 +196,7 @@ class TestTournament(ModelTestCase):
         self.assertEqual(season_1.tournaments[0].tournament_dt, datetime.date(2009, 9, 1))
         self.assertEqual(season_1.tournaments[1].tournament_dt, datetime.date(2010, 1, 1))
         self.assertEqual(season_1.tournaments[2].tournament_dt, datetime.date(2010, 2, 1))
-        self.assertEqual(season_2.tournaments[0].tournament_dt, datetime.date(2010, 9, 1))
+        self.assertEqual(season_2.tournaments[0].tournament_dt, datetime.date(2010, 8, 1))
 
         tournament_10 = Tournament()
         tournament_10.tournament_dt = datetime.date(2009, 8, 31)
@@ -220,7 +220,7 @@ class TestTournament(ModelTestCase):
         self.assertEqual(season_1.tournaments[1].tournament_dt, datetime.date(2009, 9, 1))
         self.assertEqual(season_1.tournaments[2].tournament_dt, datetime.date(2010, 1, 1))
         self.assertEqual(season_1.tournaments[3].tournament_dt, datetime.date(2010, 2, 1))
-        self.assertEqual(season_2.tournaments[0].tournament_dt, datetime.date(2010, 9, 1))
+        self.assertEqual(season_2.tournaments[0].tournament_dt, datetime.date(2010, 8, 1))
 
 
 
