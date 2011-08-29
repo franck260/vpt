@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import scoped_session, joinedload
 from sqlalchemy.orm.session import sessionmaker
-import web
 from web import config
+import web
 
 class SessionFactory(object):
     
@@ -47,5 +47,11 @@ class Base(object):
         return query.all()
     
     @classmethod
-    def get(cls, id):
-        return config.orm.query(cls).get(id)   
+    def get(cls, id, joined_attrs=[]):
+        
+        query = config.orm.query(cls)
+        
+        for joined_attr in joined_attrs:
+            query = query.options(joinedload(joined_attr))        
+        
+        return query.get(id) 

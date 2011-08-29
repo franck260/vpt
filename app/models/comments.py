@@ -14,7 +14,7 @@ comments_table = Table("COMMENTS", metadata,
                        Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
                        Column("type", String(1), nullable=False),
                        Column("comment", Text, nullable=False),
-                       Column("comment_dt", DateTime, default=datetime.datetime.now, nullable=False)
+                       Column("comment_dt", DateTime, nullable=False)
                        )
 
 tournament_comments_table = Table("TOURNAMENT_COMMENTS", metadata,
@@ -28,9 +28,10 @@ class BaseComment(Base):
     
     TYPES = Enum(["T", "S"])
     
-    def __init__(self, user=None, comment=None):
+    def __init__(self, user=None, comment=None, comment_dt=None):
         self.user = user
         self.comment = comment
+        self.comment_dt = comment_dt or datetime.datetime.now()
     
     def __repr__(self) : 
         return "<Comment(%s,%s,%s)>" % (self.user.pseudonym, self.comment, self.comment_dt)
@@ -40,7 +41,7 @@ class TournamentComment(BaseComment):
     pass
 
 mapper(BaseComment, comments_table, polymorphic_on=comments_table.c.type, polymorphic_identity=None, properties={
-    "user": relationship(User)
+    "user": relationship(User, lazy="joined")
 })
 
 mapper(TournamentComment, tournament_comments_table, inherits=BaseComment, polymorphic_identity=BaseComment.TYPES.T)

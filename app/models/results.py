@@ -18,8 +18,6 @@ results_table = Table("RESULTS", metadata,
                       Column("profit", Integer, nullable=True),
                       )
 
-
-
 class _Result(Base):
     
     def __repr__(self):
@@ -34,7 +32,6 @@ class _Result(Base):
         
         return self.profit - self.buyin  
 
-
 class Result(_Result):
     """ Represents a tournament result """
     
@@ -44,6 +41,21 @@ class Result(_Result):
     # The last player of the game does not get 0 but MIN_SCORE instead
     MIN_SCORE = 5
 
+    def __init__(self, user=None, status=None, buyin=None, rank=None, profit=None):
+        self.user = user
+        self.status = status
+        self.buyin = buyin
+        self.rank = rank
+        self.profit = profit
+
+    def __eq__(self, other):
+        
+        return self.user == other.user       \
+           and self.status == other.status   \
+           and self.buyin == other.buyin     \
+           and self.rank == other.rank       \
+           and self.profit == other.profit
+    
     @property
     def actual(self):
         """ Is the result actual, i.e. does it represent real data (to be displayed, for instance) """
@@ -57,6 +69,11 @@ class Result(_Result):
         
         return 100 - 100 * self.rank / self.tournament.nb_attending_players or self.MIN_SCORE
     
+# Handy method which returns a tuple composed of the sort keys of an instance
+# May also be used with the type parameter (Result) so that the ORDER BY clause
+# can be easily set up on the ORM side
+result_sort_keys = lambda r: (r.status, r.rank, r.user_id)    
+
 class SeasonResult(_Result):
     """ Represents a season result """
     
@@ -75,7 +92,7 @@ class SeasonResult(_Result):
         
 
 mapper(Result, results_table, properties={
-    "user": relationship(User)
+    "user": relationship(User, lazy="joined")
 })
 
 web.debug("[MODEL] Successfully mapped Result class")

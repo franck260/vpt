@@ -2,16 +2,13 @@
 
 from app.models.comments import TournamentComment
 from app.models.meta import metadata, Base
-from app.models.results import Result, results_table
+from app.models.results import Result, result_sort_keys
 from sqlalchemy import Table, Column, Integer, Date, ForeignKey
-from sqlalchemy.orm import mapper, relationship
+from sqlalchemy.orm import mapper, relationship, joinedload
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.sql.expression import desc
 from web import config
 import datetime
 import web
-
-
                        
 tournaments_table = Table("TOURNAMENTS", metadata,
                           Column("id", Integer, primary_key=True, nullable=False),
@@ -28,10 +25,11 @@ class Tournament(Base):
         """ Returns the tournament matching the parameters, or None if it could not be found """
         
         try:
-            tournament = config.orm.query(Tournament)                      \
-                               .filter(Tournament.season_id == season_id)  \
-                               .filter(Tournament.position == position)    \
-                               .one()
+            tournament = config.orm.query(Tournament)                          \
+                                   .options(joinedload(Tournament.results))    \
+                                   .filter(Tournament.season_id == season_id)  \
+                                   .filter(Tournament.position == position)    \
+                                   .one()
         except NoResultFound:
             tournament = None
         
@@ -63,9 +61,8 @@ class Tournament(Base):
         current_result = self.results_by_user.get(user)
         
         if not current_result :
-            current_result = Result()
+            current_result = Result(user=user)
             self.results.append(current_result)
-            current_result.user = user
 
         current_result.status = status
         current_result.buyin = buyin
@@ -98,8 +95,13 @@ class Tournament(Base):
         """ Returns the tournament results, ordered and filtered by status """
         return filter(lambda result: result.status == status, self.results)
     
+    def sort_results(self):
+        """ Sorts the tournament results by the same keys used by the ORM """
+        self.results.sort(key=result_sort_keys)
+
+# TODO: sort results by pseudonym instead
 mapper(Tournament, tournaments_table, properties={
-    "results": relationship(Result, backref="tournament", order_by=[desc(results_table.c.status), results_table.c.rank, results_table.c.user_id], cascade="save-update, merge, delete"), #@UndefinedVariable
+    "results": relationship(Result, backref="tournament", order_by=lambda: result_sort_keys(Result), cascade="save-update, merge, delete"), #@UndefinedVariable
     "comments": relationship(TournamentComment, backref="tournament", order_by=TournamentComment.comment_dt, cascade="save-update, merge, delete") #@UndefinedVariable
 })
 web.debug("[MODEL] Successfully mapped Tournament class")
