@@ -2,7 +2,7 @@ $def with (next_tournament, all_news)
 
 $def show_next_tournament():
     $if next_tournament:
-    	Il aura lieu le <i>$next_tournament.tournament_dt.strftime("%A %d %B")</i> : 
+    	Il aura lieu le <i>$:formatting.format_date(next_tournament.tournament_dt, "%A %d %B")</i> : 
     	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
     $else:
 	    Le prochain tournoi n'est pas encore planifié.
@@ -21,7 +21,7 @@ $def show_next_tournament():
 	<h2>Actualités du site</h2>
 	<ul>
 	    $for news in all_news:
-	        <li><i>$news.news_dt.strftime("%d %B %Y")</i> : $:formatting.first_lower(news.news)</li>
+	        <li><i>$:formatting.format_date(news.news_dt, "%d %B %Y")</i> : $:formatting.first_lower(news.news)</li>
     </ul> 
 	
 </div>
