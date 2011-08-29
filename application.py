@@ -10,33 +10,35 @@ from web import config
 import ConfigParser
 import locale
 import web
+import sys
 
 # Application's URLs
 urls = (
-    '/',                                    'app.controllers.main.Index',
+    "/",                                    "app.controllers.main.Index",
     
-    '/login',                               'app.controllers.account.Login',
-    '/logout',                              'app.controllers.account.Logout',
-    '/account',                             'app.controllers.account.View',
-    '/update_user',                         'app.controllers.account.Update_User',
-    '/update_password',                     'app.controllers.account.Update_Password',
+    "/login",                               "app.controllers.account.Login",
+    "/logout",                              "app.controllers.account.Logout",
+    "/admin/account",                       "app.controllers.account.View",
+    "/update/user",                         "app.controllers.account.Update_User",
+    "/update/password",                     "app.controllers.account.Update_Password",
 
-    '/season/(\d+)',                        'app.controllers.seasons.View',
+    "/season/(\d+)",                        "app.controllers.seasons.View",
 
-    '/tournament/(\d+)/(\d+)',              'app.controllers.tournaments.View',
-    '/(statistics|results|comments)/(\d+)', 'app.controllers.tournaments.View_Part',   
-    '/updateStatus',                        'app.controllers.tournaments.Update_Status',
-    '/addComment',                          'app.controllers.tournaments.Add_Comment',
+    "/tournament/(\d+)/(\d+)",              "app.controllers.tournaments.View",
+    "/update/status",                       "app.controllers.tournaments.Update_Status",
+    "/add/comment",                         "app.controllers.tournaments.Add_Comment",
+    "/admin/results/(\d+)",                 "app.controllers.tournaments.Admin_Results",
     
-    '/public/(?:img|js|css|doc)/.*',        'app.controllers.public.Public'
+    "/public/(?:img|js|css|doc)/.*",        "app.controllers.public.Public"
 )
 
 
 # Enforces the locale
-try:
+if sys.platform == "win32":
+    locale.setlocale(locale.LC_ALL, "fra")
+else:
     locale.setlocale(locale.LC_ALL, "fr_FR")
-except locale.Error:
-    locale.setlocale(locale.LC_ALL, "")
+    
 
 def _sqlalchemy_processor(handler):
     """ Makes sure a commit appends at the end of each request """
@@ -104,4 +106,5 @@ if __name__ == "__main__":
 else:
     
     # Enable FCGI
+    # TODO: this is no longer useful
     web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
