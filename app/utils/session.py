@@ -133,11 +133,21 @@ def init_session_manager(session_handler_cls):
     """ Instanciates the session manager """
     
     store = SqlAlchemyDBStore()
-    session_handler = session_handler_cls(app = None, store = store, initializer = {'is_logged': False, 'user_id' : None})
+    session_handler = session_handler_cls(app = None, store = store, initializer = {"is_logged": False, "user_id" : None})
     web.debug("[WEBSESSION] Sucessfully instanciated session manager with the handler %s" %session_handler_cls)
     return SessionManager(session_handler) 
     
+def administration(func):
+    """ Wraps a controller method (GET/POST) in order to restrict access to administrators """
 
+    def wrapped_func(*args):
+        
+        if not config.session_manager.user.is_admin:
+            raise web.Forbidden()
+        
+        return func(*args)
+            
+    return wrapped_func
 
 def configure_session(enabled = True, login_required = False):
     """ Wraps a controller method (GET/POST) in order to handle session management on a per-request basis """
@@ -157,7 +167,13 @@ def configure_session(enabled = True, login_required = False):
                 try:
                     
                     if not session_manager.is_logged:
-                        raise web.seeother('/login')
+                        
+                        # If the requested path is not the site's index, keep 
+                        # track of it to redirect the user after successful login
+                        path = web.ctx.path
+                        requested_path_parameter = "?next=%s" % path if path != "/" else ""
+                        raise web.seeother("/login%s" % requested_path_parameter)
+                    
                     return func(*args)
                 
                 finally:
