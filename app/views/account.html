@@ -4,7 +4,7 @@ $def with (user_fieldset, password_fieldset)
 
 <h2>Mon compte</h2>
 <p>
-<form action="/update_user" method="post" class="user_form">
+<form action="/update/user" method="post" class="user_form">
     $:user_fieldset.render()
     <button type="submit">Modifier</button>
 </form>
@@ -12,7 +12,7 @@ $def with (user_fieldset, password_fieldset)
 
 <h2>Mon mot de passe</h2>
 <p>
-<form action="/update_password" method="post" class="user_form">
+<form action="/update/password" method="post" class="user_form">
     $:password_fieldset.render()
     <button type="submit">Modifier</button>
 </form>
