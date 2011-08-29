@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from app.utils.formatting import spacesafe, append, first_lower
+from app.utils.formatting import spacesafe, append, first_lower, format_date
+import datetime
+import locale
+import sys
 try:
     import unittest2 as unittest
 except ImportError:
@@ -22,7 +25,34 @@ class TestFormatting(unittest.TestCase):
         self.assertEquals(spacesafe("test"), "test")
         self.assertEquals(spacesafe("test with space"), "test&nbsp;with&nbsp;space")
         self.assertEquals(spacesafe("test with space and\nbackslash"), "test&nbsp;with&nbsp;space&nbsp;and<br />backslash")
+    
+    def test_format_date(self):
+
+        # Enforces the locale
+        if sys.platform == "win32":
+            locale.setlocale(locale.LC_ALL, "fra")
+        else:
+            locale.setlocale(locale.LC_ALL, "fr_FR")
         
+        # Testing parameters
+        DATE_FORMAT = "%A %d %B %Y"
+        JULY_15 = datetime.date(2011, 7, 15)
+        AUGUST_15 = datetime.date(2011, 8, 15)
+        DECEMBER_15 = datetime.date(2011, 12, 15)
+        
+        # Checks that French dates are properly formatted
+        formatted_dt = format_date(JULY_15, DATE_FORMAT)
+        self.assertIsInstance(formatted_dt, unicode)
+        self.assertEqual(formatted_dt, u"vendredi 15 juillet 2011")
+        
+        formatted_dt = format_date(AUGUST_15, DATE_FORMAT)
+        self.assertIsInstance(formatted_dt, unicode)
+        self.assertEqual(formatted_dt, u"lundi 15 août 2011")
+        
+        formatted_dt = format_date(DECEMBER_15, DATE_FORMAT)
+        self.assertIsInstance(formatted_dt, unicode)
+        self.assertEqual(formatted_dt, u"jeudi 15 décembre 2011")
+    
     def test_append(self):
         
         self.assertIsNone(append(None, None))
