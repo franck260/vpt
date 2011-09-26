@@ -4,7 +4,7 @@
 
 # On-the-fly interpreter change
 import sys, os
-INTERP = "/home/franck260/ENV/bin/python"
+INTERP = "/home/franck260/ENV2.7/bin/python"
 if sys.executable != INTERP: os.execl(INTERP, INTERP, *sys.argv)
 sys.path.append(os.getcwd())
 
