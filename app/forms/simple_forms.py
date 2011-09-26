@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-""" All the input forms used by the controllers """
+""" Simple forms used by the controllers (except the generic administration one) """
 
+from app.forms import custom_validators
 from app.models import User, Result
 from app.utils import formatting
-from app.utils.session import to_md5
 from formalchemy import FieldSet, validators
 from formalchemy.fields import Field
 from formalchemy.tables import Grid
@@ -40,18 +40,6 @@ class UserFieldSet(FieldSet):
 
 class PasswordFieldSet(FieldSet):
     """ FormAlchemy form used to edit passwords """
-
-    @staticmethod
-    def old_password_validator(value, field):
-        
-        if field.parent.model.password != to_md5(value):
-            raise validators.ValidationError("Invalid value")
-        
-    @staticmethod
-    def new_password_validator(value, field):
-        
-        if field.parent.new_password.value != value:
-            raise validators.ValidationError("Passwords do not match")
     
     def __init__(self):
         
@@ -61,38 +49,16 @@ class PasswordFieldSet(FieldSet):
         self.append(Field("new_password"))
         self.append(Field("new_password_confirm"))
         
-        inc = [self.old_password.label(u"Ancien mot de passe").password().required().validate(self.old_password_validator),
+        inc = [self.old_password.label(u"Ancien mot de passe").password().required().validate(custom_validators.old_password_validator),
                self.new_password.label(u"Nouveau mot de passe").password().required().validate(validators.minlength(4)),
-               self.new_password_confirm.label(u"Nouveau mot de passe (confirmation)").password().required().validate(validators.minlength(4)).validate(self.new_password_validator),
+               self.new_password_confirm.label(u"Nouveau mot de passe (confirmation)").password().required().validate(validators.minlength(4)).validate(custom_validators.new_password_validator),
                ]
         
         self.configure(include=inc)
 
-class ResultsFieldSet(Grid):
-    """ FormAlchemy form used to edit tournament results """
-    
-    @staticmethod
-    def required_for(statuses):
+class ResultsGrid(Grid):
+    """ FormAlchemy grid used to edit tournament results """
         
-        @validators.accepts_none
-        def f(value, field):
-            status = field.parent.to_dict(with_prefix=False)["status"]
-            if status in statuses and value is None:
-                raise validators.ValidationError("Mandatory value (status=%s)" %status)
-            
-        return f
-
-    @staticmethod
-    def forbidden_for(statuses):
-        
-        @validators.accepts_none
-        def f(value, field):
-            status = field.parent.to_dict(with_prefix=False)["status"]
-            if status in statuses and value is not None:
-                raise validators.ValidationError("Forbidden value (status=%s)" %status)
-            
-        return f
-    
     def __init__(self):
         
         Grid.__init__(self, Result)
@@ -104,9 +70,10 @@ class ResultsFieldSet(Grid):
         
         inc = [self.pseudonym.label(u"Joueur").readonly(),
                self.status.label(u"Statut").dropdown(options=STATUS_OPTIONS),
-               self.buyin.label(u"Mise").validate(self.required_for([Result.STATUSES.P])).validate(self.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
-               self.rank.label(u"Classement").dropdown(options=RANK_OPTIONS).validate(self.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
-               self.profit.label(u"Gain").validate(self.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
+               self.buyin.label(u"Mise").validate(custom_validators.required_for([Result.STATUSES.P])).validate(custom_validators.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
+               self.rank.label(u"Classement").dropdown(options=RANK_OPTIONS).validate(custom_validators.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
+               self.profit.label(u"Gain").validate(custom_validators.forbidden_for([Result.STATUSES.M, Result.STATUSES.A])),
                ]
         
         self.configure(include=inc)
+        

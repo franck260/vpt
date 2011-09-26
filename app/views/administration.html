@@ -1,0 +1,27 @@
+$def with (grid, fieldset)
+
+<div class="post"> 
+
+<h2>Edition des éléments</h2>
+<p>
+<form action="" method="post" class="results_form">
+    <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
+    <input type="hidden" name="action" value="edit" />
+    <table class="admin_results admin_generic">$:grid.render()</table>
+    <button type="submit">Modifier</button>
+
+</form>
+</p>
+
+<h2>Ajout d'un élément</h2>
+<p>
+<form action="" method="post" class="user_form">
+    <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
+    <input type="hidden" name="action" value="new" />
+    $:fieldset.render()
+    <button type="submit">Créer</button>
+</form>
+</p>
+
+</div>
+

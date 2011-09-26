@@ -132,6 +132,10 @@ table.admin_results {
     border-spacing: 0px;
 }
 
+table.admin_generic {
+    width: 340px;
+}
+
 table.results th, table.admin_results th {
     padding: 6px 3px;
     text-align: left;

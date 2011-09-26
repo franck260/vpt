@@ -182,8 +182,7 @@ class TestTournament(ModelTestCase):
         tournament_13.season_id = 1
         
         season_1.tournaments.append(tournament_13)
-        season_1.tournaments.sort(key = lambda tournament: tournament.tournament_dt)
-        season_1.tournaments.reorder()
+        season_1.reorder_tournaments()
         
         self.assertEqual(len(season_1.tournaments), 3)
         self.assertEqual(len(season_2.tournaments), 1)
@@ -204,8 +203,7 @@ class TestTournament(ModelTestCase):
         tournament_10.season_id = 1
         
         season_1.tournaments.append(tournament_10)
-        season_1.tournaments.sort(key = lambda tournament: tournament.tournament_dt)
-        season_1.tournaments.reorder()
+        season_1.reorder_tournaments()
         
         self.assertEqual(len(season_1.tournaments), 4)
         self.assertEqual(len(season_2.tournaments), 1)

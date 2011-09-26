@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from app.controllers import forms
+from app.forms import simple_forms
 from app.models import Season, Tournament
 from app.utils import session, http
 from web import config
@@ -17,9 +17,9 @@ class Admin_Results :
         if tournament is None:
             raise web.notfound()
         
-        results_fieldset = forms.ResultsFieldSet().bind(tournament.results)
+        results_grid = simple_forms.ResultsGrid().bind(tournament.results)
         
-        return config.views.results_admin(tournament, results_fieldset)
+        return config.views.results_admin(tournament, results_grid)
 
     @session.configure_session(login_required=True)
     @session.administration
@@ -31,18 +31,18 @@ class Admin_Results :
         if tournament is None:
             raise web.notfound()
         
-        results_fieldset = forms.ResultsFieldSet().bind(tournament.results, data=web.input())
+        results_grid = simple_forms.ResultsGrid().bind(tournament.results, data=web.input())
         
-        if results_fieldset.validate():
+        if results_grid.validate():
             # If the form was properly filled, updates the model and returns the standard table
             # Besides, we sort the results manually since they are directly returned (commit & no load)
-            results_fieldset.sync()
+            results_grid.sync()
             tournament.sort_results()
             results = config.views.results(tournament)
             statistics = config.views.statistics(tournament)
         else:
             # Otherwise, returns the editing grid
-            results = config.views.results_admin(tournament, results_fieldset)
+            results = config.views.results_admin(tournament, results_grid)
             statistics = None
         
         # Returns the dictionary

@@ -148,8 +148,7 @@ class TestTournaments(ControllerTestCase):
         # Checks the statistics
         statistics = decoded_json_response["statistics"]
         self.assertIn("Nombre de participants</td><td>3</td>", statistics)
-        #TODO: full string & unicode !
-        self.assertIn("tre</td><td>%s,%s</td>" %(UserData.franck_l.pseudonym, UserData.fx.pseudonym), statistics) 
+        self.assertIn(u"Peut-être</td><td>%s,%s</td>" %(UserData.franck_l.pseudonym, UserData.fx.pseudonym), statistics) 
         self.assertIn(u"Somme en jeu</td><td>40 €</td>", statistics)  
         
         # Checks the results

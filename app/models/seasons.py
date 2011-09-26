@@ -21,9 +21,9 @@ seasons_table = Table("SEASONS", metadata,
 class Season(Base):
     
     @classmethod
-    def all(cls):
+    def all(cls, order_by_clause=None):
         """ Overrides the default all method to guarantee the order by """
-        return Base.all.im_func(Season, order_by_clause=desc(Season.start_year)) #@UndefinedVariable
+        return Base.all.im_func(Season, order_by_clause=order_by_clause or desc(Season.start_year)) #@UndefinedVariable
     
     @property
     def results(self):
@@ -53,13 +53,18 @@ class Season(Base):
         # Sorts the list by score
         season_results.sort(key = lambda r: r.score, reverse=True)
         
-        # Calculates the rank
-        # Hack : Python < 2.7 => for rank, result in enumerate(season_results, start = 1)
-        for rank, result in enumerate(season_results):
-            result.rank = rank + 1           
+        # Calculates the rank (Python 2.7)
+        for rank, result in enumerate(season_results, start=1):
+            result.rank = rank        
                     
         return season_results
-    
+
+    def reorder_tournaments(self):
+        """ Reorders (i.e. enforce position) the tournaments by date. Useful when a tournament was appended in the end of the collection for example """
+        
+        self.tournaments.sort(key = lambda tournament: tournament.tournament_dt)
+        self.tournaments.reorder()
+
     def __repr__(self) : 
         return "<Season(%s,%s)>" % (self.start_year, self.end_year)
 

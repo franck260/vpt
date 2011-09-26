@@ -28,7 +28,9 @@ urls = (
     "/update/status",                       "app.controllers.tournaments.Update_Status",
     "/add/comment",                         "app.controllers.tournaments.Add_Comment",
     "/admin/results/(\d+)",                 "app.controllers.tournaments.Admin_Results",
-    
+
+    "/admin/(.*)",                          "app.controllers.administration.Admin",
+
     "/public/(?:img|js|css|doc)/.*",        "app.controllers.public.Public"
 )
 

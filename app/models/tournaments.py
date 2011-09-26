@@ -49,6 +49,11 @@ class Tournament(Base):
         return "<Tournament(#%s-%s, %s, %d)>" % (self.season.id, self.position, self.tournament_dt, self.buyin)
     
     def __eq__(self, other):
+        
+        # Horrible hack to bypass FormAlchemy controls (!?)
+        if isinstance(other, type):
+            return False
+        
         return self.tournament_dt == other.tournament_dt and self.buyin == other.buyin
     
     def subscribe(self, user, status):
