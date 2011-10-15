@@ -94,7 +94,11 @@ div.comment_content {
     margin-left:200px;
     /* width:550px;
     padding:2px 0 0 0; */
-    
+}
+
+div.comment_content a {
+    color:#000000;
+    text-decoration:underline;
 }
 
 textarea.comment_textarea {

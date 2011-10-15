@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from app.utils.formatting import spacesafe, append, first_lower, format_date
+from app.utils.formatting import spacesafe, append, first_lower, format_date, \
+    urlize
 import datetime
 import locale
 import sys
@@ -23,8 +24,17 @@ class TestFormatting(unittest.TestCase):
     def test_spacesafe(self):
         
         self.assertEquals(spacesafe("test"), "test")
-        self.assertEquals(spacesafe("test with space"), "test&nbsp;with&nbsp;space")
-        self.assertEquals(spacesafe("test with space and\nbackslash"), "test&nbsp;with&nbsp;space&nbsp;and<br />backslash")
+        # self.assertEquals(spacesafe("test with space"), "test&nbsp;with&nbsp;space")
+        self.assertEquals(spacesafe("test with space"), "test with space")
+        # self.assertEquals(spacesafe("test with space and\nbackslash"), "test&nbsp;with&nbsp;space&nbsp;and<br />backslash")
+        self.assertEquals(spacesafe("test with space and\nbackslash"), "test with space and <br /> backslash")
+        
+    def test_urlize(self):
+        
+        self.assertEquals(urlize("test"), "test")
+        self.assertEquals(urlize("http://www.google.com"), "<a href='http://www.google.com' target='_blank'>http://www.google.com</a>")
+        self.assertEquals(urlize("Lien 1 : http://www.google.com <br /> et lien 2 : http://microsoft.com"),
+                                 "Lien 1 : <a href='http://www.google.com' target='_blank'>http://www.google.com</a> <br /> et lien 2 : <a href='http://microsoft.com' target='_blank'>http://microsoft.com</a>")
     
     def test_format_date(self):
 

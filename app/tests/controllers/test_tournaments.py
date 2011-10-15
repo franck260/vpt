@@ -180,7 +180,7 @@ class TestTournaments(ControllerTestCase):
         
         # Checks the comments
         comments = decoded_json_response["comments"]
-        self.assertIn("Salut&nbsp;les&nbsp;copains", comments)
+        self.assertIn("Salut les copains", comments)
 
     def test_add_comment_existing(self):
         
@@ -200,8 +200,8 @@ class TestTournaments(ControllerTestCase):
             
             # Checks the comments
             comments = decoded_json_response["comments"]
-            self.assertIn("Salut&nbsp;les&nbsp;amis&nbsp;!<br />Je&nbsp;suis&nbsp;Franck", comments)
-            self.assertIn("Salut&nbsp;les&nbsp;copains", comments)
+            self.assertIn("Salut les amis ! <br /> Je suis Franck", comments)
+            self.assertIn("Salut les copains", comments)
             
         finally:
             #TODO: should be done by the fixture
