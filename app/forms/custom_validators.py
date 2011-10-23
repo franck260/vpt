@@ -51,16 +51,21 @@ def year_delta_validator(value, field):
     if value - field.parent.start_year.value != 1:
         raise validators.ValidationError("1 != end_year - start_year")
     
+
+def _generic_dt_validator(value, dt_format):
+    """ Validates the date and returns the year """
     
-def dt_validator(dt_format):
+    try:
+        return datetime.datetime.strptime(value, dt_format).year
+    except ValueError:
+        raise validators.ValidationError("Date does not match format %s" %dt_format)
+
+def tournament_dt_validator(dt_format):
     
     def f(value, field):
         
         # Step 1 : general format check with the standard library
-        try:
-            year = datetime.datetime.strptime(value, dt_format).year
-        except ValueError:
-            raise validators.ValidationError("Date does not match format %s" %dt_format)
+        year = _generic_dt_validator(value, dt_format)
         
         # Step 2 : year check
         selected_season = Season.get(field.parent.season_id.value)
@@ -70,4 +75,6 @@ def dt_validator(dt_format):
         
     return f
  
-    
+
+def dt_validator(dt_format):
+    return lambda value, field: _generic_dt_validator(value, dt_format)

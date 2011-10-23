@@ -2,10 +2,10 @@
 
 """
 Generic administration controller.
-Most calls to /admin/components will land here : the 'components' key must be properly registered below.
+Most calls to /admin/(.*) will land here : the 'components' key must be properly registered below.
 """
 
-from app.forms import admin_forms
+from app.forms.admin_forms import season_forms, tournament_forms, news_forms
 from app.models import Season
 from app.utils import session
 from collections import namedtuple
@@ -15,8 +15,10 @@ import web
 # Named tuple to define an administration component (Python 2.6)
 AdminComponent = namedtuple("AdminComponent",  ["grid", "fieldset"])
 
-ADMIN_COMPONENTS = {"seasons"     : AdminComponent(admin_forms.SeasonsGrid, admin_forms.SeasonFieldSet),
-                    "tournaments" : AdminComponent(admin_forms.TournamentsGrid, admin_forms.TournamentFieldSet)
+# HTTP requests to /admin/(.*) are routed through this dictionary : administration components must be declared accordingly
+ADMIN_COMPONENTS = {"seasons"     : AdminComponent(season_forms.SeasonsGrid, season_forms.SeasonFieldSet),
+                    "tournaments" : AdminComponent(tournament_forms.TournamentsGrid, tournament_forms.TournamentFieldSet),
+                    "news" : AdminComponent(news_forms.NewsGrid, news_forms.NewsFieldSet)
                     }
 
 class Admin:

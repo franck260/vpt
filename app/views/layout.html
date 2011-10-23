@@ -8,6 +8,7 @@ $def show_left_menu():
             <li><h3>Administration</h3></li>
             <li><div><p><a href="/admin/seasons">Saisons</a></p></div></li>
             <li><div><p><a href="/admin/tournaments">Tournois</a></p></div></li>
+            <li><div><p><a href="/admin/news">News</a></p></div></li>
         $for season in all_seasons:
             <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
             $for tournament in season.tournaments:

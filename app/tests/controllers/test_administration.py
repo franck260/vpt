@@ -48,3 +48,19 @@ class TestAdministration(ControllerTestCase):
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Créer", response.data)
         self.assertIn("Modifier", response.data)
+
+    def test_admin_news_GET_notlogged(self):
+        response = app.request("/admin/news") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_SEE_OTHER)
+
+    def test_admin_news_GET_notadmin(self):
+        self.login("franck.lasry@gmail.com", "secret1")
+        response = app.request("/admin/news") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_FORBIDDEN)
+        
+    def test_admin_news_GET(self):
+        self.login("franck.perez@gmail.com", "secret2")
+        response = app.request("/admin/news") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("Créer", response.data)
+        self.assertIn("Modifier", response.data)
