@@ -3,12 +3,12 @@
 """ Session management """
 
 from app.models import User, Session
+from sqlalchemy.orm.exc import NoResultFound
 from web import config
 from web.session import Store
 import datetime
 import hashlib
 import web
-from sqlalchemy.orm.exc import NoResultFound
 
 to_md5 = lambda s : hashlib.md5(s).hexdigest()
 
@@ -133,7 +133,7 @@ def init_session_manager(session_handler_cls):
     """ Instanciates the session manager """
     
     store = SqlAlchemyDBStore()
-    session_handler = session_handler_cls(app = None, store = store, initializer = {"is_logged": False, "user_id" : None})
+    session_handler = globals()[session_handler_cls](app = None, store = store, initializer = {"is_logged": False, "user_id" : None})
     web.debug("[WEBSESSION] Sucessfully instanciated session manager with the handler %s" %session_handler_cls)
     return SessionManager(session_handler) 
     

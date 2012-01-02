@@ -2,6 +2,7 @@
 
 from app.forms import simple_forms
 from app.models import Season, Tournament
+from app.notifications import notify_via_email, Events
 from app.utils import session, http
 from web import config
 import web
@@ -60,8 +61,12 @@ class Add_Comment :
         comment = i.comment
         
         # Appends the comment
+        # TODO: variables are ambiguous
         tournament = Tournament.get(int(tournament_id), joined_attrs=["comments"])
-        tournament.add_comment(config.session_manager.user, comment)
+        added_comment = tournament.add_comment(config.session_manager.user, comment)
+        
+        # Sends an email notification
+        notify_via_email(added_comment, Events.NEW)
 
         # Returns the dictionary
         return dict(comments=config.views.comments(tournament))

@@ -77,7 +77,9 @@ class Tournament(Base):
     
     def add_comment(self, user, comment):
         """ Adds the comment to this tournament instance """
-        self.comments.append(TournamentComment(user, comment))
+        comment = TournamentComment(user, comment)
+        self.comments.append(comment)
+        return comment
     
     @property
     def sum_in_play(self):

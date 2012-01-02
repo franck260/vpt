@@ -26,7 +26,11 @@ class User(Base):
         self.is_admin = is_admin
         self.password = password
         
-        
+    @classmethod
+    def all(cls):
+        """ Overrides the default all method to guarantee the order by """
+        return Base.all.im_func(User, order_by_clause=User.email) #@UndefinedVariable
+
     def __repr__(self) : 
         return "<User(%s,%s,%s,%s,%s,%s)>" % (self.first_name, self.last_name, self.pseudonym, self.email, self.is_admin, self.password)
 

@@ -1,0 +1,9 @@
+$def with (comment)
+$var subject: VPT : un nouveau commentaire a été posté (tournoi du $:formatting.format_date(comment.tournament.tournament_dt, "%d %B"))
+$comment.user.pseudonym a écrit :
+
+"$:comment.comment"
+
+Voir le commentaire dans son contexte : http://vpt.franck-perez.com/tournament/$comment.tournament.season.id/$comment.tournament.position
+
+** Ceci est un email généré automatiquement, merci de ne pas y répondre **

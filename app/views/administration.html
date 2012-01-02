@@ -6,7 +6,7 @@ $def with (grid, fieldset)
 <p>
 <form action="" method="post" class="results_form">
     <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
-    <input type="hidden" name="action" value="edit" />
+    <input type="hidden" name="event" value="$Events.MODIFIED" />
     <table class="admin_results admin_generic">$:grid.render()</table>
     <button type="submit">Modifier</button>
 
@@ -17,7 +17,7 @@ $def with (grid, fieldset)
 <p>
 <form action="" method="post" class="user_form">
     <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
-    <input type="hidden" name="action" value="new" />
+    <input type="hidden" name="event" value="$Events.NEW" />
     $:fieldset.render()
     <button type="submit">Créer</button>
 </form>

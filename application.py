@@ -1,16 +1,15 @@
-#!/home/franck260/ENV/bin/python
 # -*- coding: utf-8 -*-
 
 """ Main application class """
 
-from app.models import meta
-from app.models.results import Result
+from app.models import meta, Result
+from app.notifications import Events, handlers as notification_handlers
 from app.utils import formatting, dates, session
 from web import config
 import ConfigParser
 import locale
-import web
 import sys
+import web
 
 # Application's URLs
 urls = (
@@ -72,7 +71,8 @@ class WebApplication(web.application):
             "getattr": getattr,
             "class_name": lambda x: x.__class__.__name__,
             "config": config,
-            "result_statuses": Result.STATUSES
+            "result_statuses": Result.STATUSES,
+            "Events": Events
         })
         
         # The ORM is bound once since it dynamically loads the engine from the configuration
@@ -90,13 +90,13 @@ class WebApplication(web.application):
         # Initializes the components
         config.engine = meta.init_engine(config_file.get("sqlalchemy", "dsn"), config_file.getboolean("sqlalchemy", "echo"))
         config.debug = config_file.getboolean("application", "debug")
-        config.session_manager = session.init_session_manager(getattr(session, config_file.get("session", "handler_cls")))
+        config.session_manager = session.init_session_manager(config_file.get("session", "handler_cls"))
+        config.email_notification_handler = notification_handlers.init_email_notification_handler(**dict(config_file.items("email_notifications")))
         
         web.debug("[CONFIGURATION] Sucessfully configured the application from %s" %config_filename)
 
 # The application is instantiated once and should be configured with the configure() method
 app = WebApplication(urls, globals())
-
 
 if __name__ == "__main__":
     
@@ -105,8 +105,3 @@ if __name__ == "__main__":
 
     # Starts the development server
     app.run()
-else:
-    
-    # Enable FCGI
-    # TODO: this is no longer useful
-    web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
