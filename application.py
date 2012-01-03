@@ -4,7 +4,7 @@
 
 from app.models import meta, Result
 from app.notifications import Events, handlers as notification_handlers
-from app.utils import formatting, dates, session
+from app.utils import formatting, dates, session, http
 from web import config
 import ConfigParser
 import locale
@@ -40,21 +40,6 @@ if sys.platform == "win32":
 else:
     locale.setlocale(locale.LC_ALL, "fr_FR")
     
-
-def _sqlalchemy_processor(handler):
-    """ Makes sure a commit appends at the end of each request """
-    try:
-        return handler()
-    except web.HTTPError:
-        config.orm.commit()
-        raise
-    except:
-        config.orm.rollback()
-        raise
-    finally:
-        config.orm.commit()
-    
-
 class WebApplication(web.application):
     """ Web application with additional features (configuration management...) """
     
@@ -78,8 +63,10 @@ class WebApplication(web.application):
         # The ORM is bound once since it dynamically loads the engine from the configuration
         config.orm = meta.init_orm(lambda : config.engine)
         
-        # SQL Alchemy processor
-        self.add_processor(_sqlalchemy_processor)    
+        # Binds the hooking mechanism & the SQL Alchemy processor
+        self.add_processor(web.loadhook(http.init_hooks))
+        self.add_processor(web.unloadhook(http.execute_hooks))        
+        self.add_processor(http.sqlalchemy_processor)    
     
     def configure(self, config_filename):
         

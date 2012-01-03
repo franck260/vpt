@@ -8,7 +8,7 @@ Most calls to /admin/(.*) will land here : the 'components' key must be properly
 from app.forms.admin_forms import season_forms, tournament_forms, news_forms
 from app.models import Season
 from app.notifications import Events, notify_via_email
-from app.utils import session
+from app.utils import session, http
 from collections import namedtuple
 from web import config
 import web
@@ -65,10 +65,10 @@ class Admin:
         else:
             raise web.notfound()
         
-        # Synchronizes the grid or the fieldset (depending on the action) & tries to send an email notification (if configured)
+        # Synchronizes the grid or the fieldset (depending on the action) & registers an email notification
         if component_to_sync.validate():
             component_to_sync.sync()
-            notify_via_email(component_to_sync.model, i.event)
+            http.register_hook(lambda: notify_via_email(component_to_sync.model, i.event))
             raise web.seeother("/")
         else:
             return config.views.layout(config.views.administration(grid, fieldset), Season.all())

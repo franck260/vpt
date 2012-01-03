@@ -65,8 +65,8 @@ class Add_Comment :
         tournament = Tournament.get(int(tournament_id), joined_attrs=["comments"])
         added_comment = tournament.add_comment(config.session_manager.user, comment)
         
-        # Sends an email notification
-        notify_via_email(added_comment, Events.NEW)
+        # Registers an email notification
+        http.register_hook(lambda: notify_via_email(added_comment, Events.NEW))
 
         # Returns the dictionary
         return dict(comments=config.views.comments(tournament))

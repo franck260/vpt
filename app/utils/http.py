@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
-""" JSON-related utility methods """
+""" HTTP-related utility methods """
 
 try:
     import json
 except ImportError:
     import simplejson as json 
+from web import config
 import web
 
+HTTP_OK = "200 OK"
+HTTP_SEE_OTHER = "303 See Other"
 
 def jsonify(func):
     """ Wraps a controller method. When called :
@@ -29,3 +32,29 @@ def jsonify(func):
         return json.dumps(results)  
         
     return wrapped_func
+
+def sqlalchemy_processor(handler):
+    """ Makes sure a commit appends at the end of each request """
+    try:
+        return handler()
+    except web.HTTPError:
+        config.orm.commit()
+        raise
+    except:
+        config.orm.rollback()
+        raise
+    finally:
+        config.orm.commit()
+
+def init_hooks():
+    """ Initializes an empty hooks list inside the context at the beginning of every request """
+    web.ctx.post_request_hooks = []
+    
+def register_hook(hook):
+    """ Appends the provided hook (which must be executable) to the hooks list for further execution """
+    web.ctx.post_request_hooks.append(hook)
+    
+def execute_hooks():
+    """ If the request is successful, executes every hook submitted by the controllers """
+    if web.ctx.status in (HTTP_OK, HTTP_SEE_OTHER):
+        [hook() for hook in web.ctx.post_request_hooks]
