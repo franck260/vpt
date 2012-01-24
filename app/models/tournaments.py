@@ -41,8 +41,8 @@ class Tournament(Base):
         """ Returns the next scheduled tournament, based on the system date """
         
         return config.orm.query(Tournament)                                              \
-                         .filter(Tournament.tournament_dt >= datetime.date.today())       \
-                         .order_by(Tournament.tournament_dt)                              \
+                         .filter(Tournament.tournament_dt >= datetime.date.today())      \
+                         .order_by(Tournament.tournament_dt)                             \
                          .first()                                                 
         
     def __repr__(self) : 

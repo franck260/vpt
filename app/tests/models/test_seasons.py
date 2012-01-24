@@ -45,7 +45,7 @@ class TestSeason(ModelTestCase):
         season_1 = config.orm.query(Season).filter(Season.start_year == 2009).one() #@UndefinedVariable
         season_2 = config.orm.query(Season).filter(Season.start_year == 2010).one() #@UndefinedVariable
         
-        franck_p = config.orm.query(User).filter(User.last_name == "Perez").one() #@UndefinedVariable
+        franck_p = config.orm.query(User).filter(User.pseudonym == "Franck P").one() #@UndefinedVariable
         nico = config.orm.query(User).filter(User.first_name == "Nicolas").one() #@UndefinedVariable
         jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
 

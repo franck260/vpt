@@ -2,9 +2,10 @@
 
 """ Handles the email notifications which can be fired in the application """
 
-from app.models import User, TournamentComment, Tournament
+from app.models import User, TournamentComment, Tournament, UserToken, \
+    PasswordToken
 from app.notifications.messaging import EMailNotification
-from app.utils import Enum, formatting
+from app.utils import Enum, formatting, dates
 from app.utils.mm import multimethod, NoSuchMethod
 from functools import wraps
 from web import config
@@ -15,7 +16,8 @@ Events = Enum(["NEW", "MODIFIED"])
 
 # The email templates are loaded once
 templates = web.template.render("app/notifications/templates/", globals={
-    "formatting": formatting
+    "formatting": formatting,
+    "dates": dates
 })
 
 class NoSuchTemplate(Exception):
@@ -69,12 +71,26 @@ def notify_via_email(obj, event):
 @templatize({Events.NEW: "comment_new"})
 def build_email_notification(comment, event):
     
-    recipients = [user.email for user in User.all() if user != comment.user or user.is_admin]
+    recipients = [user.email for user in User.all() if user.admin or (user != comment.user and user.active)]
     return EMailNotification(recipients=recipients)
 
 @multimethod(Tournament, unicode)
 @templatize({Events.NEW: "tournament_new"})
 def build_email_notification(tournament, event):
     
-    recipients = [user.email for user in User.all()]
+    recipients = [user.email for user in User.all() if user.active]
+    return EMailNotification(recipients=recipients)
+
+@multimethod(UserToken, unicode)
+@templatize({Events.NEW: "user_token_new"})
+def build_email_notification(user_token, event):
+    
+    recipients = [user_token.email] + [user.email for user in User.all() if user.admin]
+    return EMailNotification(recipients=recipients)
+
+@multimethod(PasswordToken, unicode)
+@templatize({Events.NEW: "password_token_new"})
+def build_email_notification(password_token, event):
+    
+    recipients = [password_token.user.email] + [user.email for user in User.all() if user.admin and user != password_token.user]
     return EMailNotification(recipients=recipients)

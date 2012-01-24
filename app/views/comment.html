@@ -1,0 +1,9 @@
+$def with (comment)
+
+ <div class="comment_wrapper"> 
+    <div class="comment_information">
+        <div class="comment_user">$comment.user.pseudonym</div> 
+        <div class="comment_date">$:formatting.format_date(dates.change_timezone(comment.comment_dt), "%d/%m/%y %H:%M")</div>
+    </div>
+    <div class="comment_content">$:formatting.urlize(formatting.spacesafe(comment.comment))</div>
+</div> 

@@ -7,29 +7,29 @@ small,strike,strong,sub,sup,tt,var,
 dd,dl,dt,li,ol,ul,
 fieldset,form,label,legend,
 table,caption,tbody,tfoot,thead,tr,th,td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-weight: normal;
-	font-style: normal;
-	font-size: 100%;
-	line-height: 1;
-	font-family: inherit;
-	text-align: left;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 100%;
+    line-height: 1;
+    font-family: inherit;
+    text-align: left;
 }
 
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 ol,ul {
-	list-style: none;
+    list-style: none;
 }
 
 q:before,q:after,
 blockquote:before,blockquote:after {
-	content: "";
+    content: "";
 }
 
 form.login_form label, form.login_form input {
@@ -65,6 +65,12 @@ div.login_error, span.field_error, span.grid_error {
     font-weight: bold;
     color: red;
     /* margin: 0 0 0 0; */
+    display: block;
+}
+
+div.login_success {
+    font-weight: bold;
+    color: green;
     display: block;
 }
 
@@ -159,7 +165,7 @@ table.results td {
 }
 
 table.admin_results td {
-    padding: 1px 2px;
+    padding: 1px 1px;
     text-align: left;
 }
 
@@ -253,13 +259,13 @@ ul.notifications li {
 ul.notifications li h3 {
     font-family: Arial, sans-serif;
     font-size: 15px;
-	font-weight: bold;
+    font-weight: bold;
 }
 
 ul.notifications li h3 a {
     font-family: Arial, sans-serif;
     font-size: 15px;
-	font-weight: bold;
+    font-weight: bold;
     text-decoration: none;
     color:#111;
 }
@@ -282,8 +288,8 @@ ul.notifications li div p a {
     font-family: Arial, sans-serif;
 }
 ul.notifications li div p a:hover, div.post h2 a:hover, div.post a:hover {
-  	color:#c70000;
-	text-decoration: underline;
+    color:#c70000;
+    text-decoration: underline;
 }
 
 ul.notifications li.footer div p {
@@ -302,7 +308,7 @@ div.post {
     padding-bottom:20px;
     padding-top:10px;
     margin-bottom: 20px;
-	font-size: 14px;
+    font-size: 14px;
 }
 
 div.post p a, div.post ul li a {
@@ -320,25 +326,39 @@ div.post h2 {
     display:block;
     font-size:25px;
     font-weight: bold;
-	letter-spacing:-1px;
-	word-spacing: 4px;
-	margin-top: 30px;
-	padding-bottom: 5px;
-	border-bottom: 1px solid #eee;
+    letter-spacing:-1px;
+    word-spacing: 4px;
+    margin-top: 30px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
 }
+
+div.post h2 span {
+    color:#111;
+    font-weight: bold;
+}
+
 div.post h2 a {
-	color: #111;
-	text-decoration:none;
-	font-weight: bold;
+    color: #111;
+    text-decoration:none;
+    font-weight: bold;
 }
 div.post p, div.post ul {
-	padding:15px 25px 5px;
-	line-height: 20px;
-	font-family: Arial, sans-serif;
+    padding:15px 25px 5px;
+    line-height: 20px;
+    font-family: Arial, sans-serif;
 }
 
 div.post ul li {
     line-height: 23px;
     margin-left: 45px;
     list-style-type: circle;
+}
+
+div.post form a {
+    margin-left: 10px;
+    font-size: 90%;
+    font-weight: bold;
+    text-decoration: none;
+    color:#111;
 }

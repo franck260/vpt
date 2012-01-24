@@ -5,7 +5,7 @@ Generic administration controller.
 Most calls to /admin/(.*) will land here : the 'components' key must be properly registered below.
 """
 
-from app.forms.admin_forms import season_forms, tournament_forms, news_forms
+from app.forms import season_forms, tournament_forms, news_forms, user_forms
 from app.models import Season
 from app.notifications import Events, notify_via_email
 from app.utils import session, http
@@ -17,10 +17,12 @@ import web
 AdminComponent = namedtuple("AdminComponent",  ["grid", "fieldset"])
 
 # HTTP requests to /admin/(.*) are routed through this dictionary : administration components must be declared accordingly
-ADMIN_COMPONENTS = {"seasons"     : AdminComponent(season_forms.SeasonsGrid, season_forms.SeasonFieldSet),
-                    "tournaments" : AdminComponent(tournament_forms.TournamentsGrid, tournament_forms.TournamentFieldSet),
-                    "news" : AdminComponent(news_forms.NewsGrid, news_forms.NewsFieldSet)
-                    }
+ADMIN_COMPONENTS = {
+    "seasons"     : AdminComponent(season_forms.EditSeasonsGrid, season_forms.NewSeasonFieldSet),
+    "tournaments" : AdminComponent(tournament_forms.EditTournamentsGrid, tournament_forms.NewTournamentFieldSet),
+    "news" : AdminComponent(news_forms.EditNewsGrid, news_forms.NewNewsFieldSet),
+    "users" : AdminComponent(user_forms.EditUsersGrid, user_forms.NewUserTokenFieldSet),
+}
 
 class Admin:
     
@@ -40,26 +42,26 @@ class Admin:
     @session.configure_session(login_required = True)
     @session.administration
     def POST(self, key):
-
+        
         if not key in ADMIN_COMPONENTS:
             raise web.notfound()
 
-        i = web.input()
+        input = web.input()
         
         # Scenario 1 : edit an existing element
-        if i.event == Events.MODIFIED:
+        if input.event == Events.MODIFIED:
             
             # The grid should be bound to the form data
             component_to_sync = grid =  ADMIN_COMPONENTS.get(key).grid()
-            grid.rebind(data=web.input())
+            grid.rebind(data=input)
             fieldset = ADMIN_COMPONENTS.get(key).fieldset()
         
         # Scenario 2 : create a new element
-        elif i.event == Events.NEW:
+        elif input.event == Events.NEW:
             
             # The fieldset should be bound to the form data & the session
             grid =  ADMIN_COMPONENTS.get(key).grid()
-            component_to_sync = fieldset = ADMIN_COMPONENTS.get(key).fieldset().bind(data=web.input(), session=config.orm)
+            component_to_sync = fieldset = ADMIN_COMPONENTS.get(key).fieldset().bind(data=input, session=config.orm)
         
         # Scenario 3 : invalid action
         else:
@@ -68,7 +70,7 @@ class Admin:
         # Synchronizes the grid or the fieldset (depending on the action) & registers an email notification
         if component_to_sync.validate():
             component_to_sync.sync()
-            http.register_hook(lambda: notify_via_email(component_to_sync.model, i.event))
+            http.register_hook(lambda: notify_via_email(component_to_sync.model, input.event))
             raise web.seeother("/")
         else:
             return config.views.layout(config.views.administration(grid, fieldset), Season.all())

@@ -87,7 +87,7 @@ class TestTournament(ModelTestCase):
     
     def test_comment(self):
         
-        franck_l = config.orm.query(User).filter(User.last_name == "Lasry").one() #@UndefinedVariable
+        franck_l = config.orm.query(User).filter(User.pseudonym == "Franck L").one() #@UndefinedVariable
         nico = config.orm.query(User).filter(User.first_name == "Nicolas").one() #@UndefinedVariable
         
         tournament_11 = config.orm.query(Tournament).filter(Tournament.tournament_dt == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
@@ -119,7 +119,7 @@ class TestTournament(ModelTestCase):
         
     def test_subscribe(self):
         
-        franck_l = config.orm.query(User).filter(User.last_name == "Lasry").one() #@UndefinedVariable
+        franck_l = config.orm.query(User).filter(User.pseudonym == "Franck L").one() #@UndefinedVariable
         nico = config.orm.query(User).filter(User.first_name == "Nicolas").one() #@UndefinedVariable
         jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
         fx = config.orm.query(User).filter(User.pseudonym == "FX").one() #@UndefinedVariable

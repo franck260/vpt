@@ -1,10 +1,12 @@
 $def with (tournament, results_grid)
 
-<p>
-<form action="javascript:updateResults($tournament.id);" id="admin_results_form" class="results_form">
+<br />
+<form id="admin_results_form" class="results_form">
+<input type="hidden" name="tournament_id" value="$tournament.id" />
 <table class="admin_results">
 $:results_grid.render()
 </table>
 <button type="submit">Modifier</button>
 </form>
-</p>
+<br />
+<script type="text/javascript" src="/public/js/admin_results_submit.js"></script>

@@ -22,12 +22,12 @@ class TestAdministration(ControllerTestCase):
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
     def test_admin_seasons_GET_notadmin(self):
-        self.login("franck.lasry@gmail.com", "secret1")
+        self.login("franck.l@gmail.com", "secret1")
         response = app.request("/admin/seasons") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_FORBIDDEN)
         
     def test_admin_seasons_GET(self):
-        self.login("franck.perez@gmail.com", "secret2")
+        self.login("franck.p@gmail.com", "secret2")
         response = app.request("/admin/seasons") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Créer", response.data)
@@ -38,12 +38,12 @@ class TestAdministration(ControllerTestCase):
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
     def test_admin_tournaments_GET_notadmin(self):
-        self.login("franck.lasry@gmail.com", "secret1")
+        self.login("franck.l@gmail.com", "secret1")
         response = app.request("/admin/tournaments") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_FORBIDDEN)
         
     def test_admin_tournaments_GET(self):
-        self.login("franck.perez@gmail.com", "secret2")
+        self.login("franck.p@gmail.com", "secret2")
         response = app.request("/admin/tournaments") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Créer", response.data)
@@ -54,13 +54,29 @@ class TestAdministration(ControllerTestCase):
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
     def test_admin_news_GET_notadmin(self):
-        self.login("franck.lasry@gmail.com", "secret1")
+        self.login("franck.l@gmail.com", "secret1")
         response = app.request("/admin/news") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_FORBIDDEN)
         
     def test_admin_news_GET(self):
-        self.login("franck.perez@gmail.com", "secret2")
+        self.login("franck.p@gmail.com", "secret2")
         response = app.request("/admin/news") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("Créer", response.data)
+        self.assertIn("Modifier", response.data)
+        
+    def test_admin_users_GET_notlogged(self):
+        response = app.request("/admin/users") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_SEE_OTHER)
+
+    def test_admin_users_GET_notadmin(self):
+        self.login("franck.l@gmail.com", "secret1")
+        response = app.request("/admin/users") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_FORBIDDEN)
+        
+    def test_admin_users_GET(self):
+        self.login("franck.p@gmail.com", "secret2")
+        response = app.request("/admin/users") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Créer", response.data)
         self.assertIn("Modifier", response.data)

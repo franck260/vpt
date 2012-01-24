@@ -1,38 +1,49 @@
 # -*- coding: utf-8 -*-
 
-from app.forms import simple_forms
+from app.forms import tournament_forms
 from app.models import Season, Tournament
 from app.notifications import notify_via_email, Events
 from app.utils import session, http
 from web import config
 import web
 
-class Admin_Results :
+class AdminResults :
     
     @session.configure_session(login_required=True)
     @session.administration
-    def GET(self, tournament_id):
+    def GET(self):
+        
+        tournament_id = web.input(tournament_id=None).tournament_id
+        
+        if tournament_id is None:
+            raise web.notfound()
         
         tournament = Tournament.get(int(tournament_id), joined_attrs=["results"])
 
         if tournament is None:
             raise web.notfound()
         
-        results_grid = simple_forms.ResultsGrid().bind(tournament.results)
+        results_grid = tournament_forms.EditResultsGrid().bind(tournament.results)
         
         return config.views.results_admin(tournament, results_grid)
 
     @session.configure_session(login_required=True)
     @session.administration
     @http.jsonify
-    def POST(self, tournament_id):
+    def POST(self):
         
+        input = web.input(tournament_id=None)
+        tournament_id = input.tournament_id
+
+        if tournament_id is None:
+            raise web.notfound() 
+
         tournament = Tournament.get(int(tournament_id), joined_attrs=["results"])
 
         if tournament is None:
             raise web.notfound()
         
-        results_grid = simple_forms.ResultsGrid().bind(tournament.results, data=web.input())
+        results_grid = tournament_forms.EditResultsGrid().bind(tournament.results, data=input)
         
         if results_grid.validate():
             # If the form was properly filled, updates the model and returns the standard table
@@ -49,16 +60,15 @@ class Admin_Results :
         # Returns the dictionary
         return dict(results=results, statistics=statistics)
 
-class Add_Comment :
+class AddComment :
     
     @session.configure_session(login_required=True)
-    @http.jsonify
     def POST(self):
         
         # Reads the HTTP request parameters
-        i = web.input()
-        tournament_id = i.tournament_id
-        comment = i.comment
+        input = web.input()
+        tournament_id = input.tournament_id
+        comment = input.comment
         
         # Appends the comment
         # TODO: variables are ambiguous
@@ -69,18 +79,18 @@ class Add_Comment :
         http.register_hook(lambda: notify_via_email(added_comment, Events.NEW))
 
         # Returns the dictionary
-        return dict(comments=config.views.comments(tournament))
+        return config.views.comment(added_comment)
 
-class Update_Status:
+class UpdateStatus:
     
     @session.configure_session(login_required=True)
     @http.jsonify
     def POST(self):
         
         # Reads the HTTP request parameters
-        i = web.input()
-        tournament_id = i.tournament_id
-        status = i.status
+        input = web.input()
+        tournament_id = input.tournament_id
+        status = input.status
         
         # Updates the status
         tournament = Tournament.get(int(tournament_id), joined_attrs=["results"])
@@ -102,10 +112,14 @@ class View :
         if tournament is None:
             raise web.notfound()
 
-        return config.views.layout(config.views.tournament(tournament,
-                                                           config.views.statistics(tournament),
-                                                           config.views.results(tournament),
-                                                           config.views.comments(tournament)),
-                                   Season.all())
+        return config.views.layout(
+                   config.views.tournament(
+                        tournament,
+                        config.views.statistics(tournament),
+                        config.views.results(tournament),
+                        config.views.comments(tournament, config.views.comment)
+                    ),
+                    Season.all()
+                )
 
        

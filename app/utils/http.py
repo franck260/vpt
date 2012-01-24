@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """ HTTP-related utility methods """
+from web import config
+import web
 
 try:
     import json
 except ImportError:
     import simplejson as json 
-from web import config
-import web
 
 HTTP_OK = "200 OK"
 HTTP_SEE_OTHER = "303 See Other"
@@ -31,6 +31,14 @@ def jsonify(func):
         # Returns a JSON-encoded dictionary
         return json.dumps(results)  
         
+    return wrapped_func
+
+def sqlalchemy_wrapper(func):
+    """ Convenient decorator to manually surround a method with a commit """
+    
+    def wrapped_func(*args):
+        sqlalchemy_processor(lambda: func(*args))
+            
     return wrapped_func
 
 def sqlalchemy_processor(handler):

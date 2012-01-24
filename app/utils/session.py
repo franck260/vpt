@@ -3,7 +3,7 @@
 """ Session management """
 
 from app.models import User, Session
-from sqlalchemy.orm.exc import NoResultFound
+from app.utils import http
 from web import config
 from web.session import Store
 import datetime
@@ -63,14 +63,20 @@ class SessionManager(object):
     def __repr__(self) :
         return "<SessionManager(%s)>" % self.session_handler.__dict__
     
-    def login(self, email, password):
+    def maybe_login(self, email, password):
         """ Tries to log in and returns the status """
         
         # Fetches the user
-        try:
-            user = config.orm.query(User).filter(User.email == email).one() #@UndefinedVariable
-        except NoResultFound:
-            web.debug("Unknown user : %s" %email)
+        user = User.get_user(email)
+        
+        # Checks if the user exists
+        if user is None:
+            web.debug("Unknown user : %s" % email)
+            return False
+        
+        # Checks if the user is active
+        if not user.active:
+            web.debug("Inactive user : %s" % email)
             return False
         
         # Encodes the password
@@ -78,13 +84,19 @@ class SessionManager(object):
         
         # Checks the password
         if user.password != password_md5:
-            web.debug("Incorrect password for user : %s" %email)
+            web.debug("Incorrect password for user : %s" % email)
             return False
         else :
-            self.session_handler.user_id = user.id
-            self.session_handler.is_logged = True
-            web.debug("Successfully updated session : %s" %self.session_handler)
+            self.login(user)
             return True
+        
+    def login(self, user):
+        """ Actually logs in the user """
+        
+        self.session_handler.user_id = user.id
+        self.session_handler.is_logged = True
+        
+        web.debug("Successfully logged in user : %s" % user.email)
         
     def logout(self):
         """ Logs out the currently logged user """
@@ -142,8 +154,8 @@ def administration(func):
 
     def wrapped_func(*args):
         
-        if not config.session_manager.user.is_admin:
-            raise web.Forbidden()
+        if not config.session_manager.user.admin:
+            raise web.forbidden()
         
         return func(*args)
             
@@ -211,4 +223,8 @@ def configure_session(enabled = True, login_required = False):
         
     return actual_decorator
 
-
+@http.sqlalchemy_wrapper
+@configure_session(enabled=True)
+def login_workflow(user):
+    """ Hackish method to perform the login workflow outside of a the regular HTTP request flow """
+    config.session_manager.login(user)

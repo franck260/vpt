@@ -13,8 +13,8 @@ HTTP_NOT_FOUND = "404 Not Found"
 class ControllerTestCase(WebTestCase):
     """ Parent of all controllers test classes """
     
-    def login(self, email = "franck.lasry@gmail.com", password = "secret1"):
-        config.session_manager.login(email, password)
+    def login(self, email = "franck.l@gmail.com", password = "secret1"):
+        config.session_manager.maybe_login(email, password)
         
     def logout(self):
         config.session_manager.logout()

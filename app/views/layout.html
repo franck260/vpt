@@ -4,11 +4,12 @@ $def show_left_menu():
     $if all_seasons is not None:
         <li><h3><a href="/admin/account">Mon compte</a></h3></li>
         <li><div><p><a href="/logout">Déconnexion</a></p></div></li>    
-        $if config.session_manager.user.is_admin:
+        $if config.session_manager.user.admin:
             <li><h3>Administration</h3></li>
             <li><div><p><a href="/admin/seasons">Saisons</a></p></div></li>
             <li><div><p><a href="/admin/tournaments">Tournois</a></p></div></li>
             <li><div><p><a href="/admin/news">News</a></p></div></li>
+            <li><div><p><a href="/admin/users">Utilisateurs</a></p></div></li>
         $for season in all_seasons:
             <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
             $for tournament in season.tournaments:
@@ -22,10 +23,10 @@ $def show_left_menu():
     <meta http-equiv="Content-Language" content="en-us"/>
      
     <title>Portail du VPT (Voltaire Poker Tour)</title>
-     
-    <script type="text/javascript" src="/public/js/jquery-1.6.min.js"></script> 
-    <script type="text/javascript" src="/public/js/defaults.js"></script> 
-    <link href="/public/css/defaults.css" rel="stylesheet" type="text/css"/> 
+
+    <link href="/public/css/defaults.css" rel="stylesheet" type="text/css"/>      
+    <script type="text/javascript" src="/public/js/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="/public/js/ga.js"></script>
 </head> 
  
 <body>  

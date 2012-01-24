@@ -91,7 +91,7 @@ class TestTournaments(ControllerTestCase):
             self.assertEqual(len(tournament_11.results), 5)
             self.assertFalse(config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 6).all()) #@UndefinedVariable
             
-            self.login("rolland.quillevere@gmail.com", "secret6")
+            self.login("rolland@gmail.com", "secret6")
             response = app.request("/update/status", method="POST", data={"tournament_id" : 1, "status" : Result.STATUSES.P}) #@UndefinedVariable
             self.assertEqual(response.status, HTTP_OK)
             
@@ -131,7 +131,7 @@ class TestTournaments(ControllerTestCase):
         self.assertEqual(len(tournament_11.results), 5)
         self.assertTrue(config.orm.query(Result).filter(Result.tournament_id == 1).filter(Result.user_id == 1).one()) #@UndefinedVariable
         
-        self.login("franck.lasry@gmail.com", "secret1")
+        self.login("franck.l@gmail.com", "secret1")
         response = app.request("/update/status", method="POST", data={"tournament_id" : 1, "status" : Result.STATUSES.M}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         
@@ -171,16 +171,8 @@ class TestTournaments(ControllerTestCase):
         self.login()
         response = app.request("/add/comment", method="POST", data={"tournament_id" : 1, "comment" : "Salut les copains"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("Salut les copains", response.data)
         self.assertEqual(len(tournament_11.comments), 1)
-        
-        # Checks that the JSON response is well-formed
-        decoded_json_response = json.loads(response.data)
-        self.assertEqual(len(decoded_json_response), 1)
-        self.assertIn("comments", decoded_json_response)
-        
-        # Checks the comments
-        comments = decoded_json_response["comments"]
-        self.assertIn("Salut les copains", comments)
 
     def test_add_comment_existing(self):
         
@@ -191,17 +183,8 @@ class TestTournaments(ControllerTestCase):
             self.login()
             response = app.request("/add/comment", method="POST", data={"tournament_id" : 3, "comment" : "Salut les copains"}) #@UndefinedVariable
             self.assertEqual(response.status, HTTP_OK)
+            self.assertIn("Salut les copains", response.data)
             self.assertEqual(len(tournament_21.comments), 2)
-            
-            # Checks that the JSON response is well-formed
-            decoded_json_response = json.loads(response.data)
-            self.assertEqual(len(decoded_json_response), 1)
-            self.assertIn("comments", decoded_json_response)
-            
-            # Checks the comments
-            comments = decoded_json_response["comments"]
-            self.assertIn("Salut les amis ! <br /> Je suis Franck", comments)
-            self.assertIn("Salut les copains", comments)
             
         finally:
             #TODO: should be done by the fixture
@@ -209,17 +192,22 @@ class TestTournaments(ControllerTestCase):
             config.orm.commit()
             
     def test_admin_results_GET_notlogged(self):
-        response = app.request("/admin/results/1") #@UndefinedVariable
+        response = app.request("/admin/results?tournament_id=1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
     def test_admin_results_GET_notadmin(self):
-        self.login("franck.lasry@gmail.com", "secret1")
-        response = app.request("/admin/results/1") #@UndefinedVariable
+        self.login("franck.l@gmail.com", "secret1")
+        response = app.request("/admin/results?tournament_id=1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_FORBIDDEN)
-        
+    
+    def test_admin_results_GET_notournament(self):
+        self.login("franck.p@gmail.com", "secret2")
+        response = app.request("/admin/results") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_NOT_FOUND)
+    
     def test_admin_results_GET(self):
-        self.login("franck.perez@gmail.com", "secret2")
-        response = app.request("/admin/results/1") #@UndefinedVariable
+        self.login("franck.p@gmail.com", "secret2")
+        response = app.request("/admin/results?tournament_id=1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn(UserData.franck_l.pseudonym, response.data)
         self.assertIn(UserData.franck_p.pseudonym, response.data)
@@ -230,40 +218,49 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("</button>", response.data)
         
     def test_admin_results_POST_notlogged(self):
-        response = app.request("/admin/results/1", method="POST") #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data={"tournament_id" : "1"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
 
     def test_admin_results_POST_notadmin(self):
-        self.login("franck.lasry@gmail.com", "secret1")
-        response = app.request("/admin/results/1", method="POST") #@UndefinedVariable
+        self.login("franck.l@gmail.com", "secret1")
+        response = app.request("/admin/results", method="POST", data={"tournament_id" : "1"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_FORBIDDEN)
         
+    def test_admin_results_POST_notournament(self):
+        self.login("franck.p@gmail.com", "secret2")
+        response = app.request("/admin/results", method="POST") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_NOT_FOUND)
+
     def test_admin_results_POST(self):
         
         tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
         jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
-        fx = config.orm.query(User).filter(User.last_name == "Clair").one() #@UndefinedVariable
+        fx = config.orm.query(User).filter(User.pseudonym == "FX").one() #@UndefinedVariable
         
-        updated_results = [Result(user=jo, status=Result.STATUSES.P, buyin=10, rank=1, profit=30),
-                           Result(user=fx, status=Result.STATUSES.P, buyin=20, rank=2)
-                           ]
+        updated_results = [
+            Result(user=jo, status=Result.STATUSES.P, buyin=10, rank=1, profit=30),
+            Result(user=fx, status=Result.STATUSES.P, buyin=20, rank=2)
+        ]
 
 
-        updated_results_data = {"Result-9-status" : "P",
-                                "Result-9-buyin" : "20",
-                                "Result-9-rank" : "2",
-                                "Result-9-profit" : "",
-                                "Result-10-status" : "P",
-                                "Result-10-buyin" : "10",
-                                "Result-10-rank" : "1",
-                                "Result-10-profit" : "30"}
+        updated_results_data = {
+            "tournament_id" : "3",
+            "Result-9-status" : "P",
+            "Result-9-buyin" : "20",
+            "Result-9-rank" : "2",
+            "Result-9-profit" : "",
+            "Result-10-status" : "P",
+            "Result-10-buyin" : "10",
+            "Result-10-rank" : "1",
+            "Result-10-profit" : "30"
+        }
         
-        self.login("franck.perez@gmail.com", "secret2")
+        self.login("franck.p@gmail.com", "secret2")
 
         # Makes sure that the update fails with invalid data (1)
         invalid_results_data = copy.deepcopy(updated_results_data)
         invalid_results_data["Result-9-buyin"] = ""
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Mandatory value (status=P)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -280,7 +277,7 @@ class TestTournaments(ControllerTestCase):
         invalid_results_data["Result-9-buyin"] = "20"
         invalid_results_data["Result-9-rank"] = ""
         invalid_results_data["Result-9-profit"] = ""
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Forbidden value (status=M)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -297,7 +294,7 @@ class TestTournaments(ControllerTestCase):
         invalid_results_data["Result-9-buyin"] = ""
         invalid_results_data["Result-9-rank"] = "2"
         invalid_results_data["Result-9-profit"] = ""
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Forbidden value (status=M)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -314,7 +311,7 @@ class TestTournaments(ControllerTestCase):
         invalid_results_data["Result-9-buyin"] = ""
         invalid_results_data["Result-9-rank"] = ""
         invalid_results_data["Result-9-profit"] = "0"
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Forbidden value (status=M)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -331,7 +328,7 @@ class TestTournaments(ControllerTestCase):
         invalid_results_data["Result-9-buyin"] = "20"
         invalid_results_data["Result-9-rank"] = ""
         invalid_results_data["Result-9-profit"] = ""
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Forbidden value (status=A)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -348,7 +345,7 @@ class TestTournaments(ControllerTestCase):
         invalid_results_data["Result-9-buyin"] = ""
         invalid_results_data["Result-9-rank"] = "2"
         invalid_results_data["Result-9-profit"] = ""
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Forbidden value (status=A)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -365,7 +362,7 @@ class TestTournaments(ControllerTestCase):
         invalid_results_data["Result-9-buyin"] = ""
         invalid_results_data["Result-9-rank"] = ""
         invalid_results_data["Result-9-profit"] = "0"
-        response = app.request("/admin/results/3", method="POST", data=invalid_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=invalid_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("Forbidden value (status=A)", response.data)
         decoded_json_response = json.loads(response.data)
@@ -377,7 +374,7 @@ class TestTournaments(ControllerTestCase):
         self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
 
         # Makes sure that the update works with valid data        
-        response = app.request("/admin/results/3", method="POST", data=updated_results_data) #@UndefinedVariable
+        response = app.request("/admin/results", method="POST", data=updated_results_data) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
         decoded_json_response = json.loads(response.data)
         self.assertEqual(len(decoded_json_response), 2)

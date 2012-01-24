@@ -3,19 +3,23 @@ $def with (user_fieldset, password_fieldset)
 <div class="post"> 
 
 <h2>Mon compte</h2>
-<p>
+<br />
 <form action="/update/user" method="post" class="user_form">
     $:user_fieldset.render()
     <button type="submit">Modifier</button>
 </form>
-</p>
+<br />
 
 <h2>Mon mot de passe</h2>
-<p>
+<br />
 <form action="/update/password" method="post" class="user_form">
     $:password_fieldset.render()
     <button type="submit">Modifier</button>
 </form>
-</p>
+<br />
 
 </div>
+
+<!-- Cross-page logic to prevent multiple submissions -->
+<script type="text/javascript" src="/public/js/forms.js"></script>
+

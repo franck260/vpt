@@ -1,0 +1,24 @@
+$def with (fieldset)
+
+$code:
+    # Headers by fieldset class   
+    _headers = {
+        "NewUserFieldSet" : "Création de compte",
+        "NewPasswordFieldSet" : "Définition d'un nouveau mot de passe"
+    }
+
+<div class="post"> 
+
+<h2>$_headers[class_name(fieldset)]</h2>
+<p>
+<form action="" method="post" class="user_form">
+    $:fieldset.render()
+    <button type="submit">Créer</button>
+</form>
+</p>
+
+</div>
+
+<!-- Cross-page logic to prevent multiple submissions -->
+<script type="text/javascript" src="/public/js/forms.js"></script>
+

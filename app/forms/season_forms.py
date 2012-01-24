@@ -15,25 +15,25 @@ ID_READONLY = lambda field: field.label(u"ID").readonly()
 START_YEAR = lambda field: field.label(u"Année de début").validate(custom_validators.year_validator(YEAR_PATTERN))
 END_YEAR = lambda field: field.label(u"Année de fin").validate(custom_validators.year_validator(YEAR_PATTERN)).validate(custom_validators.year_delta_validator)
 
-class SeasonsGrid(Grid):
-    """ FormAlchemy grid used to edit seasons """
+class EditSeasonsGrid(Grid):
+    """ Administration grid used to edit seasons """
     
     def __init__(self):
         
         # Grid initialization
-        Grid.__init__(self, Season, Season.all(order_by_clause=Season.start_year)) #@UndefinedVariable
+        super(EditSeasonsGrid, self).__init__(Season, Season.all(order_by_clause=Season.start_year)) #@UndefinedVariable
         
         # Grid configuration
         inc = [ID_READONLY(self.id), START_YEAR(self.start_year), END_YEAR(self.end_year)]
         self.configure(include=inc)
 
-class SeasonFieldSet(FieldSet):
-    """ FormAlchemy form used to edit seasons """
+class NewSeasonFieldSet(FieldSet):
+    """ Administration form used to create seasons """
 
     def __init__(self):
 
         # FieldSet initialization
-        FieldSet.__init__(self, Season)
+        super(NewSeasonFieldSet, self).__init__(Season)
         
         # FieldSet configuration
         inc = [START_YEAR(self.start_year), END_YEAR(self.end_year)]

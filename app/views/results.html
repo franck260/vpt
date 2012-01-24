@@ -34,11 +34,12 @@ $code:
 $def show_results():
     $ filtered_results = filter(lambda result: result.actual, entity.results)
     $if not filtered_results:
-        <i>Pas encore de données enregistrées !</i>
+        <p><i>Pas encore de données enregistrées !</i></p>
     $else:
         $ fields=_fields[class_name(entity)]
         $ headers=zip(*fields)[0]
         $ formatters=zip(*fields)[1]
+        <br />
         <table class="results">
             <tr>
                 $for header in headers:
@@ -50,7 +51,6 @@ $def show_results():
                     <td>$formatter(result)</td>
                 </tr>
         </table> 
+        <br />
 
-<p>
 $:show_results()
-</p>

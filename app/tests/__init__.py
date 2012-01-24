@@ -3,6 +3,7 @@
 from app.models import *
 from app.models.meta import metadata
 from app.utils import session
+from app.utils.session import to_md5
 from application import app
 from fixture import DataSet, SQLAlchemyFixture
 from fixture.style import NamedDataStyle
@@ -15,57 +16,63 @@ try:
 except ImportError:
     import unittest
 
-_md5 = lambda s : hashlib.md5(s).hexdigest()
-
 class UserData(DataSet):
     class franck_l:
         # id = 1
         first_name = "Franck"
-        last_name = "Lasry"
+        last_name = "L"
         pseudonym = "Franck L"
-        email = "franck.lasry@gmail.com"
-        is_admin = 0
-        password = _md5("secret1")
+        email = "franck.l@gmail.com"
+        password = to_md5("secret1")
+        level = 2
     class franck_p:
         # id = 2
         first_name = "Franck"
-        last_name = "Perez"
+        last_name = "P"
         pseudonym = "Franck P"
-        email = "franck.perez@gmail.com"
-        is_admin = 1
-        password = _md5("secret2")
+        email = "franck.p@gmail.com"
+        password = to_md5("secret2")
+        level = 3
     class fx:
         # id = 3
         first_name = "Francois-Xavier"
-        last_name = "Clair"
+        last_name = "C"
         pseudonym = "FX"
-        email = "fxclair@gmail.com"
-        is_admin = 0
-        password = _md5("secret3")
+        email = "fx@gmail.com"
+        password = to_md5("secret3")
+        level = 2
     class jo:
         # id = 4
         first_name = "Jonathan"
-        last_name = "Levy"
+        last_name = "L"
         pseudonym = "Jo"
-        email = "jolevy23@gmail.com"
-        is_admin = 0
-        password = _md5("secret4")
+        email = "jo@gmail.com"
+        password = to_md5("secret4")
+        level = 2
     class nico:
         # id = 5
         first_name = "Nicolas"
-        last_name = "Chaves"
+        last_name = "C"
         pseudonym = "Nico"
-        email = "chavesnicolas@gmail.com"
-        is_admin = 0
-        password = _md5("secret5")
+        email = "nico@gmail.com"
+        password = to_md5("secret5")
+        level = 2
     class rolland:
         # id = 6
         first_name = "Rolland"
-        last_name = "Quillevere"
+        last_name = "Q"
         pseudonym = "Rolex"
-        email = "rolland.quillevere@gmail.com"
-        is_admin = 0
-        password = _md5("secret6")
+        email = "rolland@gmail.com"
+        password = to_md5("secret6")
+        level = 2
+    class zoe:
+        # id = 7
+        first_name = "Zoe"
+        last_name = "Jones"
+        pseudonym = "Zoe"
+        email = "zoe@gmail.com"
+        password = to_md5("secret7")
+        level = 0
 
 
 class SeasonData(DataSet):
@@ -173,6 +180,32 @@ class NewsData(DataSet):
     class news_4:
         news = u"Publication des derniers résultats"
         news_dt = datetime.date(2011, 8, 15)
+
+class UserTokenData(DataSet):
+    class user_token_expired:
+        token = "znc9TNqpajeN2nEH"
+        creation_dt = datetime.datetime(2011, 1, 1, 0, 0)
+        expiration_dt = datetime.datetime(2011, 1, 31, 0, 0)
+        email = "oscar.wilde@gmail.com"
+        level = 1
+    class user_token_active:
+        token = "xjRp67wh3HdjEI6I"
+        creation_dt = datetime.datetime(2011, 1, 1, 0, 0)
+        expiration_dt = datetime.datetime(2020, 1, 31, 0, 0)
+        email = "dorian.gray@gmail.com"
+        level = 1
+        
+class PasswordTokenData(DataSet):
+    class password_token_expired:
+        token = "goB9Z7fhsUrjXHDi"
+        creation_dt = datetime.datetime(2010, 1, 1, 0, 0)
+        expiration_dt = datetime.datetime(2010, 1, 31, 0, 0)
+        user = UserData.nico
+    class password_token_active:
+        token = "xYCPayfPCPEPCPaL"
+        creation_dt = datetime.datetime(2012, 1, 1, 0, 0)
+        expiration_dt = datetime.datetime(2022, 1, 31, 0, 0)
+        user = UserData.jo
 
 class WebTestCase(unittest.TestCase):
     """ Parent of all test classes based on a Web architecture (controllers, models...) """

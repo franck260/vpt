@@ -1,15 +1,20 @@
 $def with (tournament, statistics, results, comments)
 
 $def show_administration_link_if_authorized():
-    $if config.session_manager.user.is_admin:
-        <a href="#" onclick="unlockResults($tournament.id);" id="admin_results_link"> <img src="/public/img/lock.png" /></a>
+    $if config.session_manager.user.admin:
+        <a href="#" id="admin_results_link" data-tournament-id="$tournament.id"> <img src="/public/img/lock.png" /></a>
+        <script type="text/javascript" src="/public/js/admin_results.js"></script>
 
-$def show_comments_components():
-    <textarea id="comment_textarea" class="comment_textarea"></textarea> 
+$def show_comment_form():
+    <form id="comment_form">
+    <input type="hidden" name="tournament_id" value="$tournament.id" />
+    <textarea id="comment" name="comment" class="comment_textarea"></textarea> 
     <br /> 
-    <button id="comment_button" name="submit" type="button" onclick="postComment($tournament.id);" class="comment_button">Poster un commentaire</button> 
+    <button type="submit" class="comment_button">Poster un commentaire</button> 
     &nbsp; &nbsp;
     $:formatting.ajax_animation("comment_ajax_animation")
+    </form>
+    <script type="text/javascript" src="/public/js/comments.js"></script>
 
 <div class="post"> 
 <h2>
@@ -44,8 +49,8 @@ $:results
 <div id="comments">				
 $:comments
 </div>
-$:show_comments_components()
-
-
+<br />
+$:show_comment_form()
 </div>
-        
+
+

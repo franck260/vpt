@@ -1,22 +1,35 @@
-$def with (login_form)
+$def with (login_form, recover_password_form)
 
-<div class="post"> 
-<h2>Identification requise</h2>
+<div class="post">
  
-<p>
+<h2>Identification requise</h2> 
+<br />
 <form action="" method="post" class="login_form">
 
     $if not login_form.valid:
-        <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div><br/>
+        <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div><br />
         
     $:login_form.render_css()
 
+<a href="#" id="display_recover_password">Mot de passe oublié ?</a>
 </form>
-</p>
+
+<br />
+
+<div id="recover_password" style="display: none;">
+<h2>Mot de passe oublié ?</h2>
+<br />
+<form id="recover_password_form" class="login_form">
+
+    $:recover_password_form.render_css()
+    &nbsp; &nbsp;
+    $:formatting.ajax_animation("recover_password_ajax_animation")
+    
+    <div id="recover_password_ajax_output"></div>
+
+</form>
+<br />
 </div>
 
-<script type="text/javascript">
-//<![CDATA[
-document.getElementById("email").focus();
-//]]>
-</script>
+</div>
+<script type="text/javascript" src="/public/js/login.js"></script>

@@ -7,7 +7,7 @@ $def show_subscription_button(status, label, extra_text):
     $if config.session_manager.user in [result.user for result in tournament.results_by_status(status)]:
         <span style="font-weight: bold" id="$("subscribtion_link_" + status)">$label</span>
     $else:
-        <a id="$("subscribtion_link_" + status)" href="javascript:updateStatus($tournament.id, '$status');">$label</a>
+        <a id="$("subscribtion_link_" + status)" href="#" data-tournament-id="$tournament.id" data-status="$status">$label</a>
     $:extra_text
 
 
@@ -18,6 +18,8 @@ $def show_subscription_box():
         $:show_subscription_button(result_statuses.A, "Non", "&nbsp;|&nbsp;")
         $:show_subscription_button(result_statuses.M, "Peut-être", "&nbsp; &nbsp;")
         $:formatting.ajax_animation("subscribtion_ajax_animation")
+		<script type="text/javascript" src="/public/js/subscription.js"></script>
+        
         </td></tr>
         
 $def show_attending_players():
@@ -31,7 +33,7 @@ $def show_players_by_status(status, header):
     $if players:
         <tr><td class="title">$header</td><td>$players</td></tr>
 
-<p>
+<br />
 <table class="stats">
     $:show_subscription_box()
     $:show_attending_players()
@@ -39,7 +41,6 @@ $def show_players_by_status(status, header):
     $:show_players_by_status(result_statuses.A, "Absents")
     $:show_players_by_status(result_statuses.M, "Peut-être")				
 </table>
-</p>
-
+<br />
 
 

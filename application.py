@@ -17,16 +17,19 @@ urls = (
     
     "/login",                               "app.controllers.account.Login",
     "/logout",                              "app.controllers.account.Logout",
-    "/admin/account",                       "app.controllers.account.View",
-    "/update/user",                         "app.controllers.account.Update_User",
-    "/update/password",                     "app.controllers.account.Update_Password",
+    "/admin/account",                       "app.controllers.account.ViewAccount",
+    "/create/account",                      "app.controllers.account.CreateAccount",
+    "/update/user",                         "app.controllers.account.UpdateUser",
+    "/update/password",                     "app.controllers.account.UpdatePassword",
+    "/recover/password",                    "app.controllers.account.RecoverPassword",
+    "/reset/password",                      "app.controllers.account.ResetPassword",
 
     "/season/(\d+)",                        "app.controllers.seasons.View",
 
     "/tournament/(\d+)/(\d+)",              "app.controllers.tournaments.View",
-    "/update/status",                       "app.controllers.tournaments.Update_Status",
-    "/add/comment",                         "app.controllers.tournaments.Add_Comment",
-    "/admin/results/(\d+)",                 "app.controllers.tournaments.Admin_Results",
+    "/update/status",                       "app.controllers.tournaments.UpdateStatus",
+    "/add/comment",                         "app.controllers.tournaments.AddComment",
+    "/admin/results",                       "app.controllers.tournaments.AdminResults",
 
     "/admin/(.*)",                          "app.controllers.administration.Admin",
 

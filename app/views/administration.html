@@ -3,7 +3,7 @@ $def with (grid, fieldset)
 <div class="post"> 
 
 <h2>Edition des éléments</h2>
-<p>
+<br />
 <form action="" method="post" class="results_form">
     <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
     <input type="hidden" name="event" value="$Events.MODIFIED" />
@@ -11,17 +11,19 @@ $def with (grid, fieldset)
     <button type="submit">Modifier</button>
 
 </form>
-</p>
+<br />
 
 <h2>Ajout d'un élément</h2>
-<p>
+<br />
 <form action="" method="post" class="user_form">
     <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
     <input type="hidden" name="event" value="$Events.NEW" />
     $:fieldset.render()
     <button type="submit">Créer</button>
 </form>
-</p>
+<br />
 
 </div>
 
+<!-- Cross-page logic to prevent multiple submissions -->
+<script type="text/javascript" src="/public/js/forms.js"></script>
