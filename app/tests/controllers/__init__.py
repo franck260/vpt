@@ -14,7 +14,7 @@ class ControllerTestCase(WebTestCase):
     """ Parent of all controllers test classes """
     
     def login(self, email = "franck.l@gmail.com", password = "secret1"):
-        config.session_manager.maybe_login(email, password)
+        config.session_manager.maybe_login(email, password, False)
         
     def logout(self):
         config.session_manager.logout()

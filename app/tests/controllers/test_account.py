@@ -30,10 +30,10 @@ class TestAccount(ControllerTestCase):
     def test_logout(self):
         
         self.login()
-        self.assertTrue(config.session_manager.is_logged)
+        self.assertEquals(config.session_manager.user, UserData.franck_l)
         response = app.request("/logout") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
-        self.assertFalse(config.session_manager.is_logged)
+        self.assertIsNone(config.session_manager.user)
 
     def test_login_GET(self):
         
@@ -43,24 +43,24 @@ class TestAccount(ControllerTestCase):
  
     def test_login_POST(self):
 
-        self.assertFalse(config.session_manager.is_logged)
+        self.assertIsNone(config.session_manager.user)
         response = app.request("/login", method="POST", data={"email" : "jo@gmail.com", "password" : "secret4"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_SEE_OTHER)
-        self.assertTrue(config.session_manager.is_logged)  
+        self.assertEquals(config.session_manager.user, UserData.jo)
 
     def test_login_POST_wrongpassword(self):
 
-        self.assertFalse(config.session_manager.is_logged)
+        self.assertIsNone(config.session_manager.user)
         response = app.request("/login", method="POST", data={"email" : "jo@gmail.com", "password" : "secret2"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertFalse(config.session_manager.is_logged)
+        self.assertIsNone(config.session_manager.user)
         
     def test_login_POST_inactiveuser(self):
 
-        self.assertFalse(config.session_manager.is_logged)
+        self.assertIsNone(config.session_manager.user)
         response = app.request("/login", method="POST", data={"email" : "zoe@gmail.com", "password" : "secret7"}) #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertFalse(config.session_manager.is_logged)
+        self.assertIsNone(config.session_manager.user)
     
     def test_view_account_notlogged(self):
         

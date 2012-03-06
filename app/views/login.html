@@ -4,15 +4,17 @@ $def with (login_form, recover_password_form)
  
 <h2>Identification requise</h2> 
 <br />
-<form action="" method="post" class="login_form">
+<div class="login_form_wrapper">
+<form id="login" action="" method="post" class="login_form">
 
     $if not login_form.valid:
         <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div><br />
         
     $:login_form.render_css()
 
-<a href="#" id="display_recover_password">Mot de passe oublié ?</a>
 </form>
+<a href="#" id="display_recover_password" class="login_form_link">Mot de passe oublié ?</a>
+</div>
 
 <br />
 

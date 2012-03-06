@@ -61,13 +61,16 @@ class User(Base):
            and self.password == other.password     \
            and self.level == other.level
            
+    def check_level(self, base_level):
+        return self.level >= self.Levels[base_level].value
+     
     @property
     def admin(self):
-        return self.level == self.Levels[self.BaseLevels.ADMIN].value
+        return self.check_level(self.BaseLevels.ADMIN)
 
     @property
     def active(self):
-        return self.level != self.Levels[self.BaseLevels.DISABLED].value
+        return self.check_level(self.BaseLevels.GUEST)
     
     @staticmethod
     def get_user(email):

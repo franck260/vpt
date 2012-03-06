@@ -32,10 +32,56 @@ blockquote:before,blockquote:after {
     content: "";
 }
 
-form.login_form label, form.login_form input {
+form.login_form button, form.user_form button, form.results_form button {
+    padding: 2px 0 0 0;
+    color: white;
+    background-color: black;
+    border-color: #56aaff;
+    border-width: thin;
+    font-weight: bold;
+    width: 100px;
+    height: 25px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+form.login_form input[type=text], form.login_form input[type=password] {
     display: block;
     margin: 3px 0px;
-    width: 300px;
+    width: 250px;
+}
+
+form.login_form input[type=checkbox] {
+    margin: 15px 0px 6px 5px;
+}
+
+form.login_form {
+    width: 256px;
+    position: relative;
+}
+
+#login button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-top: 7px;
+    margin-right: 2px;
+}
+
+.login_form_wrapper {
+    position: relative;
+    width: 420px;
+}
+
+.login_form_link {
+    position: absolute;
+    margin-bottom: 6px;
+    right: 0;
+    bottom: 0;
+    font-weight: bold;
+    font-size: 90%;
+    text-decoration: none;
+    color:#111;
 }
 
 form.user_form label, form.user_form input {
@@ -49,28 +95,17 @@ form.results_form label, form.results_form input {
     width: 110px;
 }
 
-form.login_form button, form.user_form button, form.results_form button {
-    padding:2px 0 0 0;
-    color:white;
-    background-color:black;
-    border-color:#56aaff;
-    border-width:thin;
-    font-weight:bold;
-    width:100px;
-    height:25px;
-    margin: 10px 0;
-}
-
 div.login_error, span.field_error, span.grid_error {
     font-weight: bold;
     color: red;
-    /* margin: 0 0 0 0; */
+    margin-top: 10px;
     display: block;
 }
 
 div.login_success {
     font-weight: bold;
     color: green;
+    margin-top: 10px;
     display: block;
 }
 
@@ -304,9 +339,9 @@ div.content {
 }
 
 div.post {
-    border-bottom:2px dashed #eee;
-    padding-bottom:20px;
-    padding-top:10px;
+    border-bottom: 2px dashed #eee;
+    padding-bottom: 20px;
+    padding-top: 10px;
     margin-bottom: 20px;
     font-size: 14px;
 }

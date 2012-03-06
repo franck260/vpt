@@ -7,7 +7,7 @@ from web import config
 
 class View:
     
-    @session.configure_session(login_required = True)
+    @session.login_required
     def GET(self, id):
 
         season = Season.get(int(id))

@@ -2,8 +2,6 @@
 
 """ Administration & user-facing forms used to edit users """
 
-#TODO: better calls to super constructors
-
 from app.forms import custom_validators, CustomFieldSet
 from app.models import User, UserToken
 from app.utils.session import to_md5
@@ -14,6 +12,7 @@ from web import config
 import web
 
 # Lambda methods used to enrich the fields with labels & validators
+ID_READONLY = lambda field: field.label(u"ID").readonly()
 EMAIL = lambda field: field.label(u"Adresse email").validate(validators.email)
 EMAIL_REQUIRED = lambda field: EMAIL(field).required()
 EMAIL_READONLY = lambda field: field.label(u"User").readonly()
@@ -25,7 +24,7 @@ OLD_PASSWORD = lambda field: field.label(u"Ancien mot de passe").password().requ
 NEW_PASSWORD = lambda field: field.label(u"Nouveau mot de passe").password().required().validate(validators.minlength(4))
 NEW_PASSWORD_CONFIRM = lambda field: field.label(u"Nouveau mot de passe (confirmation)").password().required().validate(validators.minlength(4)).validate(custom_validators.new_password_validator)
 
-def login_form(email=None):
+def login_form(email=None, persistent=False):
     """ Simple form used to log in users """
 
     email = email or ""
@@ -33,6 +32,7 @@ def login_form(email=None):
     return web.form.Form(
               web.form.Textbox("email", description="Adresse email : ", value=email),
               web.form.Password("password", description="Mot de passe : "),
+              web.form.Checkbox(u"Rester connecté", value="True", checked=persistent),
               web.form.Button("Se connecter", type="submit")                  
            )
     
@@ -56,6 +56,7 @@ class EditUsersGrid(Grid):
         level_options = sorted(User.Levels.values(), key=lambda level_component: level_component.value)
         
         inc = [
+            ID_READONLY(self.id),
             EMAIL_READONLY(self.email),
             LEVEL(self.level, level_options)
         ]

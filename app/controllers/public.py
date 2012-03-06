@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from app.utils import session
 import mimetypes
 import web
 
 class Public:
     
-    @session.configure_session(enabled = False)
     def GET(self): 
         try:
             path = web.ctx.path

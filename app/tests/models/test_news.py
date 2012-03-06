@@ -5,7 +5,6 @@ from app.tests import dbfixture, NewsData
 from app.tests.models import ModelTestCase
 import datetime
 
-
 class TestNews(ModelTestCase):
     
     def setUp(self):

@@ -2,26 +2,27 @@ $def with (grid, fieldset)
 
 <div class="post"> 
 
-<h2>Edition des éléments</h2>
-<br />
-<form action="" method="post" class="results_form">
-    <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
-    <input type="hidden" name="event" value="$Events.MODIFIED" />
-    <table class="admin_results admin_generic">$:grid.render()</table>
-    <button type="submit">Modifier</button>
+$if grid:
+    <h2>Edition des éléments</h2>
+    <br />
+    <form action="" method="post" class="results_form">
+        <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
+        <input type="hidden" name="event" value="$Events.MODIFIED" />
+        <table class="admin_results admin_generic">$:grid.render()</table>
+        <button type="submit">Modifier</button>
+    </form>
+    <br />
 
-</form>
-<br />
-
-<h2>Ajout d'un élément</h2>
-<br />
-<form action="" method="post" class="user_form">
-    <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
-    <input type="hidden" name="event" value="$Events.NEW" />
-    $:fieldset.render()
-    <button type="submit">Créer</button>
-</form>
-<br />
+$if fieldset:
+    <h2>Ajout d'un élément</h2>
+    <br />
+    <form action="" method="post" class="user_form">
+        <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
+        <input type="hidden" name="event" value="$Events.NEW" />
+        $:fieldset.render()
+        <button type="submit">Créer</button>
+    </form>
+    <br />
 
 </div>
 

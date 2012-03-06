@@ -6,7 +6,7 @@ from web import config
 
 class Index :
     
-    @session.configure_session(login_required = True)
+    @session.login_required
     def GET(self):
         
         next_tournament = Tournament.next_tournament()

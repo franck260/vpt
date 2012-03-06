@@ -14,12 +14,17 @@ sessions_table = Table("SESSIONS", metadata,
 
 class Session(Base):
     
-    def __init__(self, session_id, atime, data) :
+    def __init__(self, session_id=None, atime=None, data=None) :
         
         self.session_id = session_id
         self.atime = atime
         self.data = data
-        
+
+    @classmethod
+    def all(cls):
+        """ Overrides the default all method to guarantee the order by """
+        return Base.all.im_func(Session, order_by_clause=Session.atime) #@UndefinedVariable
+
     def __repr__(self) : 
         return "<Session(%s,%s,%s)>" % (self.session_id, self.atime, self.data)
 

@@ -11,7 +11,7 @@ import web
 
 class ViewAccount:
     
-    @session.configure_session(login_required=True)
+    @session.login_required
     def GET(self):
         
         user_fieldset = user_forms.EditUserFieldSet().bind(config.session_manager.user)
@@ -21,7 +21,7 @@ class ViewAccount:
 
 class UpdateUser:
     
-    @session.configure_session(login_required=True)  
+    @session.login_required 
     def POST(self):
         
         user_fieldset = user_forms.EditUserFieldSet().bind(config.session_manager.user, data=web.input())
@@ -36,7 +36,7 @@ class UpdateUser:
         
 class UpdatePassword:
     
-    @session.configure_session(login_required=True)  
+    @session.login_required 
     def POST(self):
         
         user_fieldset = user_forms.EditUserFieldSet().bind(config.session_manager.user)
@@ -51,7 +51,6 @@ class UpdatePassword:
 
 class RecoverPassword:
 
-    @session.configure_session(enabled=False)
     def POST(self):
         
         # Reads the email in the HTTP request parameters
@@ -81,7 +80,6 @@ class RecoverPassword:
 
 class ResetPassword:
     
-    @session.configure_session(enabled=False)
     def GET(self):
         
         # Reads the token in the HTTP request parameters
@@ -97,7 +95,6 @@ class ResetPassword:
         password_fieldset = user_forms.NewPasswordFieldSet().bind(password_token.user)
         return config.views.layout(config.views.creation_form(password_fieldset))
     
-    @session.configure_session(enabled=False)
     def POST(self):
         
         # Reads the token in the HTTP request parameters
@@ -122,7 +119,6 @@ class ResetPassword:
 
 class CreateAccount:
     
-    @session.configure_session(enabled=False)
     def GET(self):
         
         # Reads the token in the HTTP request parameters
@@ -138,7 +134,6 @@ class CreateAccount:
         user_fieldset = user_forms.NewUserFieldSet(user_token)
         return config.views.layout(config.views.creation_form(user_fieldset))
     
-    @session.configure_session(enabled=False)
     def POST(self):
         
         # Reads the token in the HTTP request parameters
@@ -163,7 +158,7 @@ class CreateAccount:
     
 class Logout:
     
-    @session.configure_session(enabled=True)
+    @session.login_required
     def GET(self):
         
         #TODO: logout should be done by a POST !
@@ -172,11 +167,9 @@ class Logout:
 
 class Login:
         
-    @session.configure_session(enabled=False)
     def GET(self):
         return config.views.layout(config.views.login(user_forms.login_form(), user_forms.recover_password_form()))
     
-    @session.configure_session(enabled=True)
     def POST(self):
         
         # Reads the form parameters & the previously requested path (if any)
@@ -184,12 +177,14 @@ class Login:
         email = input.email
         password = input.password
         requested_path = input.next
-    
+        #TODO: horrible fix to circumvent encoding problems
+        persistent = any(key.startswith("Rester") for key in input)
+
         # Tries to log in, and redirects to the previously requested path (if any)
-        if config.session_manager.maybe_login(email, password):
+        if config.session_manager.maybe_login(email, password, persistent):
             raise web.seeother(requested_path)
         else:
-            login_form = user_forms.login_form(email)
+            login_form = user_forms.login_form(email, persistent)
             login_form.valid = False
 
             return config.views.layout(config.views.login(login_form, user_forms.recover_password_form()))

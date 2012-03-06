@@ -206,6 +206,16 @@ class PasswordTokenData(DataSet):
         creation_dt = datetime.datetime(2012, 1, 1, 0, 0)
         expiration_dt = datetime.datetime(2022, 1, 31, 0, 0)
         user = UserData.jo
+        
+class SessionData(DataSet):
+    class session:
+        session_id = "030772213fc184c4613534c59da814d054604bc8"
+        atime = datetime.datetime(2012, 2, 19, 0, 0)
+        data = """
+               KGRwMQpTJ2lwJwpwMgpWMTI3LjAuMC4xCnAzCnNTJ2V4cGlyZXMnCnA0Ck5zUyd1c2VyX2lkJwpw
+               NQpJMgpzUydzZXNzaW9uX2lkJwpwNgpTJzAzMDc3MjIxM2ZjMTg0YzQ2MTM1MzRjNTlkYTgxNGQw
+               NTQ2MDRiYzgnCnA3CnMu
+               """
 
 class WebTestCase(unittest.TestCase):
     """ Parent of all test classes based on a Web architecture (controllers, models...) """

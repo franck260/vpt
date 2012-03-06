@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.forms import tournament_forms
-from app.models import Season, Tournament
+from app.models import Season, Tournament, User
 from app.notifications import notify_via_email, Events
 from app.utils import session, http
 from web import config
@@ -9,8 +9,7 @@ import web
 
 class AdminResults :
     
-    @session.configure_session(login_required=True)
-    @session.administration
+    @session.login_required(User.BaseLevels.ADMIN)
     def GET(self):
         
         tournament_id = web.input(tournament_id=None).tournament_id
@@ -27,8 +26,7 @@ class AdminResults :
         
         return config.views.results_admin(tournament, results_grid)
 
-    @session.configure_session(login_required=True)
-    @session.administration
+    @session.login_required(User.BaseLevels.ADMIN)
     @http.jsonify
     def POST(self):
         
@@ -62,7 +60,7 @@ class AdminResults :
 
 class AddComment :
     
-    @session.configure_session(login_required=True)
+    @session.login_required
     def POST(self):
         
         # Reads the HTTP request parameters
@@ -83,7 +81,7 @@ class AddComment :
 
 class UpdateStatus:
     
-    @session.configure_session(login_required=True)
+    @session.login_required
     @http.jsonify
     def POST(self):
         
@@ -104,7 +102,7 @@ class UpdateStatus:
     
 class View :
     
-    @session.configure_session(login_required=True)
+    @session.login_required
     def GET(self, season_id, position):
         
         tournament = Tournament.get_tournament(int(season_id), int(position))

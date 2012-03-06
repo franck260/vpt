@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 
-""" Session management """
+""" Session management built on top of web.py's session component """
 
 from app.models import User, Session
 from app.utils import http
+from app.utils.mm import multimethod
+from functools import wraps
 from web import config
 from web.session import Store
 import datetime
 import hashlib
+import time
+import types
 import web
 
-to_md5 = lambda s : hashlib.md5(s).hexdigest()
+def to_md5(s):
+    return hashlib.md5(s).hexdigest()
 
 class SqlAlchemyDBStore(Store):
     """
@@ -23,9 +28,9 @@ class SqlAlchemyDBStore(Store):
     """
     
     def __contains__(self, key):
-        data = Session.get(key)
-        return bool(data) 
-
+        s = Session.get(key)
+        return s and not s in config.orm.deleted
+    
     def __getitem__(self, key):
         
         now = datetime.datetime.now()
@@ -33,7 +38,6 @@ class SqlAlchemyDBStore(Store):
         s.atime = now
         return self.decode(s.data)
         
-    
     def __setitem__(self, key, value):
         pickled = self.encode(value)
         now = datetime.datetime.now()
@@ -48,14 +52,18 @@ class SqlAlchemyDBStore(Store):
         s = Session.get(key)
         config.orm.delete(s)
 
-    def cleanup(self, timeout):
-        
-        timeout = datetime.timedelta(timeout/(24.0*60*60)) #timedelta takes numdays as arg
-        last_allowed_time = datetime.datetime.now() - timeout
-        
-        config.orm.query(Session).filter(last_allowed_time > Session.atime).delete()
-
 class SessionManager(object):
+    """
+    The session manager should be instantiated once & bound to the application's config.
+    
+    Essentially, it's a wrapper around the session component built into the framework (the "handler"), including some new features
+    (login/logout methods, persistent cookies...) and a different cookie mechanism (the cookie is only sent at login time).
+    
+    This manager depends on SqlAlchemy to manage the users but this link could be easily broken.
+    """
+    
+    # Duration of persistent cookies
+    PERSISTENT_SESSION_DURATION = 30 * 24 * 3600 # 30 days
     
     def __init__(self, session_handler):
         self.session_handler = session_handler
@@ -63,7 +71,7 @@ class SessionManager(object):
     def __repr__(self) :
         return "<SessionManager(%s)>" % self.session_handler.__dict__
     
-    def maybe_login(self, email, password):
+    def maybe_login(self, email, password, persistent):
         """ Tries to log in and returns the status """
         
         # Fetches the user
@@ -87,144 +95,158 @@ class SessionManager(object):
             web.debug("Incorrect password for user : %s" % email)
             return False
         else :
-            self.login(user)
+            self.login(user, persistent)
             return True
+       
+    def login(self, user, persistent):
+        """
+        Actually logs in the user and sets the client-side cookie.
+        The cookie is valid for 30 days if persistent is True, until the browser is closed otherwise (session cookie).
+        """
         
-    def login(self, user):
-        """ Actually logs in the user """
-        
-        self.session_handler.user_id = user.id
-        self.session_handler.is_logged = True
+        if persistent:
+            session_duration = self.PERSISTENT_SESSION_DURATION
+            expires = int(time.time() + session_duration)
+        else:
+            session_duration = expires = None
+
+        self.update(user_id=user.id, expires=expires)
+        self.session_handler.setcookie(session_duration)
         
         web.debug("Successfully logged in user : %s" % user.email)
-        
+    
     def logout(self):
         """ Logs out the currently logged user """
+        
+        self.lazy_load()
         self.session_handler.kill()
+        self.session_handler.setcookie(-1)
+        
+    def __getattr__(self, name):
+        """ Lazily loads the session if needed, and returns the selected attribute """
+        
+        self.lazy_load()
+        return getattr(self.session_handler, name)
     
     @property
     def user(self):
-        """ Returns the user logged in the session """
-        return User.get(self.session_handler.user_id)
+        """ Returns the user logged in the session, or None """
+        return self.user_id and User.get(self.user_id)
     
-    @property
-    def is_logged(self):
-        """ Returns true if the user is authenticated """
-        return self.session_handler.is_logged
+    def lazy_load(self):
+        """ Lazily loads the session """
+        
+        if not self.session_handler.loaded:
+            self.session_handler.load()
+            
+            # If the user passed a cookie which should already have expired, loads a new session_id from the store
+            if self.expires and self.expires < time.time():
+                self.logout()
+                self.session_handler.load()
     
+    def update(self, **kwargs):
+        """ Wraps the session update process : lazily loads the session if needed, and updates it via the handler """
+        
+        self.lazy_load()
+        
+        for key, value in kwargs.items():
+            setattr(self.session_handler, key, value)
+        
+        self.session_handler.save()
+
+class DefaultSessionHandler(web.session.Session):
+    """ Session handler inherited from the framework, with a slightly different structure to provide more flexibility """
+
     def load(self):
-        self.session_handler._cleanup()
-        self.session_handler._load()
-    
+        super(DefaultSessionHandler, self)._load()
+
+    @property
+    def loaded(self):
+        return hasattr(self, "session_id")
+
     def save(self):
-        self.session_handler._save()
+        self.store[self.session_id] = dict(self._data)
 
-DefaultSessionHandler = web.session.Session
+    def setcookie(self, session_duration):
+        super(DefaultSessionHandler, self)._setcookie(self.session_id, session_duration or "")
 
+    def kill(self):
+        super(DefaultSessionHandler, self).kill()
+        
 class MemorySessionHandler(object):
-    """ Simple implementation of a SessionHandler for testing purposes """
-    
+    """ Simple implementation of a session handler for testing purposes """
+
     def __init__(self, app, store, initializer=None):
-        self.is_logged = False
-        self.user_id = None
-    
-    def _cleanup(self):
+        self.store = store
+        self._clear()
+
+    def load(self):
+        self.loaded = True
+
+    def save(self):
         pass
-    
-    def _load(self):
-        pass
-    
-    def _save(self):
+
+    def setcookie(self, session_duration):
         pass
     
     def kill(self):
-        self.is_logged = False
-        self.user_id = None
-
-def init_session_manager(session_handler_cls):
-    """ Instanciates the session manager """
+        self._clear()
     
-    store = SqlAlchemyDBStore()
-    session_handler = globals()[session_handler_cls](app = None, store = store, initializer = {"is_logged": False, "user_id" : None})
+    def _clear(self):
+        self.user_id = None
+        self.expires = None
+        self.loaded = False
+    
+def init_session_manager(session_handler_cls):
+    """ Instanciates the session manager : should be called at initialization time """
+    
+    session_handler = globals()[session_handler_cls](app=None, store=SqlAlchemyDBStore(), initializer={"user_id" : None, "expires" : None})
     web.debug("[WEBSESSION] Sucessfully instanciated session manager with the handler %s" %session_handler_cls)
     return SessionManager(session_handler) 
-    
-def administration(func):
-    """ Wraps a controller method (GET/POST) in order to restrict access to administrators """
 
-    def wrapped_func(*args):
-        
-        if not config.session_manager.user.admin:
-            raise web.forbidden()
-        
-        return func(*args)
-            
-    return wrapped_func
-
-def configure_session(enabled = True, login_required = False):
-    """ Wraps a controller method (GET/POST) in order to handle session management on a per-request basis """
+@multimethod(unicode)
+def login_required(base_level):
+    """
+    Wraps a controller method (GET/POST) in order to handle session management on a per-request basis.
     
-    def actual_decorator(func):
-        """ The actual decorator returned by configure_session (required for a decorator with arguments) """
-        
-        if login_required:
-            
-            # Scenario 1 (session control, login control) : replaces the GET/POST with a wrapped function            
-            def wrapped_func(*args):
-                
-                #print "[SESSION WRAPPER - SCENARIO 1] [BEGIN] Inside wrapped %s method in %s" %(func.__name__, func.__module__)
-                session_manager = config.session_manager
-                session_manager.load()
-                
-                try:
-                    
-                    if not session_manager.is_logged:
-                        
-                        # If the requested path is not the site's index, keep 
-                        # track of it to redirect the user after successful login
-                        path = web.ctx.path
-                        requested_path_parameter = "?next=%s" % path if path != "/" else ""
-                        raise web.seeother("/login%s" % requested_path_parameter)
-                    
-                    return func(*args)
-                
-                finally:
-                    session_manager.save()
-                    #print "[SESSION WRAPPER - SCENARIO 1] [END] Inside wrapped %s method in %s" %(func.__name__, func.__module__)
+    When executed, the wrapped_controller check if the user is logged, if he has sufficient privileges
+    (as defined by the base_level attribute) and then only executes the controller.
+    """
     
-            # End of scenario 1 
-            #print "[SESSION WRAPPER - SCENARIO 1] Succesfully wrapped %s method in %s" %(func.__name__, func.__module__) 
-            return wrapped_func
+    def actual_decorator(controller):
+        """ The actual decorator returned by login_required """
         
-        elif enabled:
+        @wraps(controller)      
+        def wrapped_controller(*args):
+            """ The method which replaces the actual controller """
             
-            # Scenario 2 (session control, no login control) : replaces the GET/POST with a wrapped function
-            def wrapped_func(*args):
-                
-                #print "[SESSION WRAPPER - SCENARIO 2] [BEGIN] Inside wrapped %s method in %s" %(func.__name__, func.__module__)
-                session_manager = config.session_manager
-                session_manager.load()
-                
-                try :
-                    return func(*args)
-                finally:
-                    session_manager.save()
-                    #print "[SESSION WRAPPER - SCENARIO 2] [END] Inside wrapped %s method in %s" %(func.__name__, func.__module__)
-
-            # End of scenario 2 
-            #print "[SESSION WRAPPER - SCENARIO 2] Succesfully wrapped %s method in %s" %(func.__name__, func.__module__)
-            return wrapped_func
+            # Loads the session (if it exists) & reads the user stored in the session backend
+            user = config.session_manager.user
+    
+            if user is None:
+                # If the requested path is not the site's index, keep 
+                # track of it to redirect the user after successful login
+                path = web.ctx.path
+                requested_path_parameter = "?next=%s" % path if path != "/" else ""
+                raise web.seeother("/login%s" % requested_path_parameter)
             
-        else:
+            elif not user.check_level(base_level):
+                # Checks if the user has sufficient access : use cases include administration pages, and scenarios where the user was disabled
+                # In this case, the user will get 403 errors as long as its session is valid
+                raise web.forbidden()
             
-            # Scenario 3 (no session control) : the GET/POST is unmodified (actually, it's replaced by itself)
-            #print "[SESSION WRAPPER] No wrapped function generated for %s method inside %s" %(func.__name__, func.__module__)
-            return func
+            # Everything is fine, the controller method can be executed
+            return controller(*args)            
+            
+        return wrapped_controller
         
     return actual_decorator
 
-@http.sqlalchemy_wrapper
-@configure_session(enabled=True)
+@multimethod(types.FunctionType)
+def login_required(controller):
+    """ By default, controller methods are reserved to 'guests'. This convenient method allows to decorate controller methods with @login_required instead of @login_required() """
+    return login_required(User.BaseLevels.GUEST)(controller)
+
 def login_workflow(user):
     """ Hackish method to perform the login workflow outside of a the regular HTTP request flow """
-    config.session_manager.login(user)
+    http.sqlalchemy_processor(lambda: config.session_manager.login(user, False))
