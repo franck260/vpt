@@ -20,7 +20,6 @@ class TestSeason(ModelTestCase):
     def test_all(self):
         
         all_seasons = Season.all()
-        print all_seasons
         self.assertEqual(len(all_seasons), 2)
         
         # Checks the order by clause

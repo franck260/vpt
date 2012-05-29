@@ -18,9 +18,8 @@ $def show_subscription_box():
         $:show_subscription_button(result_statuses.A, "Non", "&nbsp;|&nbsp;")
         $:show_subscription_button(result_statuses.M, "Peut-être", "&nbsp; &nbsp;")
         $:formatting.ajax_animation("subscribtion_ajax_animation")
-		<script type="text/javascript" src="/public/js/subscription.js"></script>
-        
         </td></tr>
+        $:formatting.include_js("subscription.js")
         
 $def show_attending_players():
     <tr><td class="title">Nombre de participants</td><td>$tournament.nb_attending_players</td></tr>

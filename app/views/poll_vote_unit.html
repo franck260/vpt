@@ -1,0 +1,39 @@
+$def with (poll)
+
+$def show_poll_vote_unit():
+    $ choices = poll.choices
+    $ choices_by_user = poll.choices_by_user
+    $if poll.expired:
+        <p><i>Ce sondage est désormais fermé !</i></p>
+    $else:
+        <br />
+        <form id="poll_vote_form" class="results_form" data-user-id="$config.session_manager.user.id">
+        <input type="hidden" name="poll_id" value="$poll.id" />
+        <table class="admin_results fixed_width">
+        <tr>
+        <th>Joueur</th>
+         $for choice in choices:
+             <th>
+             <span>$:formatting.format_date(choice.choice_dt, "%d/%m/%Y")</span>
+             <span class="ui-icon ui-icon-calendar" />
+             </th>
+         </tr>
+         <tr>
+         <td>$config.session_manager.user.pseudonym</td>
+         $for choice in choices:
+             <td><input type="checkbox" name="poll_user_choices" value="$loop.index0" 
+             $if choice in choices_by_user.get(config.session_manager.user, set()):
+                  checked="checked"
+             ></td>
+        </tr>
+        </table>
+        <button type="submit">Voter</button>
+        &nbsp; &nbsp;
+        $:formatting.ajax_animation("poll_vote_unit_ajax_animation")
+        <span id="poll_vote_unit_ajax_output"></span>
+        </form>
+        <br />
+        $:formatting.INCLUDE_JQUERYUI
+        $:formatting.include_js("poll_vote.js")
+        
+$:show_poll_vote_unit()

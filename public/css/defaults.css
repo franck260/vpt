@@ -23,6 +23,10 @@ table {
     border-spacing: 0;
 }
 
+table.fixed_width th {
+    width: 70px;
+}
+
 ol,ul {
     list-style: none;
 }
@@ -90,7 +94,7 @@ form.user_form label, form.user_form input {
     width: 300px;
 }
 
-form.results_form label, form.results_form input {
+form.results_form label, form.results_form input[type=text] {
     display: block;
     width: 110px;
 }
@@ -190,6 +194,16 @@ table.results th, table.admin_results th {
     font-weight:bold;
 }
 
+table.admin_results th span {
+    font-weight: bold;
+    float: left;
+}
+
+table.admin_results th .ui-icon {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
 table.results td {
     padding: 6px 3px;
     text-align: left;
@@ -200,7 +214,7 @@ table.results td {
 }
 
 table.admin_results td {
-    padding: 1px 1px;
+    padding: 3px 1px;
     text-align: left;
 }
 
@@ -396,4 +410,14 @@ div.post form a {
     font-weight: bold;
     text-decoration: none;
     color:#111;
+}
+
+.poll_success {
+	color: green;
+	font-weight: bold;
+}
+
+.poll_error {
+	color: red;
+	font-weight: bold;
 }

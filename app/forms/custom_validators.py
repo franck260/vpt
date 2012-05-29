@@ -18,6 +18,25 @@ def new_password_validator(value, field):
     if field.parent.new_password.value != value:
         raise validators.ValidationError("Passwords do not match")
 
+def poll_choice_dt_uniqueness_validator(value, field):
+
+    siblings = [f for f in field.parent.possible_date_fields if f is not field]
+        
+    if any(value == field.parent.to_dict(with_prefix=False)[sibling.name] for sibling in siblings):
+            raise validators.ValidationError("Non-unique possible date")
+
+def poll_dt_range_validator(dt_format):
+    
+    def f(value, field):
+        formatted_start_dt = field.parent.to_dict(with_prefix=False)["formatted_start_dt"]
+        try:
+            if datetime.datetime.strptime(value, dt_format).date() < datetime.datetime.strptime(formatted_start_dt, dt_format).date():
+                raise validators.ValidationError("Must be greater or equal to the poll start date")
+        except ValueError:
+            pass # will be caught by another validator
+        
+    return f
+
 def required_for(statuses):
     
     @validators.accepts_none
@@ -51,7 +70,6 @@ def year_delta_validator(value, field):
     if value - field.parent.start_year.value != 1:
         raise validators.ValidationError("1 != end_year - start_year")
     
-
 def _generic_dt_validator(value, dt_format):
     """ Validates the date and returns the year """
     
@@ -74,7 +92,6 @@ def tournament_dt_validator(dt_format):
             raise validators.ValidationError("Year should be %s" % " or ".join(map(str,allowed_years))) 
         
     return f
- 
 
 def dt_validator(dt_format):
     return lambda value, field: _generic_dt_validator(value, dt_format)

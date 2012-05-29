@@ -19,14 +19,18 @@ comments_table = Table("COMMENTS", metadata,
 
 tournament_comments_table = Table("TOURNAMENT_COMMENTS", metadata,
                                   Column("comment_id", Integer, ForeignKey("COMMENTS.comment_id"), primary_key=True, nullable=False),
-                                  Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False),                 
+                                  Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False)             
                                   )
 
+poll_comments_table = Table("POLL_COMMENTS", metadata,
+                            Column("comment_id", Integer, ForeignKey("COMMENTS.comment_id"), primary_key=True, nullable=False),
+                            Column("poll_id", Integer, ForeignKey("POLLS.id"), nullable=False)          
+                            )
 
 class BaseComment(Base):
     """ Base 'abstract' comment - must be subclassed by actual comments types """ 
     
-    TYPES = Enum(["T", "S"])
+    TYPES = Enum(["T", "S", "P"])
     
     def __init__(self, user=None, comment=None, comment_dt=None):
         self.user = user
@@ -40,11 +44,16 @@ class TournamentComment(BaseComment):
     """ Tournament comments """
     pass
 
+class PollComment(BaseComment):
+    """ Poll comments """
+    pass
+
 mapper(BaseComment, comments_table, polymorphic_on=comments_table.c.type, polymorphic_identity=None, properties={
     "user": relationship(User, lazy="joined")
 })
 
 mapper(TournamentComment, tournament_comments_table, inherits=BaseComment, polymorphic_identity=BaseComment.TYPES.T)
-
 web.debug("[MODEL] Successfully mapped TournamentComment class")
 
+mapper(PollComment, poll_comments_table, inherits=BaseComment, polymorphic_identity=BaseComment.TYPES.P)
+web.debug("[MODEL] Successfully mapped PollComment class")

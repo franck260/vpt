@@ -17,15 +17,15 @@ $(document).ready(function() {
             $("#comment_ajax_animation").show();
             
             // Triggers the server call
-            $.post(/* url  */     "/add/comment",
-                    /* data */     data,
-                    /* callback */ function(response) {
-                                       $(response).hide().appendTo($("#comments")).fadeIn("slow");
-                                       $("#nb_comments").hide().html($(".comment_wrapper").length).fadeIn("slow");
-                                       $("#comment_ajax_animation").hide();
-                                       $("#comment").val("");
-                                       $(":input", that).attr("disabled", false);
-                                   });              
+            $.post(/* url  */      $(that).attr("action"),
+                   /* data */      data,
+                   /* callback */  function(response) {
+                                        $(response).hide().appendTo($("#comments_list")).fadeIn("slow");
+                                        $("#nb_comments").hide().html($(".comment_wrapper").length).fadeIn("slow");
+                                        $("#comment_ajax_animation").hide();
+                                        $("#comment").val("");
+                                        $(":input", that).attr("disabled", false);
+                                    });              
 
         }
         

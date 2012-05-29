@@ -19,7 +19,6 @@ class TestTournamentComment(ModelTestCase):
     def test_all(self):
         
         all_comments = TournamentComment.all()
-        print all_comments
         self.assertEqual(len(all_comments), 4)
     
     def test_get(self):

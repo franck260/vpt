@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.tests import dbfixture, TournamentData, SessionData, NewsData, UserData, \
-    SeasonData
+    SeasonData, PollData
 from app.tests.controllers import ControllerTestCase, HTTP_OK, HTTP_SEE_OTHER, \
     HTTP_FORBIDDEN
 from application import app
@@ -12,7 +12,7 @@ class TestAdministration(ControllerTestCase):
     
     def setUp(self):
         super(TestAdministration, self).setUp()
-        self.data = dbfixture.data(TournamentData, NewsData, SessionData)
+        self.data = dbfixture.data(TournamentData, NewsData, SessionData, PollData)
         self.data.setup()
     
     def tearDown(self):
@@ -115,3 +115,21 @@ class TestAdministration(ControllerTestCase):
         self.assertIn("Modifier", response.data)
         self.assertNotIn("Créer", response.data)
         
+    def test_admin_polls_GET_notlogged(self):
+        response = app.request("/admin/polls") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_SEE_OTHER)
+
+    def test_admin_polls_GET_notadmin(self):
+        self.login("franck.l@gmail.com", "secret1")
+        response = app.request("/admin/polls") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_FORBIDDEN)
+        
+    def test_admin_polls_GET(self):
+        self.login("franck.p@gmail.com", "secret2")
+        response = app.request("/admin/polls") #@UndefinedVariable
+        self.assertEqual(response.status, HTTP_OK)
+        #TODO: restore
+        #for poll in (PollData.poll_1, PollData.poll_2, PollData.poll_3):
+            #self.assertIn(poll.title, response.data)
+        #self.assertIn("Modifier", response.data)
+        #self.assertIn("Créer", response.data)

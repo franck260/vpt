@@ -1,0 +1,26 @@
+$def with (poll, poll_header, poll_vote_unit, poll_votes, comments)
+
+<div class="post">
+
+<h2>Sondage : $poll.title</h2> 
+<div id="poll_header">
+$:poll_header
+</div>
+
+$:formatting.INCLUDE_JQUERY
+
+<h2>Mon vote</h2> 
+<div id="poll_vote_unit">
+$:poll_vote_unit
+</div>
+
+<h2>Résultats du sondage $:formatting.ajax_animation("poll_votes_ajax_animation")</h2>
+<div id="poll_votes">
+$:poll_votes
+</div>
+
+<div id="comments">
+$:comments
+</div>
+
+</div>

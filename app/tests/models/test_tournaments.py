@@ -22,7 +22,6 @@ class TestTournament(ModelTestCase):
     def test_all(self):
         
         all_tournaments = Tournament.all()
-        print all_tournaments
         self.assertEqual(len(all_tournaments), 3)
     
     def test_get(self):

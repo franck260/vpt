@@ -1,4 +1,4 @@
-$def with (content, all_seasons=None)
+$def with (content, all_seasons=None, head_extension=None)
 
 $def show_left_menu():
     $if all_seasons is not None:
@@ -11,6 +11,7 @@ $def show_left_menu():
             <li><div><p><a href="/admin/news">News</a></p></div></li>
             <li><div><p><a href="/admin/users">Utilisateurs</a></p></div></li>
             <li><div><p><a href="/admin/sessions">Sessions</a></p></div></li>
+            <li><div><p><a href="/admin/polls">Sondages</a></p></div></li>
         $for season in all_seasons:
             <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
             $for tournament in season.tournaments:
@@ -25,9 +26,9 @@ $def show_left_menu():
      
     <title>Portail du VPT (Voltaire Poker Tour)</title>
 
-    <link href="/public/css/defaults.css" rel="stylesheet" type="text/css"/>      
-    <script type="text/javascript" src="/public/js/jquery-1.6.min.js"></script>
-    <script type="text/javascript" src="/public/js/ga.js"></script>
+    $:formatting.include_js("ga.js")
+    $:formatting.include_css("defaults.css")
+    $:head_extension
 </head> 
  
 <body>  

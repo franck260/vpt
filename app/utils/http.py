@@ -17,16 +17,19 @@ def jsonify(func):
     
     0) Sets the HTTP response header to "application/json"
     1) Runs the wrapped GET/POST (which must return a Python dict !)
-    2) Stringifies the returned values (typically template bodies) to make sure the output is serializable
+    2) Serializes the returned values (typically template bodies) to make sure the output is serializable
     3) Returns a JSON-encoded dictionary """
     
-    def wrapped_func(*args):        
+    def wrapped_func(*args):
+        
+        # Value serializer by type
+        _serialize = lambda v: v if type(v) in [bool, str, int] else v and str(v) or None 
 
         # Sets the HTTP header
         web.header("Content-Type", "application/json")
        
-        # Runs the GET/POST and cleans the values
-        results = dict((k,v and str(v) or None) for k,v in func(*args).items())
+        # Runs the GET/POST and serializes the values
+        results = dict((k, _serialize(v)) for k,v in func(*args).items())
         
         # Returns a JSON-encoded dictionary
         return json.dumps(results)  

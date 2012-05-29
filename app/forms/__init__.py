@@ -5,16 +5,22 @@ from formalchemy import FieldSet
 from formalchemy.fields import Field
 from formalchemy.tables import Grid
 import datetime
+import operator
 
-def create_date_field(name, model_date_attribute, dt_format):
-    """ Instanciates a standard date field associated with the format passed as a parameter """
+def create_generic_date_field(name, attr_getter, dt_format, today_by_default=True):
+    """ Instanciates a generic date field associated with the format passed as a parameter """
     
     def value(model):
         """ Returns the model date or today's date """
-        dt = model and getattr(model, model_date_attribute) or datetime.date.today()
-        return formatting.format_date(dt, dt_format)
+        default_date = datetime.date.today() if today_by_default else None
+        dt = model and attr_getter(model) or default_date
+        return dt and formatting.format_date(dt, dt_format)
     
     return Field(name=name, value=value)
+
+def create_date_field(name, model_date_attribute, dt_format, today_by_default=True):
+    """ Instanciates a standard date field associated with the format passed as a parameter """
+    return create_generic_date_field(name, operator.attrgetter(model_date_attribute), dt_format, today_by_default)
 
 class CustomGrid(Grid):
     """ Used when simple FormAlchemy grids are not sufficient

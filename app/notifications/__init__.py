@@ -3,7 +3,7 @@
 """ Handles the email notifications which can be fired in the application """
 
 from app.models import User, TournamentComment, Tournament, UserToken, \
-    PasswordToken
+    PollComment, PasswordToken, Poll, PollVote
 from app.notifications.messaging import EMailNotification
 from app.utils import Enum, formatting, dates
 from app.utils.mm import multimethod, NoSuchMethod
@@ -17,6 +17,7 @@ Events = Enum(["NEW", "MODIFIED"])
 # The email templates are loaded once
 templates = web.template.render("app/notifications/templates/", globals={
     "formatting": formatting,
+    "sorted": sorted,
     "dates": dates
 })
 
@@ -68,10 +69,31 @@ def notify_via_email(obj, event):
         pass
 
 @multimethod(TournamentComment, unicode)
-@templatize({Events.NEW: "comment_new"})
+@templatize({Events.NEW: "tournament_comment_new"})
 def build_email_notification(comment, event):
     
     recipients = [user.email for user in User.all() if user.admin or (user != comment.user and user.active)]
+    return EMailNotification(recipients=recipients)
+
+@multimethod(PollComment, unicode)
+@templatize({Events.NEW: "poll_comment_new"})
+def build_email_notification(comment, event):
+    
+    recipients = [user.email for user in User.all() if user.admin or (user != comment.user and user.active)]
+    return EMailNotification(recipients=recipients)
+
+@multimethod(PollVote, unicode)
+@templatize({Events.NEW: "poll_vote_new", Events.MODIFIED: "poll_vote_modified"})
+def build_email_notification(poll_vote, event):
+    
+    recipients = [user.email for user in User.all() if user.admin]
+    return EMailNotification(recipients=recipients)
+
+@multimethod(Poll, unicode)
+@templatize({Events.NEW: "poll_new"})
+def build_email_notification(poll, event):
+    
+    recipients = [user.email for user in User.all() if user.active]
     return EMailNotification(recipients=recipients)
 
 @multimethod(Tournament, unicode)

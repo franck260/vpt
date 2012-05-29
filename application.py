@@ -7,6 +7,7 @@ from app.notifications import Events, handlers as notification_handlers
 from app.utils import formatting, dates, session, http
 from web import config
 import ConfigParser
+import collections
 import locale
 import sys
 import web
@@ -25,6 +26,10 @@ urls = (
     "/reset/password",                      "app.controllers.account.ResetPassword",
 
     "/season/(\d+)",                        "app.controllers.seasons.View",
+
+    "/poll/(\d+)",                          "app.controllers.polls.View",
+    "/poll/vote",                           "app.controllers.polls.Vote",
+    "/poll/comment",                        "app.controllers.polls.Comment",
 
     "/tournament/(\d+)/(\d+)",              "app.controllers.tournaments.View",
     "/update/status",                       "app.controllers.tournaments.UpdateStatus",
@@ -58,6 +63,7 @@ class WebApplication(web.application):
             "zip": zip,
             "getattr": getattr,
             "class_name": lambda x: x.__class__.__name__,
+            "namedtuple": collections.namedtuple,
             "config": config,
             "result_statuses": Result.STATUSES,
             "Events": Events

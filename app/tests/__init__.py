@@ -181,6 +181,82 @@ class NewsData(DataSet):
         news = u"Publication des derniers résultats"
         news_dt = datetime.date(2011, 8, 15)
 
+class PollChoiceData(DataSet):
+    class poll_choice_11:
+        choice_dt = datetime.date(2012, 5, 1)
+    class poll_choice_12:
+        choice_dt = datetime.date(2012, 5, 8)
+    class poll_choice_13:
+        choice_dt = datetime.date(2012, 5, 20)
+    class poll_choice_21:
+        choice_dt = datetime.date(2012, 5, 20)
+    class poll_choice_22:
+        choice_dt = datetime.date(2012, 6, 1)
+    class poll_choice_31:
+        choice_dt = datetime.date(2020, 7, 20)
+    class poll_choice_32:
+        choice_dt = datetime.date(2020, 7, 27)
+
+class PollCommentData(DataSet):
+    class comment_11:
+        user = UserData.franck_p
+        comment = u"Test de commentaire (sondage 1 - #1)"
+        comment_dt = datetime.datetime.strptime("2012-04-06 07:57:34", "%Y-%m-%d %H:%M:%S")
+    class comment_12:
+        user = UserData.jo
+        comment = u"Test de commentaire (sondage 1 - #2)"
+        comment_dt = datetime.datetime.strptime("2012-04-07 07:57:34", "%Y-%m-%d %H:%M:%S")
+    class comment_21:
+        user = UserData.rolland
+        comment = u"Voici un commentaire accentué - avec une URL : http://www.google.com"
+        comment_dt = datetime.datetime.strptime("2012-05-28 10:57:34", "%Y-%m-%d %H:%M:%S")
+
+class PollData(DataSet):
+    class poll_1:
+        title = u"Date du VPT de mai 2012"
+        start_dt = datetime.date(2012, 4, 5)
+        choices = [PollChoiceData.poll_choice_11, PollChoiceData.poll_choice_12, PollChoiceData.poll_choice_13]
+        comments = [PollCommentData.comment_11, PollCommentData.comment_12]
+    class poll_2:
+        title = u"Date du VPT de juin 2011"
+        start_dt = datetime.date(2011, 5, 28)
+        end_dt = datetime.date(2011, 5, 31)        
+        choices = [PollChoiceData.poll_choice_21, PollChoiceData.poll_choice_22]
+        comments = [PollCommentData.comment_21]
+    class poll_3:
+        title = u"Date du VPT de juillet 2020"
+        start_dt = datetime.date(2020, 7, 1)
+        end_dt = datetime.date(2020, 7, 31)        
+        choices = [PollChoiceData.poll_choice_31, PollChoiceData.poll_choice_32]
+
+class PollVoteData(DataSet):
+    class poll_vote_11:
+        poll = PollData.poll_1
+        user = UserData.jo
+        last_vote_dt = datetime.date(2012, 4, 6)
+        choices = [PollChoiceData.poll_choice_11, PollChoiceData.poll_choice_12, PollChoiceData.poll_choice_13]
+    class poll_vote_12:
+        poll = PollData.poll_1
+        user = UserData.nico
+        last_vote_dt = datetime.date(2012, 4, 7)
+        choices = [PollChoiceData.poll_choice_12]
+    class poll_vote_13:
+        poll = PollData.poll_1
+        user = UserData.franck_l
+        first_vote_dt = datetime.date(2012, 4, 5)
+        last_vote_dt = datetime.date(2012, 4, 8)
+        choices = []
+    class poll_vote_21:
+        poll = PollData.poll_2
+        user = UserData.jo
+        last_vote_dt = datetime.date(2011, 5, 29)
+        choices = [PollChoiceData.poll_choice_21]
+    class poll_vote_22:
+        poll = PollData.poll_2
+        user = UserData.fx
+        last_vote_dt = datetime.date(2011, 5, 30)
+        choices = [PollChoiceData.poll_choice_21, PollChoiceData.poll_choice_22]
+
 class UserTokenData(DataSet):
     class user_token_expired:
         token = "znc9TNqpajeN2nEH"

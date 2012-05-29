@@ -34,11 +34,14 @@ class Base(object):
     """ Parent of all model classes """
     
     @classmethod
-    def all(cls, order_by_clause=None):
+    def all(cls, order_by_clause=None, joined_attrs=[]):
         
         # Creation of the query
         query = config.orm.query(cls)
-        
+
+        for joined_attr in joined_attrs:
+            query = query.options(joinedload(joined_attr))
+
         # Takes into account the optional order_by clause
         if order_by_clause is not None :
             query = query.order_by(order_by_clause)

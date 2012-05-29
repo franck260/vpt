@@ -7,3 +7,9 @@ class Enum(set):
         if name in self:
             return unicode(name)
         raise AttributeError
+    
+def safeget(l, i):
+    try:
+        return l[i]
+    except IndexError:
+        return None

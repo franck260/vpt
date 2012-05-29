@@ -1,28 +1,43 @@
-$def with (next_tournament, all_news)
+$def with (next_tournament, open_polls, expired_polls, all_news)
 
 $def show_next_tournament():
     $if next_tournament:
     	Il aura lieu le <i>$:formatting.format_date(next_tournament.tournament_dt, "%A %d %B")</i> : 
     	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
     $else:
-	    Le prochain tournoi n'est pas encore planifié.
+	    Il n'y a pas de tournoi planifié en ce moment.
 
+$def show_polls(polls, action, output_if_empty):
+    $if polls:
+        <ul>
+        $for poll in polls:
+            <li><i>$poll.title : </i><a href="/poll/$poll.id">$action</a></li>
+        </ul> 
+    $else:
+        <p>$output_if_empty</p>
 
 <div class="post"> 
-    <h2>Bienvenue</h2> 
-    <p>Ce portail permet de gérer et suivre les tournois du VPT.</p> 
- 
-	<h2>Prochain tournoi</h2> 
-	<p>$:show_next_tournament()</p> 
+
+<h2>Bienvenue</h2> 
+<p>Ce portail permet de gérer et suivre les tournois du VPT.</p> 
+
+<h2>Prochain tournoi</h2> 
+<p>$:show_next_tournament()</p>
+
+<h2>Sondages ouverts</h2>
+$:show_polls(open_polls, "votez", "Il n'y pas de sondage ouvert en ce moment.")
+
+<h2>Sondages fermés</h2>
+$:show_polls(expired_polls, "voir", "Il n'y pas de sondage fermé en ce moment.")
 	
-	<h2>Charte du VPT</h2>
-	<p>Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.</p>
+<h2>Charte du VPT</h2>
+<p>Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.</p>
 	
-	<h2>Actualités du site</h2>
-	<ul>
-	    $for news in all_news:
-	        <li><i>$:formatting.format_date(news.news_dt, "%d %B %Y")</i> : $:formatting.first_lower(news.news)</li>
-    </ul> 
+<h2>Actualités du site</h2>
+<ul>
+$for news in all_news:
+    <li><i>$:formatting.format_date(news.news_dt, "%d %B %Y")</i> : $:formatting.first_lower(news.news)</li>
+</ul> 
 	
 </div>
 

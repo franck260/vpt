@@ -20,7 +20,6 @@ class TestResult(ModelTestCase):
     def test_all(self):
         
         all_results = Result.all()
-        print all_results
         self.assertEqual(len(all_results), 10)
     
     def test_get(self):

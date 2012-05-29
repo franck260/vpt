@@ -1,12 +1,34 @@
-$def with (tournament, comment_formatter)
+$def with (entity, comment_formatter)
 
 $def show_comments():
-    $for comment in tournament.comments:
+    <div id="comments_list">
+    <h2>Commentaires (<span id="nb_comments">$len(entity.comments)</span>)</h2>
+    <br />
+    $for comment in entity.comments:
         $:comment_formatter(comment)
+    </div>
 
-<h2>Commentaires (<span id="nb_comments">$len(tournament.comments)</span>)</h2>
+$code:
+    # Form data by entity class
+    FormData = namedtuple("FormData", ["comment_url", "entity_id"])
+    FORM_DATA = {
+        "Tournament": FormData("/add/comment", "tournament_id"),
+        "Poll": FormData("/poll/comment", "poll_id")
+    }
 
-<br />
+$def show_comment_form():
+    <form id="comment_form" action="$FORM_DATA[class_name(entity)].comment_url" method="post">
+    <input type="hidden" name="$FORM_DATA[class_name(entity)].entity_id" value="$entity.id" />
+    <textarea id="comment" name="comment" class="comment_textarea"></textarea> 
+    <br /> 
+    <button type="submit" class="comment_button">Poster un commentaire</button> 
+    &nbsp; &nbsp;
+    $:formatting.ajax_animation("comment_ajax_animation")
+    </form>
+    <br />
+    $:formatting.include_js("comments.js")
+
 $:show_comments()
+$:show_comment_form()
 
 
