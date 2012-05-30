@@ -25,7 +25,7 @@ class TestNotifications(ModelTestCase):
         notification = build_email_notification(tournament_21, Events.NEW)
         zoe = config.orm.query(User).filter(User.first_name == "Zoe").one() 
         
-        self.assertEqual(notification.subject, u"VPT : le prochain tournoi aura lieu le dimanche 01 août")
+        self.assertEqual(notification.subject, u"VPT : un nouveau tournoi a été planifié le dimanche 01 août")
         self.assertListEqual(notification.recipients, [user.email for user in User.all() if user != zoe])
 
     def test_build_email_notification_poll_new(self):

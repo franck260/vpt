@@ -1,11 +1,13 @@
-$def with (next_tournament, open_polls, expired_polls, all_news)
+$def with (pending_tournaments, open_polls, expired_polls, all_news)
 
-$def show_next_tournament():
-    $if next_tournament:
-    	Il aura lieu le <i>$:formatting.format_date(next_tournament.tournament_dt, "%A %d %B")</i> : 
-    	<a href="tournament/$next_tournament.season_id/$next_tournament.position">cliquez ici</a> pour vous inscrire ou commenter la partie à venir.
+$def show_pending_tournaments():
+    $if pending_tournaments:
+        <ul>
+        $for tournament in pending_tournaments:
+            <li><i>$:formatting.format_date(tournament.tournament_dt, "%A %d %B").capitalize() : </i><a href="/tournament/$tournament.season_id/$tournament.position">s'inscrire</a></li>
+        </ul>     
     $else:
-	    Il n'y a pas de tournoi planifié en ce moment.
+	    <p>Il n'y a pas de tournoi planifié en ce moment.</p>
 
 $def show_polls(polls, action, output_if_empty):
     $if polls:
@@ -21,8 +23,8 @@ $def show_polls(polls, action, output_if_empty):
 <h2>Bienvenue</h2> 
 <p>Ce portail permet de gérer et suivre les tournois du VPT.</p> 
 
-<h2>Prochain tournoi</h2> 
-<p>$:show_next_tournament()</p>
+<h2>Prochains tournois</h2> 
+$:show_pending_tournaments()
 
 <h2>Sondages ouverts</h2>
 $:show_polls(open_polls, "votez", "Il n'y pas de sondage ouvert en ce moment.")

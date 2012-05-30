@@ -18,6 +18,14 @@ tournaments_table = Table("TOURNAMENTS", metadata,
                           Column("position", Integer, nullable=True)
                           )
 
+def pending_tournaments():
+    """ Returns the next scheduled tournaments, based on the system date """
+    
+    return config.orm.query(Tournament)                                              \
+                     .filter(Tournament.tournament_dt >= datetime.date.today())      \
+                     .order_by(Tournament.tournament_dt)                             \
+                     .all()
+
 class Tournament(Base):
     
     @staticmethod
@@ -34,17 +42,7 @@ class Tournament(Base):
             tournament = None
         
         return tournament
-        
     
-    @staticmethod
-    def next_tournament():
-        """ Returns the next scheduled tournament, based on the system date """
-        
-        return config.orm.query(Tournament)                                              \
-                         .filter(Tournament.tournament_dt >= datetime.date.today())      \
-                         .order_by(Tournament.tournament_dt)                             \
-                         .first()                                                 
-        
     def __repr__(self) : 
         return "<Tournament(#%s-%s, %s, %d)>" % (self.season.id, self.position, self.tournament_dt, self.buyin)
     
