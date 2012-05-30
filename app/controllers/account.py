@@ -3,7 +3,7 @@
 #TODO: test login redirection
 
 from app.forms import user_forms
-from app.models import Season, UserToken, PasswordToken, User
+from app.models import UserToken, PasswordToken, User
 from app.notifications import notify_via_email, Events
 from app.utils import session, formatting, dates, http
 from web import config
@@ -17,7 +17,7 @@ class ViewAccount:
         user_fieldset = user_forms.EditUserFieldSet().bind(config.session_manager.user)
         password_fieldset = user_forms.EditPasswordFieldSet().bind(config.session_manager.user)
         
-        return config.views.layout(config.views.account(user_fieldset, password_fieldset), Season.all())
+        return config.views.layout(config.views.account(user_fieldset, password_fieldset))
 
 class UpdateUser:
     
@@ -32,7 +32,7 @@ class UpdateUser:
             user_fieldset.sync()
             raise web.seeother("/")
         else:
-            return config.views.layout(config.views.account(user_fieldset, password_fieldset), Season.all())
+            return config.views.layout(config.views.account(user_fieldset, password_fieldset))
         
 class UpdatePassword:
     
@@ -47,7 +47,7 @@ class UpdatePassword:
             password_fieldset.sync()
             raise web.seeother("/")
         else:
-            return config.views.layout(config.views.account(user_fieldset, password_fieldset), Season.all())
+            return config.views.layout(config.views.account(user_fieldset, password_fieldset))
 
 class RecoverPassword:
 

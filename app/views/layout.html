@@ -1,10 +1,12 @@
-$def with (content, all_seasons=None, head_extension=None)
+$def with (content, head_extension=None)
 
-$def show_left_menu():
-    $if all_seasons is not None:
+$def show_menu_for_logged_users():
+    $ user = config.session_manager.user
+    $if user:
+        <ul class="notifications">
         <li><h3><a href="/admin/account">Mon compte</a></h3></li>
         <li><div><p><a href="/logout">Déconnexion</a></p></div></li>    
-        $if config.session_manager.user.admin:
+        $if user.admin:
             <li><h3>Administration</h3></li>
             <li><div><p><a href="/admin/seasons">Saisons</a></p></div></li>
             <li><div><p><a href="/admin/tournaments">Tournois</a></p></div></li>
@@ -12,10 +14,11 @@ $def show_left_menu():
             <li><div><p><a href="/admin/users">Utilisateurs</a></p></div></li>
             <li><div><p><a href="/admin/sessions">Sessions</a></p></div></li>
             <li><div><p><a href="/admin/polls">Sondages</a></p></div></li>
-        $for season in all_seasons:
+        $for season in all_seasons():
             <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
             $for tournament in season.tournaments:
                 <li><div><p><a href="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($:formatting.format_date(tournament.tournament_dt, "%d/%m/%Y"))</a></p></div></li>
+        </ul>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
@@ -35,9 +38,8 @@ $def show_left_menu():
 
 <div class="wrapper"> 
 <div class="header"><h1><a href="/">V<span>P</span>T</a></h1></div>
-<ul class="notifications">
-$:show_left_menu() 
-</ul>           
+
+$:show_menu_for_logged_users() 
                             
 <div class="content"> 
 $:content

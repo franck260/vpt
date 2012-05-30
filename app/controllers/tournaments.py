@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.forms import tournament_forms
-from app.models import Season, Tournament, User
+from app.models import Tournament, User
 from app.notifications import notify_via_email, Events
 from app.utils import session, http
 from web import config
@@ -111,13 +111,10 @@ class View :
             raise web.notfound()
 
         return config.views.layout(
-                   config.views.tournament(
-                        tournament,
-                        config.views.statistics(tournament),
-                        config.views.results(tournament),
-                        config.views.comments(tournament, config.views.comment)
-                    ),
-                    Season.all()
-                )
-
-       
+            config.views.tournament(
+                tournament,
+                config.views.statistics(tournament),
+                config.views.results(tournament),
+                config.views.comments(tournament, config.views.comment)
+            )
+        )

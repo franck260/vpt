@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from app.models import Poll, Season
+from app.models import Poll
 from app.notifications import notify_via_email, Events
 from app.utils import session, http
 from web import config
@@ -25,7 +25,6 @@ class View:
                         config.views.poll_votes(poll),
                         config.views.comments(poll, config.views.comment)
                     ),
-                    Season.all(),
                     config.views.ui_head()
                 )
 

@@ -7,7 +7,7 @@ Most calls to /admin/(.*) will land here : the 'components' key must be properly
 
 from app.forms import season_forms, tournament_forms, news_forms, user_forms, \
     session_forms, poll_forms
-from app.models import Season, User
+from app.models import User
 from app.notifications import Events, notify_via_email
 from app.utils import session, http
 from collections import namedtuple
@@ -42,7 +42,7 @@ class Admin:
         grid =  ADMIN_COMPONENTS.get(key).grid_component()
         fieldset = ADMIN_COMPONENTS.get(key).fieldset_component()
         
-        return config.views.layout(config.views.administration(grid, fieldset), Season.all(), config.views.ui_head())
+        return config.views.layout(config.views.administration(grid, fieldset), config.views.ui_head())
         
     @session.login_required(User.BaseLevels.ADMIN)
     def POST(self, key):
@@ -77,6 +77,6 @@ class Admin:
             http.register_hook(lambda: notify_via_email(component_to_sync.model, input.event))
             raise web.seeother("/")
         else:
-            return config.views.layout(config.views.administration(grid, fieldset), Season.all(), config.views.ui_head())
+            return config.views.layout(config.views.administration(grid, fieldset), config.views.ui_head())
 
     

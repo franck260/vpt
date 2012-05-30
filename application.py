@@ -2,7 +2,7 @@
 
 """ Main application class """
 
-from app.models import meta, Result
+from app.models import meta, Result, Season
 from app.notifications import Events, handlers as notification_handlers
 from app.utils import formatting, dates, session, http
 from web import config
@@ -58,6 +58,7 @@ class WebApplication(web.application):
         
         # The views are bound once for all to the configuration
         config.views = web.template.render("app/views/", globals={
+            "all_seasons": lambda: Season.all(),
             "formatting": formatting,
             "dates": dates,
             "zip": zip,
