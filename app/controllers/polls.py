@@ -24,8 +24,7 @@ class View:
                         config.views.poll_vote_unit(poll),
                         config.views.poll_votes(poll),
                         config.views.comments(poll, config.views.comment)
-                    ),
-                    config.views.ui_head()
+                    )
                 )
 
 class Vote:

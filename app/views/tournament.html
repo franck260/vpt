@@ -2,16 +2,14 @@ $def with (tournament, statistics, results, comments)
 
 $def show_administration_link_if_authorized():
     $if config.session_manager.user.admin:
-        <a href="#" id="admin_results_link" data-tournament-id="$tournament.id"> <img src="/public/img/lock.png" /></a>
-        $:formatting.include_js("admin_results.js")
+        <a href="#" id="admin_results_link" data-tournament-id="$tournament.id"> <img style="width: 16px; height: 16px;" src="/public/img/lock.png" /></a>
+        $code: webparts.register_script("admin_results.js")
 
 <div class="post"> 
 <h2>
 Tournoi $tournament.position ($:formatting.format_date(tournament.tournament_dt, "%A %d %B %Y")) 
-$:formatting.ajax_animation("statistics_ajax_animation")
+$:webparts.ajax_animation("statistics_ajax_animation")
 </h2> 
-
-$:formatting.INCLUDE_JQUERY
 
 <div id="statistics">
 $:statistics
@@ -23,7 +21,7 @@ $if tournament.future:
 $else:
     Résultats 
 $:show_administration_link_if_authorized()
-$:formatting.ajax_animation("results_ajax_animation")
+$:webparts.ajax_animation("results_ajax_animation")
 </h2>
 
 <div id="results">

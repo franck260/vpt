@@ -1,4 +1,4 @@
-$def with (content, head_extension=None)
+$def with (content)
 
 $def show_menu_for_logged_users():
     $ user = config.session_manager.user
@@ -29,9 +29,11 @@ $def show_menu_for_logged_users():
      
     <title>Portail du VPT (Voltaire Poker Tour)</title>
 
-    $:formatting.include_js("ga.js")
-    $:formatting.include_css("defaults.css")
-    $:head_extension
+    $code: webparts.register_stylesheet("defaults.css")
+    $for stylesheet in webparts.registered_stylesheets():
+        <link href="/public/css/$stylesheet" rel="stylesheet" type="text/css"/>
+    
+    $:config.views.tracking()
 </head> 
  
 <body>  
@@ -46,6 +48,9 @@ $:content
 </div>  
 
 </div>
+
+$for script in webparts.registered_scripts():
+    <script type="text/javascript" src="/public/js/$script"></script>
 
 </body>
 </html>

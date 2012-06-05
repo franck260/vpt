@@ -25,7 +25,7 @@ $def with (login_form, recover_password_form)
 
     $:recover_password_form.render_css()
     &nbsp; &nbsp;
-    $:formatting.ajax_animation("recover_password_ajax_animation")
+    $:webparts.ajax_animation("recover_password_ajax_animation")
     
     <div id="recover_password_ajax_output"></div>
 
@@ -35,5 +35,6 @@ $def with (login_form, recover_password_form)
 
 </div>
 
-$:formatting.INCLUDE_JQUERY
-$:formatting.include_js("login.js")
+$code:
+    webparts.register_script(webparts.JS_JQUERY)
+    webparts.register_script("login.js")

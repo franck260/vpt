@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	
     // Binds a click event to all subscribtion links
-    $("a[id^='subscribtion_link']").click(function() {
+    $("#statistics").on("click", "a[id^='subscribtion_link']", function() {
 		
         // Reads some information in the link itself
         var tournament_id = $(this).attr("data-tournament-id");

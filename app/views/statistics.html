@@ -17,9 +17,9 @@ $def show_subscription_box():
         $:show_subscription_button(result_statuses.P, "Oui", "&nbsp;|&nbsp;")
         $:show_subscription_button(result_statuses.A, "Non", "&nbsp;|&nbsp;")
         $:show_subscription_button(result_statuses.M, "Peut-être", "&nbsp; &nbsp;")
-        $:formatting.ajax_animation("subscribtion_ajax_animation")
+        $:webparts.ajax_animation("subscribtion_ajax_animation")
         </td></tr>
-        $:formatting.include_js("subscription.js")
+        $code: webparts.register_script("subscription.js")
         
 $def show_attending_players():
     <tr><td class="title">Nombre de participants</td><td>$tournament.nb_attending_players</td></tr>
@@ -32,6 +32,8 @@ $def show_players_by_status(status, header):
     $if players:
         <tr><td class="title">$header</td><td>$players</td></tr>
 
+$code: webparts.register_script(webparts.JS_JQUERY)
+
 <br />
 <table class="stats">
     $:show_subscription_box()
@@ -41,5 +43,3 @@ $def show_players_by_status(status, header):
     $:show_players_by_status(result_statuses.M, "Peut-être")				
 </table>
 <br />
-
-

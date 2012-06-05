@@ -23,10 +23,10 @@ $def show_comment_form():
     <br /> 
     <button type="submit" class="comment_button">Poster un commentaire</button> 
     &nbsp; &nbsp;
-    $:formatting.ajax_animation("comment_ajax_animation")
+    $:webparts.ajax_animation("comment_ajax_animation")
     </form>
     <br />
-    $:formatting.include_js("comments.js")
+    $code: webparts.register_script("comments.js")
 
 $:show_comments()
 $:show_comment_form()

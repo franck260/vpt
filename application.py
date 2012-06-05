@@ -4,7 +4,7 @@
 
 from app.models import meta, Result, Season
 from app.notifications import Events, handlers as notification_handlers
-from app.utils import formatting, dates, session, http
+from app.utils import formatting, dates, session, http, webparts
 from web import config
 import ConfigParser
 import collections
@@ -59,6 +59,7 @@ class WebApplication(web.application):
         # The views are bound once for all to the configuration
         config.views = web.template.render("app/views/", globals={
             "all_seasons": lambda: Season.all(),
+            "webparts": webparts,
             "formatting": formatting,
             "dates": dates,
             "zip": zip,
@@ -76,7 +77,10 @@ class WebApplication(web.application):
         # Binds the hooking mechanism & the SQL Alchemy processor
         self.add_processor(web.loadhook(http.init_hooks))
         self.add_processor(web.unloadhook(http.execute_hooks))        
-        self.add_processor(http.sqlalchemy_processor)    
+        self.add_processor(http.sqlalchemy_processor)
+
+        # Binds the webparts initialization mechanism
+        self.add_processor(web.loadhook(webparts.init_webparts))
     
     def configure(self, config_filename):
         

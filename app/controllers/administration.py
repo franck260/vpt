@@ -42,7 +42,7 @@ class Admin:
         grid =  ADMIN_COMPONENTS.get(key).grid_component()
         fieldset = ADMIN_COMPONENTS.get(key).fieldset_component()
         
-        return config.views.layout(config.views.administration(grid, fieldset), config.views.ui_head())
+        return config.views.layout(config.views.administration(grid, fieldset))
         
     @session.login_required(User.BaseLevels.ADMIN)
     def POST(self, key):
@@ -77,6 +77,6 @@ class Admin:
             http.register_hook(lambda: notify_via_email(component_to_sync.model, input.event))
             raise web.seeother("/")
         else:
-            return config.views.layout(config.views.administration(grid, fieldset), config.views.ui_head())
+            return config.views.layout(config.views.administration(grid, fieldset))
 
     

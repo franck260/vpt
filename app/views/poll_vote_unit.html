@@ -29,11 +29,13 @@ $def show_poll_vote_unit():
         </table>
         <button type="submit">Voter</button>
         &nbsp; &nbsp;
-        $:formatting.ajax_animation("poll_vote_unit_ajax_animation")
+        $:webparts.ajax_animation("poll_vote_unit_ajax_animation")
         <span id="poll_vote_unit_ajax_output"></span>
         </form>
         <br />
-        $:formatting.INCLUDE_JQUERYUI
-        $:formatting.include_js("poll_vote.js")
+        $code:
+            webparts.register_stylesheet(webparts.CSS_JQUERYUI)
+            webparts.register_script(webparts.JS_JQUERYUI)
+            webparts.register_script("poll_vote.js")
         
 $:show_poll_vote_unit()

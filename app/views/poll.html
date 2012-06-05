@@ -7,14 +7,12 @@ $def with (poll, poll_header, poll_vote_unit, poll_votes, comments)
 $:poll_header
 </div>
 
-$:formatting.INCLUDE_JQUERY
-
 <h2>Mon vote</h2> 
 <div id="poll_vote_unit">
 $:poll_vote_unit
 </div>
 
-<h2>Résultats du sondage $:formatting.ajax_animation("poll_votes_ajax_animation")</h2>
+<h2>Résultats du sondage $:webparts.ajax_animation("poll_votes_ajax_animation")</h2>
 <div id="poll_votes">
 $:poll_votes
 </div>

@@ -26,6 +26,8 @@ $if fieldset:
 
 </div>
 
-$:formatting.INCLUDE_JQUERY_WITH_FORMS
-$:formatting.INCLUDE_JQUERYUI
-$:formatting.include_js("administration.js")
+$code:
+    webparts.register_stylesheet(webparts.CSS_JQUERYUI)
+    webparts.register_script(webparts.JS_JQUERY_AND_FORMS)
+    webparts.register_script(webparts.JS_JQUERYUI)
+    webparts.register_script("administration.js")
