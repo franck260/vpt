@@ -50,22 +50,22 @@ class Admin:
         if not key in ADMIN_COMPONENTS:
             raise web.notfound()
 
-        input = web.input()
+        http_input = web.input()
         
         # Scenario 1 : edit an existing element
-        if input.event == Events.MODIFIED:
+        if http_input.event == Events.MODIFIED:
             
             # The grid should be bound to the form data
             component_to_sync = grid =  ADMIN_COMPONENTS.get(key).grid_component()
-            grid.rebind(data=input)
+            grid.rebind(data=http_input)
             fieldset = ADMIN_COMPONENTS.get(key).fieldset_component()
         
         # Scenario 2 : create a new element
-        elif input.event == Events.NEW:
+        elif http_input.event == Events.NEW:
             
             # The fieldset should be bound to the form data & the session
             grid =  ADMIN_COMPONENTS.get(key).grid_component()
-            component_to_sync = fieldset = ADMIN_COMPONENTS.get(key).fieldset_component().bind(data=input, session=config.orm)
+            component_to_sync = fieldset = ADMIN_COMPONENTS.get(key).fieldset_component().bind(data=http_input, session=config.orm)
         
         # Scenario 3 : invalid action
         else:
@@ -74,7 +74,7 @@ class Admin:
         # Synchronizes the grid or the fieldset (depending on the action) & registers an email notification
         if component_to_sync.validate():
             component_to_sync.sync()
-            http.register_hook(lambda: notify_via_email(component_to_sync.model, input.event))
+            http.register_hook(lambda: notify_via_email(component_to_sync.model, http_input.event))
             raise web.seeother("/")
         else:
             return config.views.layout(config.views.administration(grid, fieldset))

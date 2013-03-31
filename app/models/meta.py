@@ -16,7 +16,7 @@ class SessionFactory(object):
         engine = self.engine_factory()
         self.sessionmaker.configure(bind=engine)
         session = self.sessionmaker()
-        web.debug("[MODEL] Sucessfully instanciated DB session %s bound to %s" %(session, engine))
+        web.debug("[MODEL] Successfully instanciated DB session %s bound to %s" %(session, engine))
         return session
         
 def init_orm(engine_factory):
@@ -50,11 +50,11 @@ class Base(object):
         return query.all()
     
     @classmethod
-    def get(cls, id, joined_attrs=[]):
+    def get(cls, ident, joined_attrs=[]):
         
         query = config.orm.query(cls)
         
         for joined_attr in joined_attrs:
             query = query.options(joinedload(joined_attr))        
         
-        return query.get(id) 
+        return query.get(ident) 

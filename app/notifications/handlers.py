@@ -57,6 +57,6 @@ def init_email_notification_handler(**kwargs):
     
     # Actually instanciates the handler
     handler = globals()[handler_cls](handler_host, handler_user, handler_password)
-    web.debug("[NOTIFICATIONS] Sucessfully instanciated notification handler from the class %s" % handler_cls)
+    web.debug("[NOTIFICATIONS] Successfully instanciated notification handler from the class %s" % handler_cls)
     
     return handler

@@ -201,7 +201,7 @@ def init_session_manager(session_handler_cls):
     """ Instanciates the session manager : should be called at initialization time """
     
     session_handler = globals()[session_handler_cls](app=None, store=SqlAlchemyDBStore(), initializer={"user_id" : None, "expires" : None})
-    web.debug("[WEBSESSION] Sucessfully instanciated session manager with the handler %s" %session_handler_cls)
+    web.debug("[WEBSESSION] Successfully instanciated session manager with the handler %s" %session_handler_cls)
     return SessionManager(session_handler) 
 
 @multimethod(unicode)

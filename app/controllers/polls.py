@@ -9,10 +9,10 @@ import web
 class View:
     
     @session.login_required
-    def GET(self, id):
+    def GET(self, poll_id):
         
         # Loads the poll
-        poll = Poll.get(int(id), joined_attrs=["choices", "votes_by_user", "comments"])
+        poll = Poll.get(int(poll_id), joined_attrs=["choices", "votes_by_user", "comments"])
         
         if poll is None:
             raise web.notfound()
@@ -34,9 +34,9 @@ class Vote:
     def POST(self):
         
         # Reads the HTTP request parameters
-        input = web.input(poll_id=None, poll_user_choices=[])
-        poll_id = input.poll_id
-        poll_user_choices = input.poll_user_choices
+        http_input = web.input(poll_id=None, poll_user_choices=[])
+        poll_id = http_input.poll_id
+        poll_user_choices = http_input.poll_user_choices
 
         # Loads the poll
         if poll_id is None:
@@ -81,9 +81,9 @@ class Comment:
     def POST(self):
         
         # Reads the HTTP request parameters
-        input = web.input()
-        poll_id = input.poll_id
-        comment = input.comment
+        http_input = web.input()
+        poll_id = http_input.poll_id
+        comment = http_input.comment
 
         # Loads the poll
         if poll_id is None:

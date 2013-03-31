@@ -173,12 +173,12 @@ class Login:
     def POST(self):
         
         # Reads the form parameters & the previously requested path (if any)
-        input = web.input(next="/")
-        email = input.email
-        password = input.password
-        requested_path = input.next
+        http_input = web.input(next="/")
+        email = http_input.email
+        password = http_input.password
+        requested_path = http_input.next
         #TODO: horrible fix to circumvent encoding problems
-        persistent = any(key.startswith("Rester") for key in input)
+        persistent = any(key.startswith("Rester") for key in http_input)
 
         # Tries to log in, and redirects to the previously requested path (if any)
         if config.session_manager.maybe_login(email, password, persistent):
