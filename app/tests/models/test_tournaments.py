@@ -125,22 +125,42 @@ class TestTournament(ModelTestCase):
         tournament_21 = config.orm.query(Tournament).join(Tournament.season).filter(Season.id == 2).one() #@UndefinedVariable
         
         self.assertEqual(len(tournament_21.results), 2)
+
+        # Checks if the results are properly ordered
+        self.assertListEqual(
+            [result.user for result in tournament_21.results],
+            [jo, fx]
+        )
         
         tournament_21.subscribe(franck_l, Result.STATUSES.P)
         tournament_21.subscribe(nico, Result.STATUSES.P)
-        tournament_21.subscribe(jo, Result.STATUSES.M) 
-           
+        tournament_21.subscribe(jo, Result.STATUSES.M)
+
         self.assertEqual(len(tournament_21.results), 4)
+
+        # Checks if the results are properly ordered
+        self.assertListEqual(
+            [result.user for result in tournament_21.results],
+            [jo, fx, franck_l, nico]  
+        )
+                
         self.assertEqual(tournament_21.results_by_user.get(franck_l).status, Result.STATUSES.P)
         self.assertEqual(tournament_21.results_by_user.get(nico).status, Result.STATUSES.P)
         self.assertEqual(tournament_21.results_by_user.get(jo).status, Result.STATUSES.M)
         self.assertEqual(tournament_21.results_by_user.get(fx).status, Result.STATUSES.P)
         
-        tournament_21.subscribe(franck_l, Result.STATUSES.A)
         tournament_21.subscribe(nico, Result.STATUSES.M)
+        tournament_21.subscribe(franck_l, Result.STATUSES.A)
         tournament_21.subscribe(jo, Result.STATUSES.M)
         
         self.assertEqual(len(tournament_21.results), 4)
+        
+        # Checks if the results are properly ordered
+        self.assertListEqual(
+            [result.user for result in tournament_21.results],
+            [franck_l, nico, jo, fx]  
+        )        
+        
         self.assertEqual(tournament_21.results_by_user.get(franck_l).status, Result.STATUSES.A)
         self.assertEqual(tournament_21.results_by_user.get(nico).status, Result.STATUSES.M)
         self.assertEqual(tournament_21.results_by_user.get(jo).status, Result.STATUSES.M)

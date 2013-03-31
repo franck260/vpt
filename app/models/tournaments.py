@@ -71,6 +71,10 @@ class Tournament(Base):
         current_result.buyin = buyin
         current_result.rank = None
         current_result.profit = None
+        current_result.last_registration_dt = datetime.datetime.now()
+        
+        # Keeps results ordered (from a functional perspective)
+        self.sort_results()
 
     
     def add_comment(self, user, comment):

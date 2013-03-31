@@ -30,8 +30,8 @@ class AdminResults :
     @http.jsonify
     def POST(self):
         
-        input = web.input(tournament_id=None)
-        tournament_id = input.tournament_id
+        http_input = web.input(tournament_id=None)
+        tournament_id = http_input.tournament_id
 
         if tournament_id is None:
             raise web.notfound() 
@@ -41,11 +41,11 @@ class AdminResults :
         if tournament is None:
             raise web.notfound()
         
-        results_grid = tournament_forms.EditResultsGrid().bind(tournament.results, data=input)
+        results_grid = tournament_forms.EditResultsGrid().bind(tournament.results, data=http_input)
         
         if results_grid.validate():
             # If the form was properly filled, updates the model and returns the standard table
-            # Besides, we sort the results manually since they are directly returned (commit & no load)
+            # Besides, we sort the results "from the outside" since they are directly returned (commit & no load)
             results_grid.sync()
             tournament.sort_results()
             results = config.views.results(tournament)
@@ -64,9 +64,8 @@ class AddComment :
     def POST(self):
         
         # Reads the HTTP request parameters
-        input = web.input()
-        tournament_id = input.tournament_id
-        comment = input.comment
+        tournament_id = web.input().tournament_id
+        comment = web.input().comment
         
         # Appends the comment
         # TODO: variables are ambiguous
@@ -86,19 +85,17 @@ class UpdateStatus:
     def POST(self):
         
         # Reads the HTTP request parameters
-        input = web.input()
-        tournament_id = input.tournament_id
-        status = input.status
+        tournament_id = web.input().tournament_id
+        status = web.input().status
         
         # Updates the status
         tournament = Tournament.get(int(tournament_id), joined_attrs=["results"])
         tournament.subscribe(config.session_manager.user, status)
         
-        # We sort the results manually since they are directly returned (commit & no load)
-        tournament.sort_results()
-        
-        # Returns the dictionary
-        return dict(statistics=config.views.statistics(tournament), results=config.views.results(tournament))
+        return dict(
+            statistics=config.views.statistics(tournament),
+            results=config.views.results(tournament)
+        )
     
 class View :
     

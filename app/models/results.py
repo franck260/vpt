@@ -3,20 +3,23 @@
 from app.models.meta import metadata, Base
 from app.models.users import User
 from app.utils import Enum
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import mapper, relationship
+import datetime
 import web
 
-
-results_table = Table("RESULTS", metadata,
-                      Column("id", Integer, primary_key=True, nullable=False),
-                      Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False),
-                      Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
-                      Column("status", String(1), nullable=False),
-                      Column("buyin", Integer, nullable=True),
-                      Column("rank", Integer, nullable=True),
-                      Column("profit", Integer, nullable=True),
-                      )
+results_table = Table(
+    "RESULTS",
+    metadata,
+    Column("id", Integer, primary_key=True, nullable=False),
+    Column("tournament_id", Integer, ForeignKey("TOURNAMENTS.id"), nullable=False),
+    Column("user_id", Integer, ForeignKey("USERS.id"), nullable=False),
+    Column("status", String(1), nullable=False),
+    Column("buyin", Integer, nullable=True),
+    Column("rank", Integer, nullable=True),
+    Column("profit", Integer, nullable=True),
+    Column("last_registration_dt", DateTime, nullable=True)
+)
 
 class _Result(Base):
     
@@ -41,12 +44,13 @@ class Result(_Result):
     # The last player of the game does not get 0 but MIN_SCORE instead
     MIN_SCORE = 5
 
-    def __init__(self, user=None, status=None, buyin=None, rank=None, profit=None):
+    def __init__(self, user=None, status=None, buyin=None, rank=None, profit=None, last_registration_dt=None):
         self.user = user
         self.status = status
         self.buyin = buyin
         self.rank = rank
         self.profit = profit
+        self.last_registration_dt = last_registration_dt
 
     def __eq__(self, other):
         
@@ -72,7 +76,7 @@ class Result(_Result):
 # Handy method which returns a tuple composed of the sort keys of an instance
 # May also be used with the type parameter (Result) so that the ORDER BY clause
 # can be easily set up on the ORM side
-result_sort_keys = lambda r: (r.status, r.rank, r.user_id)    
+result_sort_keys = lambda r: (r.status, r.rank, r.last_registration_dt or datetime.datetime(datetime.MINYEAR, 1, 1), r.user_id)    
 
 class SeasonResult(_Result):
     """ Represents a season result """
@@ -89,8 +93,7 @@ class SeasonResult(_Result):
     def actual(self):
         """ Is the result actual, i.e. does it represent real data (to be displayed, for instance) ? """
         return True
-        
-
+    
 mapper(Result, results_table, properties={
     "user": relationship(User, lazy="joined")
 })

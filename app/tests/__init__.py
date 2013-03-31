@@ -127,12 +127,14 @@ class ResultData(DataSet):
         buyin = 10
         rank = None
         profit = None
+        last_registration_dt = datetime.datetime.strptime("2010-07-31 10:57:34", "%Y-%m-%d %H:%M:%S")
     class result21_fx:
         user = UserData.fx
         status = Result.STATUSES.P
         buyin = 10
         rank = None
         profit = None
+        last_registration_dt = datetime.datetime.strptime("2010-07-31 14:57:34", "%Y-%m-%d %H:%M:%S")
     
 class TournamentCommentData(DataSet):
     class comment_121:
