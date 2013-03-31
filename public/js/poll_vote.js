@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     // Binds a click event to all calendar links
-    $("#poll_vote_form .ui-icon").click(function(event) {
+    $("#poll_vote_form .cal_icon").click(function(event) {
 
         // Reads the actual date in the neighbor node & opens a dialog datepicker
         $(this).datepicker("dialog", $(this).prev().html(), null, null, event);
@@ -28,7 +28,7 @@ $(document).ready(function() {
         // Displays the animated images
         $("#poll_vote_unit_ajax_animation").show();
         $("#poll_votes_ajax_animation").show();
-        
+
         // Triggers the server call 
         $.post(/* url  */     "/poll/vote",
                /* data */     data,
@@ -80,5 +80,5 @@ $(document).ready(function() {
         return false;
 
     });
-	
+
 });

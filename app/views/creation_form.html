@@ -3,20 +3,16 @@ $def with (fieldset)
 $code:
     # Headers by fieldset class   
     _headers = {
-        "NewUserFieldSet" : "Création de compte",
-        "NewPasswordFieldSet" : "Définition d'un nouveau mot de passe"
+        "NewUserFieldSet": "Création de compte",
+        "NewPasswordFieldSet": "Définition d'un nouveau mot de passe"
     }
 
-<div class="post"> 
-
-<h2>$_headers[class_name(fieldset)]</h2>
-<p>
-<form action="" method="post" class="user_form">
+<div class="section"> 
+<h1>$_headers[class_name(fieldset)]</h1>
+<form action="" method="post" class="narrow">
     $:fieldset.render()
     <button type="submit">Créer</button>
 </form>
-</p>
-
 </div>
 
-$code: webparts.register_script(webparts.JS_JQUERY_AND_FORMS)
+$code: webparts.register_script(webparts.JS_FORMS)

@@ -1,55 +1,84 @@
 $def with (content)
 
+$def show_account_for_logged_users():
+    $ user = config.session_manager.user
+    $if user:
+        <div id="account">
+        <span class="user">$user.email</span> | <a href="/admin/account">Mon compte</a> | <a href="/logout">Déconnexion</a>		
+        </div>
+
 $def show_menu_for_logged_users():
     $ user = config.session_manager.user
     $if user:
-        <ul class="notifications">
-        <li><h3><a href="/admin/account">Mon compte</a></h3></li>
-        <li><div><p><a href="/logout">Déconnexion</a></p></div></li>    
+        <div id="nav-wrap">
+        <ul id="nav">
         $if user.admin:
-            <li><h3>Administration</h3></li>
-            <li><div><p><a href="/admin/seasons">Saisons</a></p></div></li>
-            <li><div><p><a href="/admin/tournaments">Tournois</a></p></div></li>
-            <li><div><p><a href="/admin/news">News</a></p></div></li>
-            <li><div><p><a href="/admin/users">Utilisateurs</a></p></div></li>
-            <li><div><p><a href="/admin/sessions">Sessions</a></p></div></li>
-            <li><div><p><a href="/admin/polls">Sondages</a></p></div></li>
+            <li>
+            <div class="title">Admin</div>
+            <ul>
+            <li><a href="/admin/seasons">Editer les saisons</a</li>
+            <li><a href="/admin/tournaments">Editer les tournois</a></li>
+            <li><a href="/admin/news">Editer les actualités</a></li>
+            <li><a href="/admin/users">Editer les utilisateurs</a></li>
+            <li><a href="/admin/sessions">Editer les sessions</a></li>
+            <li><a href="/admin/polls">Editer les sondages</a></li>
+            </ul>
+            </li>    
         $for season in all_seasons():
-            <li><h3><a href="/season/$season.id">Saison $season.id</a></h3></li>
+            <li>
+            <div class="title"><a href="/season/$season.id">Saison $season.id</a></div>
+            <ul>
             $for tournament in season.tournaments:
-                <li><div><p><a href="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($:formatting.format_date(tournament.tournament_dt, "%d/%m/%Y"))</a></p></div></li>
+                <li><a href="/tournament/$season.id/$tournament.position">Tournoi $tournament.position ($:formatting.format_date(tournament.tournament_dt, "%d/%m/%y"))</a></li>
+            </ul>
+            </li>
+        <li>
+        <div class="title">Sondages</div>
+        <ul>
+        $for poll in all_polls():
+            <li><a href="/poll/$poll.id">$poll.title</a></li>
         </ul>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+        </li>             
+        </ul>
+        </div>
+    
+<!DOCTYPE html>
+<html lang="fr">
  
 <head> 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
-    <meta http-equiv="Content-Language" content="en-us"/>
-     
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">  
     <title>Portail du VPT (Voltaire Poker Tour)</title>
 
-    $code: webparts.register_stylesheet("defaults.css")
+    $code: webparts.register_stylesheet("styles.css")
     $for stylesheet in webparts.registered_stylesheets():
-        <link href="/public/css/$stylesheet" rel="stylesheet" type="text/css"/>
+        <link href="/public/css/$stylesheet" rel="stylesheet" type="text/css">
     
     $:config.views.tracking()
-</head> 
+</head>
  
 <body>  
 
-<div class="wrapper"> 
-<div class="header"><h1><a href="/">V<span>P</span>T</a></h1></div>
+<div id="page">
 
-$:show_menu_for_logged_users() 
-                            
-<div class="content"> 
+<div id="header">
+<h1><a href="/"><span class="highlight">V</span>oltaire <span class="highlight">P</span>oker <span class="highlight">T</span>our</a></h1>
+$:show_account_for_logged_users() 
+</div>
+
+$:show_menu_for_logged_users()
+
+<div id="content">
 $:content
-</div>  
+</div>
 
 </div>
 
-$for script in webparts.registered_scripts():
+$code:
+    webparts.register_script("menu.js")
+    all_scripts = [webparts.JS_JQUERY] + webparts.registered_scripts()
+$for script in all_scripts:
     <script type="text/javascript" src="/public/js/$script"></script>
 
 </body>

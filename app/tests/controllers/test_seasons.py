@@ -29,9 +29,8 @@ class TestSeasons(ControllerTestCase):
         self.login()
         response = app.request("/season/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        
-        self.assertIn("<h2>Saison 1 (2009 - 2010)</h2>", response.data)
-        self.assertIn("<td>%s</td>" % UserData.franck_p.pseudonym, response.data)
-        self.assertIn("<td>%s</td>" % UserData.jo.pseudonym, response.data)
-        self.assertIn("<td>%s</td>" % UserData.nico.pseudonym, response.data)
+        self.assertIn("<h1>\nSaison 1 (2009 - 2010)\n</h1>", response.data)
+        self.assertIn("%s</td>" % UserData.franck_p.pseudonym, response.data)
+        self.assertIn("%s</td>" % UserData.jo.pseudonym, response.data)
+        self.assertIn("%s</td>" % UserData.nico.pseudonym, response.data)
         

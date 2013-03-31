@@ -2,42 +2,28 @@ $def with (tournament, statistics, results, comments)
 
 $def show_administration_link_if_authorized():
     $if config.session_manager.user.admin:
-        <a href="#" id="admin_results_link" data-tournament-id="$tournament.id"> <img style="width: 16px; height: 16px;" src="/public/img/lock.png" /></a>
+        <a href="#" id="admin_results_link" data-tournament-id="$tournament.id"> <img style="width: 16px; height: 16px;" src="/public/img/lock.png"></a>
         $code: webparts.register_script("admin_results.js")
 
-<div class="post"> 
-<h2>
-Tournoi $tournament.position ($:formatting.format_date(tournament.tournament_dt, "%A %d %B %Y")) 
-$:webparts.ajax_animation("statistics_ajax_animation")
-</h2> 
-
-<div id="statistics">
-$:statistics
+<div class="section">
+<h1>
+Tournoi $tournament.position (<span class="primary_label">$:formatting.format_date(tournament.tournament_dt, "%A %d %B %Y")</span><span class="secondary_label">$:formatting.format_date(tournament.tournament_dt, "%d/%m/%Y")</span>)
+$:webparts.ajax_animation("statistics_ajax_animation") 
+</h1>
+<div id="tournament_statistics">$:statistics</div>
 </div>
 
-<h2>
+<div class="section">
+<h1>
 $if tournament.future:
     Inscriptions 
 $else:
     Résultats 
 $:show_administration_link_if_authorized()
 $:webparts.ajax_animation("results_ajax_animation")
-</h2>
-
-<div id="results">
-$:results
+</h1>
+<div id="tournament_results">$:results</div>
 </div>
 
-<h2>Photos</h2> 
-
-<div id="pictures">
-<p><i>Pas encore de photos pour ce tournoi !</i></p>
-</div>
-
-<div id="comments">
 $:comments
-</div>
-
-</div>
-
 

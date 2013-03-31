@@ -4,20 +4,19 @@ $def show_poll_vote_unit():
     $ choices = poll.choices
     $ choices_by_user = poll.choices_by_user
     $if poll.expired:
-        <p><i>Ce sondage est désormais fermé !</i></p>
+        <p><em>Ce sondage est désormais fermé !</em></p>
     $else:
-        <br />
-        <form id="poll_vote_form" class="results_form" data-user-id="$config.session_manager.user.id">
-        <input type="hidden" name="poll_id" value="$poll.id" />
-        <table class="admin_results fixed_width">
+        <form id="poll_vote_form" data-user-id="$config.session_manager.user.id">
+        <input type="hidden" name="poll_id" value="$poll.id">
+        <table class="rounded wide responsive">
+        <thead>
         <tr>
         <th>Joueur</th>
          $for choice in choices:
-             <th>
-             <span>$:formatting.format_date(choice.choice_dt, "%d/%m/%Y")</span>
-             <span class="ui-icon ui-icon-calendar" />
-             </th>
+             <th><span>$:formatting.format_date(choice.choice_dt, "%d/%m/%Y")</span><img src="/public/img/calendar.png" class="cal_icon"></th>
          </tr>
+         </thead>
+         <tbody>
          <tr>
          <td>$config.session_manager.user.pseudonym</td>
          $for choice in choices:
@@ -26,13 +25,12 @@ $def show_poll_vote_unit():
                   checked="checked"
              ></td>
         </tr>
+        </tbody>
         </table>
         <button type="submit">Voter</button>
-        &nbsp; &nbsp;
         $:webparts.ajax_animation("poll_vote_unit_ajax_animation")
         <span id="poll_vote_unit_ajax_output"></span>
         </form>
-        <br />
         $code:
             webparts.register_stylesheet(webparts.CSS_JQUERYUI)
             webparts.register_script(webparts.JS_JQUERYUI)

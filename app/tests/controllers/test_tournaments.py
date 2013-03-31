@@ -43,9 +43,7 @@ class TestTournaments(ControllerTestCase):
         self.login()
         response = app.request("/tournament/2/1") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("Tournoi 1 (dimanche 01 août 2010)", response.data)
-
-
+        self.assertIn("Tournoi 1 (<span class=\"primary_label\">dimanche 01 août 2010</span>", response.data)
 
 
 #    def test_view_statistics(self):
@@ -107,9 +105,9 @@ class TestTournaments(ControllerTestCase):
             
             # Checks the statistics
             statistics = decoded_json_response["statistics"]
-            self.assertIn("Nombre de participants</td><td>4</td>", statistics) 
-            self.assertIn("Absents</td><td>%s</td>" %UserData.franck_l.pseudonym, statistics) 
-            self.assertIn(u"Somme en jeu</td><td>50 €</td>", statistics)  
+            self.assertIn("<td id=\"mutable_nb_attending_players\">4</td>", statistics)
+            self.assertIn("<td id=\"mutable_players_A\">%s</td>" % UserData.franck_l.pseudonym, statistics) 
+            self.assertIn(u"<td id=\"mutable_sum_in_play\">50 €</td>", statistics)
             
             # Checks the results
             results = decoded_json_response["results"]
@@ -147,9 +145,9 @@ class TestTournaments(ControllerTestCase):
         
         # Checks the statistics
         statistics = decoded_json_response["statistics"]
-        self.assertIn("Nombre de participants</td><td>3</td>", statistics)
-        self.assertIn(u"Peut-être</td><td>%s,%s</td>" %(UserData.franck_l.pseudonym, UserData.fx.pseudonym), statistics) 
-        self.assertIn(u"Somme en jeu</td><td>40 €</td>", statistics)  
+        self.assertIn("<td id=\"mutable_nb_attending_players\">3</td>", statistics)
+        self.assertIn("<td id=\"mutable_players_M\">%s,%s</td>" % (UserData.fx.pseudonym, UserData.franck_l.pseudonym), statistics) 
+        self.assertIn(u"<td id=\"mutable_sum_in_play\">40 €</td>", statistics)
         
         # Checks the results
         results = decoded_json_response["results"]
@@ -269,7 +267,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
         
         # Makes sure that the update fails with invalid data (2)
         invalid_results_data = copy.deepcopy(updated_results_data)
@@ -286,7 +284,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
 
         # Makes sure that the update fails with invalid data (3)
         invalid_results_data = copy.deepcopy(updated_results_data)
@@ -303,7 +301,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
         
         # Makes sure that the update fails with invalid data (4)
         invalid_results_data = copy.deepcopy(updated_results_data)
@@ -320,7 +318,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
 
         # Makes sure that the update fails with invalid data (5)
         invalid_results_data = copy.deepcopy(updated_results_data)
@@ -337,7 +335,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
 
         # Makes sure that the update fails with invalid data (6)
         invalid_results_data = copy.deepcopy(updated_results_data)
@@ -354,7 +352,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
         
         # Makes sure that the update fails with invalid data (7)
         invalid_results_data = copy.deepcopy(updated_results_data)
@@ -371,7 +369,7 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNone(decoded_json_response["statistics"])
         self.assertNotEqual(tournament_21.results, updated_results)
-        self.assertEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])
 
         # Makes sure that the update works with valid data        
         response = app.request("/admin/results", method="POST", data=updated_results_data) #@UndefinedVariable
@@ -382,4 +380,4 @@ class TestTournaments(ControllerTestCase):
         self.assertIn("statistics", decoded_json_response)
         self.assertIsNotNone(decoded_json_response["statistics"])
         self.assertEqual(tournament_21.results, updated_results)
-        self.assertNotEqual(tournament_21.results, [ResultData.result21_fx, ResultData.result21_jo])
+        self.assertNotEqual(tournament_21.results, [ResultData.result21_jo, ResultData.result21_fx])

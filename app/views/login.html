@@ -1,40 +1,29 @@
 $def with (login_form, recover_password_form)
 
-<div class="post">
- 
-<h2>Identification requise</h2> 
-<br />
-<div class="login_form_wrapper">
-<form id="login" action="" method="post" class="login_form">
+<div class="section">
+<h1>Identification requise</h1>
+<form action="" method="post" class="narrow">
 
     $if not login_form.valid:
-        <div class="login_error">Erreur de connexion : vérifiez vos identifiants</div><br />
+        <div class="field_error">Erreur de connexion : vérifiez vos identifiants</div>
         
     $:login_form.render_css()
 
+<a href="#" id="display_recover_password">Mot de passe oublié ?</a>
+<div style="clear: both;"></div>
 </form>
-<a href="#" id="display_recover_password" class="login_form_link">Mot de passe oublié ?</a>
 </div>
 
-<br />
-
-<div id="recover_password" style="display: none;">
-<h2>Mot de passe oublié ?</h2>
-<br />
-<form id="recover_password_form" class="login_form">
+<div class="section" id="recover_password" style="display: none;">
+<h1>Mot de passe oublié ?</h1>
+<form id="recover_password_form" class="narrow">
 
     $:recover_password_form.render_css()
-    &nbsp; &nbsp;
     $:webparts.ajax_animation("recover_password_ajax_animation")
     
     <div id="recover_password_ajax_output"></div>
 
 </form>
-<br />
 </div>
 
-</div>
-
-$code:
-    webparts.register_script(webparts.JS_JQUERY)
-    webparts.register_script("login.js")
+$code: webparts.register_script("login.js")

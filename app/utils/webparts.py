@@ -5,14 +5,14 @@ from app.utils.mm import multimethod
 import web
 
 # Built-in CSS & JS files
-CSS_JQUERYUI = "jquery-ui-1.8.20.custom.css"
+CSS_JQUERYUI = "jquery-ui-1.10.2.custom.css"
 JS_JQUERY = "jquery-1.7.2.min.js"
-JS_JQUERYUI = ["jquery-ui-1.8.20.custom.min.js", "jquery.ui.datepicker-fr.js"]
-JS_JQUERY_AND_FORMS = [JS_JQUERY, "forms.js"]
+JS_JQUERYUI = ["jquery-ui-1.10.2.custom.min.js", "jquery.ui.datepicker-fr.js"]
+JS_FORMS = "forms.js"
 
 def ajax_animation(animation_id):
     """ Returns a 16 x 16 wheel animation, hidden by default """
-    return "<img style=\"width: 16px; height: 16px; display: none;\" id=\"%s\" src=\"/public/img/ajax-loader.gif\" />" % animation_id
+    return "<img class=\"ajax_animation\" id=\"%s\" src=\"/public/img/ajax-loader.gif\">" % animation_id
 
 def init_webparts():
     """ Initializes 2 empty lists (CSS & JS files) inside the context at the beginning of every request into which each view can register components """

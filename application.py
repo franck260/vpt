@@ -2,7 +2,7 @@
 
 """ Main application class """
 
-from app.models import meta, Result, Season
+from app.models import meta, Result, Season, Poll
 from app.notifications import Events, handlers as notification_handlers
 from app.utils import formatting, dates, session, http, webparts
 from web import config
@@ -59,11 +59,13 @@ class WebApplication(web.application):
         # The views are bound once for all to the configuration
         config.views = web.template.render("app/views/", globals={
             "all_seasons": lambda: Season.all(),
+            "all_polls": lambda: Poll.all(),
             "webparts": webparts,
             "formatting": formatting,
             "dates": dates,
             "zip": zip,
             "getattr": getattr,
+            "hasattr": hasattr,
             "class_name": lambda x: x.__class__.__name__,
             "namedtuple": collections.namedtuple,
             "config": config,
@@ -94,7 +96,7 @@ class WebApplication(web.application):
         config.session_manager = session.init_session_manager(config_file.get("session", "handler_cls"))
         config.email_notification_handler = notification_handlers.init_email_notification_handler(**dict(config_file.items("email_notifications")))
         
-        web.debug("[CONFIGURATION] Sucessfully configured the application from %s" %config_filename)
+        web.debug("[CONFIGURATION] Successfully configured the application from %s" %config_filename)
 
 # The application is instantiated once and should be configured with the configure() method
 app = WebApplication(urls, globals())

@@ -46,7 +46,7 @@ class TestPolls(ControllerTestCase):
         #self.assertIn(PollData.poll_1.title, response.data)
         #self.assertIn(PollCommentData.comment_11.comment, response.data)
         #self.assertIn(PollCommentData.comment_12.comment, response.data)
-        #self.assertIn("<td>" + UserData.nico.pseudonym + "</td>\n<td>\n</td>\n<td>\n√\n</td>\n<td>\n</td>", response.data)
+        #self.assertIn("<td>" + UserData.nico.pseudonym + "</td>\n<td>\n</td>\n\n<td>\n√\n</td>\n\n<td>\n</td>", response.data)
 
     def test_add_comment_notlogged(self):
         response = app.request("/add/comment", method="POST") #@UndefinedVariable
@@ -146,8 +146,8 @@ class TestPolls(ControllerTestCase):
             # Checks the data
             data = decoded_json_response["data"]
             #TODO: restore
-            #self.assertIn("<table id=\"poll_votes_table\" class=\"results fixed_width\">", data)
-            #self.assertIn("<td>" + UserData.jo.pseudonym + "</td>\n<td>\n√\n</td>\n<td>\n√\n</td>", data)
+            #self.assertIn("<table id=\"poll_votes_table\"", data)
+            #self.assertIn("<td>" + UserData.jo.pseudonym + "</td>\n<td>\n√\n</td>\n\n<td>\n√\n</td>", data)
             
             # Checks the model
             self.assertEqual(len(poll_3.choices_by_user[jo]), 2)
@@ -175,8 +175,8 @@ class TestPolls(ControllerTestCase):
             # Checks the data
             data = decoded_json_response["data"]
             #TODO: restore
-            #self.assertNotIn("<table id=\"poll_votes_table\" class=\"results fixed_width\">", data)
-            #self.assertIn("<td>" + UserData.jo.pseudonym + "</td>\n<td>\n√\n</td>\n<td>\n</td>", data)
+            #self.assertNotIn("<table id=\"poll_votes_table\"", data)
+            #self.assertIn("<td>" + UserData.jo.pseudonym + "</td>\n<td>\n√\n</td>\n\n<td>\n</td>", data)
             
             # Checks the model
             self.assertEqual(len(poll_3.choices_by_user[jo]), 1)
@@ -203,8 +203,8 @@ class TestPolls(ControllerTestCase):
 
             # Checks the data
             data = decoded_json_response["data"]
-            self.assertNotIn("<table id=\"poll_votes_table\" class=\"results fixed_width\">", data)
-            self.assertIn("<td>" + UserData.jo.pseudonym + "</td>\n<td>\n</td>\n<td>\n</td>", data)
+            self.assertNotIn("<table id=\"poll_votes_table\"", data)
+            self.assertIn("<td>" + UserData.jo.pseudonym + "</td>\n<td>\n</td>\n\n<td>\n</td>", data)
         
             # Checks the model
             self.assertEqual(len(poll_3.choices_by_user[jo]), 0)

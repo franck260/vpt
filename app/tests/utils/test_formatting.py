@@ -24,18 +24,16 @@ class TestFormatting(unittest.TestCase):
     def test_spacesafe(self):
         
         self.assertEquals(spacesafe("test"), "test")
-        # self.assertEquals(spacesafe("test with space"), "test&nbsp;with&nbsp;space")
         self.assertEquals(spacesafe("test with space"), "test with space")
-        # self.assertEquals(spacesafe("test with space and\nbackslash"), "test&nbsp;with&nbsp;space&nbsp;and<br />backslash")
-        self.assertEquals(spacesafe("test with space and\nbackslash"), "test with space and <br /> backslash")
-        
+        self.assertEquals(spacesafe("test with space and\nbackslash"), "test with space and <br> backslash")
+
     def test_urlize(self):
-        
+
         self.assertEquals(urlize("test"), "test")
         self.assertEquals(urlize("http://www.google.com"), "<a href='http://www.google.com' target='_blank'>http://www.google.com</a>")
-        self.assertEquals(urlize("Lien 1 : http://www.google.com <br /> et lien 2 : http://microsoft.com"),
-                                 "Lien 1 : <a href='http://www.google.com' target='_blank'>http://www.google.com</a> <br /> et lien 2 : <a href='http://microsoft.com' target='_blank'>http://microsoft.com</a>")
-    
+        self.assertEquals(urlize("Lien 1 : http://www.google.com <br> et lien 2 : http://microsoft.com"),
+                                 "Lien 1 : <a href='http://www.google.com' target='_blank'>http://www.google.com</a> <br> et lien 2 : <a href='http://microsoft.com' target='_blank'>http://microsoft.com</a>")
+
     def test_format_date(self):
 
         # Enforces the locale
@@ -62,7 +60,7 @@ class TestFormatting(unittest.TestCase):
         formatted_dt = format_date(DECEMBER_15, DATE_FORMAT)
         self.assertIsInstance(formatted_dt, unicode)
         self.assertEqual(formatted_dt, u"jeudi 15 décembre 2011")
-    
+
     def test_append(self):
         
         self.assertIsNone(append(None, None))
@@ -72,5 +70,3 @@ class TestFormatting(unittest.TestCase):
         self.assertEquals(append(1, lambda s: "er" if s == 1 else "e"), "1er")
         self.assertEquals(append(7, lambda s: "er" if s == 1 else "e"), "7e")
         self.assertEquals(append(8, "e"), "8e")
-
-    

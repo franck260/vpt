@@ -1,33 +1,40 @@
 $def with (poll, highlight_user=None)
 
-$def show_user_votes(user, user_choices, poll_choices):
-    <tr data-user-id="$user.id">
+$# TODO: It seems that </tr> and <tr> have to be adjacent to render properly the responsive table
+$def show_user_votes(user, user_choices, poll_choices, first_iteration):
+    $if first_iteration:
+        <tr data-user-id="$user.id">
+    $else:
+        </tr><tr data-user-id="$user.id">
     <td>$user.pseudonym</td>
     $for choice in poll_choices:
         <td>
         $if choice in user_choices:
             √
         </td>
-    </tr>
 
 $def show_votes():
     $ poll_choices = poll.choices
     $ choices_by_user = poll.choices_by_user
     $if not poll.has_votes:
-        <p><i>Pas encore de données enregistrées !</i></p>
+        <p><em>Pas encore de données enregistrées !</em></p>
     $elif highlight_user is not None:
-        $:show_user_votes(highlight_user, choices_by_user[highlight_user], poll_choices)    
+        $:show_user_votes(highlight_user, choices_by_user[highlight_user], poll_choices, True)
+        </tr>
     $else:
-        <br />
-        <table id="poll_votes_table" class="results fixed_width">
+        <table id="poll_votes_table" class="rounded wide responsive">
+        <thead>
         <tr>
         <th>Joueur</th>
         $for choice in poll_choices:
-            <th>$:formatting.format_date(choice.choice_dt, "%d/%m/%Y")</th>     
+            <th>$:formatting.format_date(choice.choice_dt, "%d/%m/%Y")<span style="margin-left: 16px;"></span></th>    
         </tr> 
+        </thead>
+        <tbody>
         $for user, user_choices in choices_by_user.items():
-            $:show_user_votes(user, user_choices, poll_choices)
+            $:show_user_votes(user, user_choices, poll_choices, loop.first)
+        </tr>
+        </tbody>
         </table> 
-        <br />
 
 $:show_votes()

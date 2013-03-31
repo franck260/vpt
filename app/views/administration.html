@@ -1,33 +1,29 @@
 $def with (grid, fieldset)
 
-<div class="post"> 
-
 $if grid:
-    <h2>Edition des éléments</h2>
-    <br />
-    <form action="" method="post" class="results_form">
+    <div class="section">
+    <h1>Edition des éléments</h1>
+    <form action="" method="post" class="wide">
         <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
-        <input type="hidden" name="event" value="$Events.MODIFIED" />
-        <table class="admin_results admin_generic">$:grid.render()</table>
+        <input type="hidden" name="event" value="$Events.MODIFIED">
+        <table class="rounded wide">$:grid.render()</table>
         <button type="submit">Modifier</button>
     </form>
-    <br />
+    </div>
 
 $if fieldset:
-    <h2>Ajout d'un élément</h2>
-    <br />
-    <form action="" method="post" class="user_form">
+    <div class="section">
+    <h1>Ajout d'un élément</h1>
+    <form action="" method="post" class="narrow">
         <!-- Both forms hit the same POST therefore we use a special field to indicate the action -->
-        <input type="hidden" name="event" value="$Events.NEW" />
+        <input type="hidden" name="event" value="$Events.NEW">
         $:fieldset.render()
         <button type="submit">Créer</button>
     </form>
-    <br />
-
-</div>
+    </div>
 
 $code:
     webparts.register_stylesheet(webparts.CSS_JQUERYUI)
-    webparts.register_script(webparts.JS_JQUERY_AND_FORMS)
+    webparts.register_script(webparts.JS_FORMS)
     webparts.register_script(webparts.JS_JQUERYUI)
     webparts.register_script("administration.js")

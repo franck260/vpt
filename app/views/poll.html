@@ -1,24 +1,18 @@
 $def with (poll, poll_header, poll_vote_unit, poll_votes, comments)
 
-<div class="post">
-
-<h2>Sondage : $poll.title</h2> 
-<div id="poll_header">
+<div class="section">
+<h1><span class="primary_label">Sondage : </span>$poll.title</h1>
 $:poll_header
 </div>
 
-<h2>Mon vote</h2> 
-<div id="poll_vote_unit">
+<div class="section">
+<h1>Mon vote</h1> 
 $:poll_vote_unit
 </div>
 
-<h2>Résultats du sondage $:webparts.ajax_animation("poll_votes_ajax_animation")</h2>
-<div id="poll_votes">
-$:poll_votes
+<div class="section">
+<h1>Résultats du sondage $:webparts.ajax_animation("poll_votes_ajax_animation")</h1>
+<div id="poll_votes">$:poll_votes</div>
 </div>
 
-<div id="comments">
 $:comments
-</div>
-
-</div>

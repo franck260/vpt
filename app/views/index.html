@@ -1,45 +1,43 @@
-$def with (pending_tournaments, open_polls, expired_polls, all_news)
+$def with (pending_tournaments, open_polls, all_news)
 
 $def show_pending_tournaments():
     $if pending_tournaments:
+         <div class="section">
+         <h1>Prochains tournois</h1>
+         <ul>
+         $for tournament in pending_tournaments:
+             <li><em>$:formatting.format_date(tournament.tournament_dt, "%A %d %B").capitalize() : </em><a href="/tournament/$tournament.season_id/$tournament.position">s'inscrire</a></li>
+         </ul> 
+         </div>
+    
+$def show_open_polls():
+    $if open_polls:
+        <div class="section">
+        <h1>Sondages ouverts</h1>
         <ul>
-        $for tournament in pending_tournaments:
-            <li><i>$:formatting.format_date(tournament.tournament_dt, "%A %d %B").capitalize() : </i><a href="/tournament/$tournament.season_id/$tournament.position">s'inscrire</a></li>
-        </ul>     
-    $else:
-	    <p>Il n'y a pas de tournoi planifié en ce moment.</p>
-
-$def show_polls(polls, action, output_if_empty):
-    $if polls:
-        <ul>
-        $for poll in polls:
-            <li><i>$poll.title : </i><a href="/poll/$poll.id">$action</a></li>
+        $for poll in open_polls:
+            <li><em>$poll.title : </em><a href="/poll/$poll.id">votez</a></li>
         </ul> 
-    $else:
-        <p>$output_if_empty</p>
+        </div>
 
-<div class="post"> 
-
-<h2>Bienvenue</h2> 
-<p>Ce portail permet de gérer et suivre les tournois du VPT.</p> 
-
-<h2>Prochains tournois</h2> 
-$:show_pending_tournaments()
-
-<h2>Sondages ouverts</h2>
-$:show_polls(open_polls, "votez", "Il n'y pas de sondage ouvert en ce moment.")
-
-<h2>Sondages fermés</h2>
-$:show_polls(expired_polls, "voir", "Il n'y pas de sondage fermé en ce moment.")
-	
-<h2>Charte du VPT</h2>
-<p>Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.</p>
-	
-<h2>Actualités du site</h2>
-<ul>
-$for news in all_news:
-    <li><i>$:formatting.format_date(news.news_dt, "%d %B %Y")</i> : $:formatting.first_lower(news.news)</li>
-</ul> 
-	
+<div class="section">
+<h1>Bienvenue</h1>	
+<p>Ce portail permet de gérer et suivre les tournois du VPT.</p>
 </div>
 
+$:show_pending_tournaments()
+
+$:show_open_polls()
+
+<div class="section">
+<h1>Charte du VPT</h1>
+<p>Elle est téléchargeable <a href="/public/doc/charte.doc">ici</a> dans sa version de 2008.</p>
+</div>
+
+<div class="section">
+<h1>Actualités du site</h1>
+<ul>
+$for news in all_news:
+    <li><em>$:formatting.format_date(news.news_dt, "%d %B %Y")</em> : $:formatting.first_lower(news.news)</li>
+</ul> 
+</div>

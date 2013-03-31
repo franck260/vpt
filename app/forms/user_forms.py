@@ -32,7 +32,7 @@ def login_form(email=None, persistent=False):
     return web.form.Form(
               web.form.Textbox("email", description="Adresse email : ", value=email),
               web.form.Password("password", description="Mot de passe : "),
-              web.form.Checkbox(u"Rester connecté", value="True", checked=persistent),
+              web.form.Checkbox(u"Rester connecté", value="True", checked=persistent, post="<br>"),
               web.form.Button("Se connecter", type="submit")                  
            )
     

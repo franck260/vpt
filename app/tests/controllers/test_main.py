@@ -28,6 +28,4 @@ class TestMain(ControllerTestCase):
         self.login()
         response = app.request("/") #@UndefinedVariable
         self.assertEqual(response.status, HTTP_OK)
-        self.assertIn("pas de tournoi", response.data)  
-
-        
+        self.assertIn("Bienvenue", response.data)

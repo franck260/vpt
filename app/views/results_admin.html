@@ -1,11 +1,9 @@
 $def with (tournament, results_grid)
 
-<br />
-<form id="admin_results_form" class="results_form">
-<input type="hidden" name="tournament_id" value="$tournament.id" />
-<table class="admin_results">
+<form id="admin_results_form">
+<input type="hidden" name="tournament_id" value="$tournament.id">
+<table class="rounded wide">
 $:results_grid.render()
 </table>
 <button type="submit">Modifier</button>
 </form>
-<br />

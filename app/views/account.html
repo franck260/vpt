@@ -1,23 +1,19 @@
 $def with (user_fieldset, password_fieldset)
 
-<div class="post"> 
-
-<h2>Mon compte</h2>
-<br />
-<form action="/update/user" method="post" class="user_form">
+<div class="section"> 
+<h1>Mon compte</h1>
+<form action="/update/user" method="post" class="narrow">
     $:user_fieldset.render()
     <button type="submit">Modifier</button>
 </form>
-<br />
+</div>
 
-<h2>Mon mot de passe</h2>
-<br />
-<form action="/update/password" method="post" class="user_form">
+<div class="section">
+<h1>Mon mot de passe</h1>
+<form action="/update/password" method="post" class="narrow">
     $:password_fieldset.render()
     <button type="submit">Modifier</button>
 </form>
-<br />
-
 </div>
 
-$code: webparts.register_script(webparts.JS_JQUERY_AND_FORMS)
+$code: webparts.register_script(webparts.JS_FORMS)

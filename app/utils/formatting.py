@@ -11,7 +11,7 @@ import web
 
 # Simple formatters
 first_lower = lambda s: s[:1].lower() + s[1:] if s else ""
-spacesafe = lambda s: web.websafe(s).replace("\n", " <br /> ") # no more .replace(" ", "&nbsp;")
+spacesafe = lambda s: web.websafe(s).replace("\n", " <br> ")
 to_rank = lambda i: "er" if i == 1 else "e"
 urlize = lambda s: re.sub(r"\b(http://[^\s]+)", r"<a href='\1' target='_blank'>\1</a>", s)
 uncapitalize = lambda s: s[0].lower() + s[1:] if s else s

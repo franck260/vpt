@@ -1,12 +1,9 @@
 $def with (entity, comment_formatter)
 
 $def show_comments():
-    <div id="comments_list">
-    <h2>Commentaires (<span id="nb_comments">$len(entity.comments)</span>)</h2>
-    <br />
+    <h1>Commentaires (<span id="nb_comments">$len(entity.comments)</span>)</h1>
     $for comment in entity.comments:
         $:comment_formatter(comment)
-    </div>
 
 $code:
     # Form data by entity class
@@ -18,17 +15,14 @@ $code:
 
 $def show_comment_form():
     <form id="comment_form" action="$FORM_DATA[class_name(entity)].comment_url" method="post">
-    <input type="hidden" name="$FORM_DATA[class_name(entity)].entity_id" value="$entity.id" />
-    <textarea id="comment" name="comment" class="comment_textarea"></textarea> 
-    <br /> 
-    <button type="submit" class="comment_button">Poster un commentaire</button> 
-    &nbsp; &nbsp;
+    <input type="hidden" name="$FORM_DATA[class_name(entity)].entity_id" value="$entity.id">
+    <textarea id="comment" name="comment"></textarea> 
+    <button type="submit">Poster un commentaire</button>
     $:webparts.ajax_animation("comment_ajax_animation")
     </form>
-    <br />
     $code: webparts.register_script("comments.js")
 
+<div id="comments" class="section">
 $:show_comments()
 $:show_comment_form()
-
-
+</div>

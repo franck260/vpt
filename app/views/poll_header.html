@@ -1,26 +1,22 @@
 $def with (poll)
 
 $def show_poll_start_date():
-    <tr><td class="title">Date d'ouverture</td><td>$:formatting.format_date(poll.start_dt, "%d/%m/%Y")</td></tr>
+    <tr><td>Date d'ouverture</td><td>$:formatting.format_date(poll.start_dt, "%d/%m/%Y")</td></tr>
     
 $def show_poll_end_date():
     $if poll.end_dt:
-        <tr><td class="title">Date de fermeture</td><td>$:formatting.format_date(poll.end_dt, "%d/%m/%Y")</td></tr>    
+        <tr><td>Date de fermeture</td><td>$:formatting.format_date(poll.end_dt, "%d/%m/%Y")</td></tr>    
 
 $def show_poll_state():
-    <tr><td class="title">Statut</td><td>
+    <thead><tr><th>Statut</th><th>
     $if poll.expired:
-        <span class="poll_close">Fermé</span>
+        Fermé
     $else:
-        <span class="poll_ope">Ouvert</span>
-    </td></tr>
+        Ouvert
+    </th></tr></thead>
 
-<br />
-<table class="stats">
+<table class="rounded narrow">
+    $:show_poll_state()
     $:show_poll_start_date()
     $:show_poll_end_date()
-    $:show_poll_state()
 </table>
-<br />
-
-$code: webparts.register_script(webparts.JS_JQUERY)

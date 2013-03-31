@@ -1,7 +1,7 @@
 $def with (entity)
 
 $code:
-    # Définition des methodes partagées
+    # Shared methods
     show_user = lambda result: result.user.pseudonym
     show_attended = lambda result: result.attended
     show_buyin = lambda result: formatting.append(result.buyin, " €")
@@ -10,47 +10,57 @@ $code:
     show_net_profit = lambda result: formatting.append(result.net_profit, " €")
     show_score = lambda result: result.score
     
-    # Définition des champs par type d'entité
-    _fields =    { "Tournament" : [("Joueur",          show_user),
-                                   ("Mise",            show_buyin),
-                                   ("Classement",      show_rank),
-                                   ("Gain",            show_profit),
-                                   ("Gain net",        show_net_profit),
-                                   ("Points",          show_score)
-                                  ],
-                                  
-                   "Season"     : [("Classement",      show_rank),
-                                   ("Joueur",          show_user),
-                                   ("Points",          show_score),
-                                   ("Participations",  show_attended),
-                                   ("Mise totale",     show_buyin),
-                                   ("Gain total",      show_profit),
-                                   ("Gain net total",  show_net_profit)
-                                  ]
-                 } 
+    # Fields by entity class
+    Field = namedtuple("Field", ["header", "formatter", "css_class"])
+    def make_field(header, formatter, css_class=None):
+        return Field(header, formatter, css_class)
+    _fields = { 
+        "Tournament": [
+            make_field("Joueur", show_user),
+            make_field("Mise", show_buyin),
+            make_field("Rang", show_rank, "secondary_content"),
+            make_field("Gain", show_profit),
+            make_field("Gain net", show_net_profit, "secondary_content"),
+            make_field("Points", show_score)
+        ],
+        "Season": [
+            make_field("Joueur", show_user),
+            make_field("Rang", show_rank, "secondary_content"),
+            make_field("Points", show_score),
+            make_field("Participations", show_attended, "secondary_content"),
+            make_field("Mise totale", show_buyin, "secondary_content"),
+            make_field("Gain net total", show_net_profit, "secondary_content"),
+            make_field("Gain total", show_profit)
+        ]
+    }
     
-
-
 $def show_results():
     $ filtered_results = filter(lambda result: result.actual, entity.results)
     $if not filtered_results:
-        <p><i>Pas encore de données enregistrées !</i></p>
+        <p><em>Pas encore de données enregistrées !</em></p>
     $else:
         $ fields=_fields[class_name(entity)]
-        $ headers=zip(*fields)[0]
-        $ formatters=zip(*fields)[1]
-        <br />
-        <table class="results">
-            <tr>
-                $for header in headers:
-                    <th>$header</th>     
-            </tr> 
+        <table class="rounded wide">
+            <thead><tr>
+                $for field in fields:
+                    <th 
+                    $if field.css_class:
+                        class="$field.css_class"
+                    >$field.header</th>
+            </tr></thead>
+            <tbody>
             $for result in filtered_results:
-                <tr>
-                $for formatter in formatters:
-                    <td>$formatter(result)</td>
+                <tr 
+                $if hasattr(result, "id"):
+                    id="mutable_result_$result.id"
+                >
+                $for field in fields:
+                    <td 
+                    $if field.css_class:
+                        class="$field.css_class"                    
+                    >$field.formatter(result)</td>
                 </tr>
-        </table> 
-        <br />
+            </tbody>
+        </table>
 
 $:show_results()

@@ -3,43 +3,53 @@ $def with (tournament)
 $code:
     format_players = lambda results: ",".join([result.user.pseudonym for result in results])
 
-$def show_subscription_button(status, label, extra_text):
+$def show_subscription_button(status, label, separator=True):
     $if config.session_manager.user in [result.user for result in tournament.results_by_status(status)]:
         <span style="font-weight: bold" id="$("subscribtion_link_" + status)">$label</span>
     $else:
         <a id="$("subscribtion_link_" + status)" href="#" data-tournament-id="$tournament.id" data-status="$status">$label</a>
-    $:extra_text
-
-
+    $if separator:
+        <span class="sep">|</span>
+        
+$def show_subscription_status(status, label, alternate_label):
+    <span style="font-weight: bold">
+    $if config.session_manager.user in [result.user for result in tournament.results_by_status(status)]:
+       $label
+    $else:
+       $alternate_label
+    </span>
+    
 $def show_subscription_box():
+    <thead>
+    <tr><th><span class="primary_label">Ma participation</span><span class="secondary_label">Ma part.</span></th><th>
     $if tournament.future:
-        <tr style="background-color: #F0F0F0;"><td class="title">Ma participation</td><td>
-        $:show_subscription_button(result_statuses.P, "Oui", "&nbsp;|&nbsp;")
-        $:show_subscription_button(result_statuses.A, "Non", "&nbsp;|&nbsp;")
-        $:show_subscription_button(result_statuses.M, "Peut-être", "&nbsp; &nbsp;")
+        $:show_subscription_button(result_statuses.P, "Oui")
+        $:show_subscription_button(result_statuses.A, "Non")
+        $:show_subscription_button(result_statuses.M, "Peut-être", False)
         $:webparts.ajax_animation("subscribtion_ajax_animation")
-        </td></tr>
-        $code: webparts.register_script("subscription.js")
+    $else:
+        $:show_subscription_status(result_statuses.P, "Oui", "Non")
+    </th></tr>
+    </thead>
+    $if tournament.future: $webparts.register_script("subscription.js")
         
 $def show_attending_players():
-    <tr><td class="title">Nombre de participants</td><td>$tournament.nb_attending_players</td></tr>
+    <tr><td><span class="primary_label">Nombre de participants</span><span class="secondary_label">Nb. part.</span></td><td id="mutable_nb_attending_players">$tournament.nb_attending_players</td></tr>
 
 $def show_sum_in_play():
-    <tr><td class="title">Somme en jeu</td><td>$tournament.sum_in_play €</td></tr>
+    <tr><td><span class="primary_label">Somme en jeu</span><span class="secondary_label">En jeu</span></td><td id="mutable_sum_in_play">$tournament.sum_in_play €</td></tr>
 
 $def show_players_by_status(status, header):
     $ players = format_players(tournament.results_by_status(status))
     $if players:
-        <tr><td class="title">$header</td><td>$players</td></tr>
+        <tr><td>$header</td><td id="mutable_players_$status">$players</td></tr>
 
-$code: webparts.register_script(webparts.JS_JQUERY)
-
-<br />
-<table class="stats">
+<table class="rounded narrow">
     $:show_subscription_box()
+    <tbody>    
     $:show_attending_players()
     $:show_sum_in_play()
     $:show_players_by_status(result_statuses.A, "Absents")
-    $:show_players_by_status(result_statuses.M, "Peut-être")				
+    $:show_players_by_status(result_statuses.M, "Peut-être")
+    </tbody>
 </table>
-<br />
