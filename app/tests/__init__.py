@@ -215,18 +215,18 @@ class PollCommentData(DataSet):
 
 class PollData(DataSet):
     class poll_1:
-        title = u"Date du VPT de mai 2012"
+        title = u"VPT de mai 2012"
         start_dt = datetime.date(2012, 4, 5)
         choices = [PollChoiceData.poll_choice_11, PollChoiceData.poll_choice_12, PollChoiceData.poll_choice_13]
         comments = [PollCommentData.comment_11, PollCommentData.comment_12]
     class poll_2:
-        title = u"Date du VPT de juin 2011"
+        title = u"VPT de juin 2011"
         start_dt = datetime.date(2011, 5, 28)
         end_dt = datetime.date(2011, 5, 31)        
         choices = [PollChoiceData.poll_choice_21, PollChoiceData.poll_choice_22]
         comments = [PollCommentData.comment_21]
     class poll_3:
-        title = u"Date du VPT de juillet 2020"
+        title = u"VPT de juillet 2020"
         start_dt = datetime.date(2020, 7, 1)
         end_dt = datetime.date(2020, 7, 31)        
         choices = [PollChoiceData.poll_choice_31, PollChoiceData.poll_choice_32]

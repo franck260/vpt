@@ -1,5 +1,5 @@
 $def with (poll_vote)
-$var subject: VPT : le participant $poll_vote.user.pseudonym a enregistré son vote (sondage : $:formatting.uncapitalize(poll_vote.poll.title))
+$var subject: VPT : le participant $poll_vote.user.pseudonym a enregistré son vote (sondage : $poll_vote.poll.title)
 $poll_vote.user.pseudonym a indiqué les disponibilités suivantes : [${", ".join([formatting.format_date(choice.choice_dt, "%d/%m/%Y") for choice in sorted(poll_vote.choices, key=lambda choice: choice.choice_dt)])}]
 
 Voir tous les votes du sondage : http://vpt.franck-perez.com/poll/$poll_vote.poll.id

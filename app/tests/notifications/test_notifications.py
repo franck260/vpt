@@ -34,7 +34,7 @@ class TestNotifications(ModelTestCase):
         notification = build_email_notification(poll_3, Events.NEW)
         zoe = config.orm.query(User).filter(User.first_name == "Zoe").one()
         
-        self.assertEqual(notification.subject, u"Date du VPT de juillet 2020 : votez !")
+        self.assertEqual(notification.subject, u"VPT de juillet 2020 : votez !")
         self.assertListEqual(notification.recipients, [user.email for user in User.all() if user != zoe])
 
     def test_build_email_notification_tournament_comment_new(self):
@@ -65,7 +65,7 @@ class TestNotifications(ModelTestCase):
             config.orm.commit()
             notification = build_email_notification(comment, Events.NEW)
             
-            self.assertEqual(notification.subject, u"VPT : un nouveau commentaire a été posté (sondage : date du VPT de juillet 2020)")
+            self.assertEqual(notification.subject, u"VPT : un nouveau commentaire a été posté (sondage : VPT de juillet 2020)")
             self.assertListEqual(notification.recipients, [user.email for user in User.all() if user not in (nico, zoe)])
 
         finally:
@@ -85,7 +85,7 @@ class TestNotifications(ModelTestCase):
             config.orm.commit()
             notification = build_email_notification(poll_vote, Events.NEW)
 
-            self.assertEqual(notification.subject, u"VPT : le participant Jo a enregistré son vote (sondage : date du VPT de juillet 2020)")
+            self.assertEqual(notification.subject, u"VPT : le participant Jo a enregistré son vote (sondage : VPT de juillet 2020)")
             self.assertListEqual(notification.recipients, [franck_p.email])
             self.assertIn("[20/07/2020, 27/07/2020]", notification.body)
 
@@ -94,7 +94,7 @@ class TestNotifications(ModelTestCase):
             config.orm.commit()
             notification = build_email_notification(poll_vote, Events.MODIFIED)
             
-            self.assertEqual(notification.subject, u"VPT : le participant Jo a modifié son vote (sondage : date du VPT de juillet 2020)")
+            self.assertEqual(notification.subject, u"VPT : le participant Jo a modifié son vote (sondage : VPT de juillet 2020)")
             self.assertListEqual(notification.recipients, [franck_p.email])
             self.assertIn("[]", notification.body)
         
