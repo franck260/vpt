@@ -7,6 +7,35 @@ Saison $season.id ($season.start_year - $season.end_year)
 <div>$:results</div>
 </div>
 
+$if season.id >= 9:
+    $webparts.register_script("angular.min.js")
+    $webparts.register_script("angular-app.js")
+    <div class="section" ng-app="vpt" ng-controller="SeasonResultsCtrl" data-season-id="$season.id">
+    <h1>Résultats détaillés (beta)</h1>
+    <div ng-show="!aggregatedResults.length">
+    <p><em>{{resultsFetchStatus}}</em></p>
+    </div>
+    <div ng-hide="!aggregatedResults.length">
+    <input type="checkbox" ng-model="shouldDiscardLowestScore">Ignorer le plus mauvais score
+    <table class="rounded wide">
+    <thead><tr>
+    <th>Joueur</th>
+    <th class="secondary_content">Rang</th>
+    <th class="secondary_content" ng-repeat="i in [] | range:numberOfTournaments">T{{i+1}}</th>
+    <th>Points</th>
+    </tr></thead>
+    <tbody>
+    <tr ng-repeat="seasonResult in aggregatedResults | orderBy:shouldDiscardLowestScore ? ['-getAdjustedScore()', '-getTotalScore()'] : '-getTotalScore()'">
+    <td>{{seasonResult.getPlayerName()}}</td>
+    <td class="secondary_content">{{$$index + 1 | rank}}</td>
+    <td class="secondary_content" ng-repeat="i in [] | range:numberOfTournaments"><span ng-hide="shouldDiscardLowestScore && $$index === seasonResult.getLowestScoreIndex()">{{seasonResult.getScores()[i]}}</span></td>
+    <td>{{shouldDiscardLowestScore ? seasonResult.getAdjustedScore() : seasonResult.getTotalScore()}}</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+
 <div class="section">
 <h1>Mode de calcul</h1>
 <ul>
