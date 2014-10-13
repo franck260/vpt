@@ -60,14 +60,14 @@ class RecoverPassword:
         user = User.get_user(email)
               
         if user is None or not user.active:
-            raise web.forbidden("Utilisateur inconnu")
+            raise http.Forbidden("Utilisateur inconnu")
         
         # Checks if there is already an active password token matching this email
         current_password_token = PasswordToken.get_password_token(email)
         
         if current_password_token is not None:
             formatted_creation_dt = formatting.format_date(dates.change_timezone(current_password_token.creation_dt), "%d/%m/%y %H:%M")
-            raise web.forbidden(u"Demande similaire déjà effectuée le %s" % formatted_creation_dt)
+            raise http.Forbidden(u"Demande similaire déjà effectuée le %s" % formatted_creation_dt)
         
         # Creates a new password token valid for 2 days
         password_token = PasswordToken(validity=2, user=user, token=PasswordToken.generate_random_token(16))
@@ -89,7 +89,7 @@ class ResetPassword:
         password_token = PasswordToken.get_token(token)
         
         if password_token is None or password_token.expired:
-            raise web.forbidden()
+            raise http.Forbidden()
         
         # The fieldset is bound to the user associated with the token
         password_fieldset = user_forms.NewPasswordFieldSet().bind(password_token.user)
@@ -104,7 +104,7 @@ class ResetPassword:
         password_token = PasswordToken.get_token(token)
         
         if password_token is None or password_token.expired:
-            raise web.forbidden()
+            raise http.Forbidden()
         
         # The fieldset is bound to the form data & the user associated with the token : the token itself is passed because it should expire when successfully used
         password_fieldset = user_forms.NewPasswordFieldSet(password_token).bind(password_token.user, data=web.input())
@@ -128,7 +128,7 @@ class CreateAccount:
         user_token = UserToken.get_token(token)
         
         if user_token is None or user_token.expired:
-            raise web.forbidden()
+            raise http.Forbidden()
         
         # The fieldset is not bound to any specific instance : the token is passed because it contains the email
         user_fieldset = user_forms.NewUserFieldSet(user_token)
@@ -143,7 +143,7 @@ class CreateAccount:
         user_token = UserToken.get_token(token)
         
         if user_token is None or user_token.expired:
-            raise web.forbidden()
+            raise http.Forbidden()
         
         # The fieldset is bound to the form data & the session : the token is passed because it contains the level
         user_fieldset = user_forms.NewUserFieldSet(user_token).bind(data=web.input(), session=config.orm)

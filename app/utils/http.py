@@ -67,3 +67,11 @@ def execute_hooks():
     """ If the request is successful, executes every hook submitted by the controllers """
     if web.ctx.status in (HTTP_OK, HTTP_SEE_OTHER):
         [hook() for hook in web.ctx.post_request_hooks]
+
+class Forbidden(web.HTTPError):
+    """ `403 Forbidden` error with a proper, optional body since the default implementation is broken """
+    message = "forbidden"
+    def __init__(self, message=None):
+        status = "403 Forbidden"
+        headers = {"Content-Type": "text/html"}
+        web.HTTPError.__init__(self, status, headers, message or self.message)

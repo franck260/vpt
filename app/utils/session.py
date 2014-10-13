@@ -233,7 +233,7 @@ def login_required(base_level):
             elif not user.check_level(base_level):
                 # Checks if the user has sufficient access : use cases include administration pages, and scenarios where the user was disabled
                 # In this case, the user will get 403 errors as long as its session is valid
-                raise web.forbidden()
+                raise http.Forbidden()
             
             # Everything is fine, the controller method can be executed
             return controller(*args)            

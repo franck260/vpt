@@ -73,7 +73,7 @@ class Vote:
             )
             
         except ValueError as exception:
-            raise web.forbidden(exception)
+            raise http.Forbidden(exception)
         
 class Comment:
     
