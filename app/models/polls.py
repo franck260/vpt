@@ -13,7 +13,7 @@ import datetime
 import operator
 import web
 
-class OrderedMappedCollection(MappedCollection, OrderedDict):
+class OrderedMappedCollection(OrderedDict, MappedCollection):
     
     def __init__(self, keyfunc):
         MappedCollection.__init__(self, keyfunc)
