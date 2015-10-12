@@ -36,11 +36,8 @@ class TestFormatting(unittest.TestCase):
 
     def test_format_date(self):
 
-        # Enforces the locale
-        if sys.platform == "win32":
-            locale.setlocale(locale.LC_ALL, "fra")
-        else:
-            locale.setlocale(locale.LC_ALL, "fr_FR")
+        # Enforces the locale (*nix systems only - we no longer support Windows)
+        locale.setlocale(locale.LC_ALL, "fr_FR.UTF-8")
         
         # Testing parameters
         DATE_FORMAT = "%A %d %B %Y"

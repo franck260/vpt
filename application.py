@@ -42,11 +42,8 @@ urls = (
     "/public/(?:img|js|css|doc)/.*",        "app.controllers.public.Public"
 )
 
-# Enforces the locale
-if sys.platform == "win32":
-    locale.setlocale(locale.LC_ALL, "fra")
-else:
-    locale.setlocale(locale.LC_ALL, "fr_FR")
+# Enforces the locale (*nix systems only - we no longer support Windows)
+locale.setlocale(locale.LC_ALL, "fr_FR.UTF-8")
 
 class WebApplication(web.application):
     """ Web application with additional features (configuration management...) """
