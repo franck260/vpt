@@ -195,9 +195,9 @@ class PollChoiceData(DataSet):
     class poll_choice_22:
         choice_dt = datetime.date(2012, 6, 1)
     class poll_choice_31:
-        choice_dt = datetime.date(2020, 7, 20)
+        choice_dt = datetime.date(2020, 10, 20)
     class poll_choice_32:
-        choice_dt = datetime.date(2020, 7, 27)
+        choice_dt = datetime.date(2020, 10, 27)
 
 class PollCommentData(DataSet):
     class comment_11:
@@ -226,9 +226,9 @@ class PollData(DataSet):
         choices = [PollChoiceData.poll_choice_21, PollChoiceData.poll_choice_22]
         comments = [PollCommentData.comment_21]
     class poll_3:
-        title = u"VPT de juillet 2020"
-        start_dt = datetime.date(2020, 7, 1)
-        end_dt = datetime.date(2020, 7, 31)        
+        title = u"VPT d'octobre 2020"
+        start_dt = datetime.date(2020, 10, 1)
+        end_dt = datetime.date(2020, 10, 31)        
         choices = [PollChoiceData.poll_choice_31, PollChoiceData.poll_choice_32]
 
 class PollVoteData(DataSet):

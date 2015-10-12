@@ -24,13 +24,13 @@ class TestPoll(ModelTestCase):
         # Checks the order by clause
         self.assertEqual(all_polls[0].start_dt, datetime.date(2011, 5, 28))
         self.assertEqual(all_polls[1].start_dt, datetime.date(2012, 4, 5))
-        self.assertEqual(all_polls[2].start_dt, datetime.date(2020, 7, 1))
+        self.assertEqual(all_polls[2].start_dt, datetime.date(2020, 10, 1))
 
     def test_expired(self):
 
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertFalse(poll_1.expired)
         self.assertTrue(poll_2.expired)
@@ -40,7 +40,7 @@ class TestPoll(ModelTestCase):
 
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertTrue(poll_1.has_votes)
         self.assertTrue(poll_2.has_votes)
@@ -54,7 +54,7 @@ class TestPoll(ModelTestCase):
         
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
 
         tournament_11 = config.orm.query(Tournament).filter(Tournament.tournament_dt == datetime.date(2009, 9, 1)).one() #@UndefinedVariable
         tournament_12 = config.orm.query(Tournament).filter(Tournament.tournament_dt == datetime.date(2010, 1, 1)).one() #@UndefinedVariable
@@ -89,7 +89,7 @@ class TestPoll(ModelTestCase):
         
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertEqual(config.orm.query(PollVote).count(), 5)
         self.assertEqual(config.orm.query(PollUserChoice).count(), 7)
@@ -184,7 +184,7 @@ class TestPoll(ModelTestCase):
         
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertEqual(config.orm.query(PollVote).count(), 5)
         self.assertEqual(config.orm.query(PollUserChoice).count(), 7)
@@ -209,7 +209,7 @@ class TestPoll(ModelTestCase):
         
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertEqual(config.orm.query(PollVote).count(), 5)
         self.assertEqual(config.orm.query(PollUserChoice).count(), 7)

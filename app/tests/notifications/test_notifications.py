@@ -30,11 +30,11 @@ class TestNotifications(ModelTestCase):
 
     def test_build_email_notification_poll_new(self):
         
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         notification = build_email_notification(poll_3, Events.NEW)
         zoe = config.orm.query(User).filter(User.first_name == "Zoe").one()
         
-        self.assertEqual(notification.subject, u"VPT de juillet 2020 : votez !")
+        self.assertEqual(notification.subject, u"VPT d'octobre 2020 : votez !")
         self.assertListEqual(notification.recipients, [user.email for user in User.all() if user != zoe])
 
     def test_build_email_notification_tournament_comment_new(self):
@@ -58,14 +58,14 @@ class TestNotifications(ModelTestCase):
     def test_build_email_notification_poll_comment_new(self):
         
         try:
-            poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+            poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
             nico = config.orm.query(User).filter(User.first_name == "Nicolas").one()
             zoe = config.orm.query(User).filter(User.first_name == "Zoe").one()
             comment = poll_3.add_comment(nico, "Salut Franck !")
             config.orm.commit()
             notification = build_email_notification(comment, Events.NEW)
             
-            self.assertEqual(notification.subject, u"VPT : un nouveau commentaire a été posté (sondage : VPT de juillet 2020)")
+            self.assertEqual(notification.subject, u"VPT : un nouveau commentaire a été posté (sondage : VPT d'octobre 2020)")
             self.assertListEqual(notification.recipients, [user.email for user in User.all() if user not in (nico, zoe)])
 
         finally:
@@ -75,7 +75,7 @@ class TestNotifications(ModelTestCase):
 
     def test_build_email_notification_poll_vote(self):
         
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
         franck_p = config.orm.query(User).filter(User.email == "franck.p@gmail.com").one() #@UndefinedVariable
         
@@ -85,16 +85,16 @@ class TestNotifications(ModelTestCase):
             config.orm.commit()
             notification = build_email_notification(poll_vote, Events.NEW)
 
-            self.assertEqual(notification.subject, u"VPT : le participant Jo a enregistré son vote (sondage : VPT de juillet 2020)")
+            self.assertEqual(notification.subject, u"VPT : le participant Jo a enregistré son vote (sondage : VPT d'octobre 2020)")
             self.assertListEqual(notification.recipients, [franck_p.email])
-            self.assertIn("[20/07/2020, 27/07/2020]", notification.body)
+            self.assertIn("[20/10/2020, 27/10/2020]", notification.body)
 
             # Scenario 2 : second vote on a poll, same user, empty list of choices
             poll_vote = poll_3.vote(jo, [])
             config.orm.commit()
             notification = build_email_notification(poll_vote, Events.MODIFIED)
             
-            self.assertEqual(notification.subject, u"VPT : le participant Jo a modifié son vote (sondage : VPT de juillet 2020)")
+            self.assertEqual(notification.subject, u"VPT : le participant Jo a modifié son vote (sondage : VPT d'octobre 2020)")
             self.assertListEqual(notification.recipients, [franck_p.email])
             self.assertIn("[]", notification.body)
         

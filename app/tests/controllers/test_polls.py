@@ -62,7 +62,7 @@ class TestPolls(ControllerTestCase):
         
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertEqual(len(poll_1.comments), 2)
         self.assertEqual(len(poll_2.comments), 1)
@@ -83,7 +83,7 @@ class TestPolls(ControllerTestCase):
 
             poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
             poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-            poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+            poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
             
             self.assertEqual(len(poll_1.comments), 2)
             self.assertEqual(len(poll_2.comments), 1)
@@ -120,7 +120,7 @@ class TestPolls(ControllerTestCase):
         jo = config.orm.query(User).filter(User.first_name == "Jonathan").one() #@UndefinedVariable
         poll_1 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2012, 4, 5)).one() #@UndefinedVariable
         poll_2 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2011, 5, 28)).one() #@UndefinedVariable
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         
         self.assertEqual(config.orm.query(PollVote).count(), 5)
         self.assertEqual(config.orm.query(PollUserChoice).count(), 7)
@@ -250,7 +250,7 @@ class TestPolls(ControllerTestCase):
         
         self.login("jo@gmail.com", "secret4")
         
-        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 7, 1)).one() #@UndefinedVariable
+        poll_3 = config.orm.query(Poll).filter(Poll.start_dt == datetime.date(2020, 10, 1)).one() #@UndefinedVariable
         self.assertFalse(poll_3.expired)
         self.assertEqual(len(poll_3.choices_by_user), 0)
 
